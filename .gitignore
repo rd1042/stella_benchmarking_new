@@ -12,3 +12,5 @@
 !test_example_scripts/master/e*.in
 !test_example_scripts/feature_electromagnetic_new/*.sh
 !test_example_scripts/master/*.sh
+!test_nonlinear_only_sims/sims/rk3/r*.in
+!test_nonlinear_only_sims/sims/rk3/*.sh
