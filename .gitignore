@@ -8,3 +8,5 @@
 !*/*/*.py
 !*/*/*/*.py
 !*/*/*/*/*.py
+!test_example_scripts/feature_electromagnetic_new/e*.in
+!test_example_scripts/feature_electromagnetic_new/*.sh
