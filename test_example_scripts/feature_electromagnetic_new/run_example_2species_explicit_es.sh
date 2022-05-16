@@ -9,6 +9,6 @@
 #SBATCH --output=array_job_%A_%a.log     # Standard output and error log
 #SBATCH --account=phys-gspt-2019         # Project account
 
-sim_name="example_explicit_em.in"
+sim_name="example_2species_explicit_es.in"
 mpirun -n 1 /users/rd1042/scratch/em_stella_new/stella $sim_name
 

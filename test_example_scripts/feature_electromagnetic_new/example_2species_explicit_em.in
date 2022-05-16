@@ -78,8 +78,8 @@
  zed_upwind = 0.02
  time_upwind = 0.02
  vpa_upwind = 0.02
- ! stream_implicit = .false.
- ! mirror_implicit = .false.
+ stream_implicit = .false.
+ mirror_implicit = .false.
  delt = 0.03
  nstep = 2000
 /
