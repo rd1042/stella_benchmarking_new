@@ -23,6 +23,7 @@ stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder="stella_beta_s
 stella_beta_scan_ky_05_np2_nt48_nvpa36_nmu18_fapar1_fbpar1_folder="stella_beta_scan_ky_05_np2_nt48_nvpa36_nmu18_fapar1_fbpar1"
 stella_beta_scan_ky_05_np2_nt128_nvpa24_nmu18_fapar1_fbpar1_folder="stella_beta_scan_ky_05_np2_nt128_nvpa24_nmu18_fapar1_fbpar1"
 stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder="stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1"
+stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder="stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1"
 stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_folder="stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1"
 stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_folder="stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1"
 stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_folder="stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1"
@@ -194,64 +195,68 @@ def make_beta_scans_for_stella_2spec():
 
 def construct_ky_beta_scans_with_resolution_checks():
 
-    # beta_vals = np.linspace(0, 0.04, 21)
-    # construct_beta_scan(stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt48_nvpa24_nmu18_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
+    beta_vals = np.linspace(0, 0.04, 21)
+    construct_beta_scan(stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder,
+                        beta_vals, "stella")
+    construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder,
+                        beta_vals, "stella")
+    construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder,
+                        beta_vals, "stella")
+    construct_beta_scan(stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder,
+                        beta_vals, "stella")
     # construct_beta_scan(gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_1_fapar1_fbpar1_folder, beta_vals, "gs2")
     # construct_beta_scan(gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_1_fapar1_fbpar1_folder, beta_vals, "gs2")
     # construct_beta_scan(gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_5_fapar1_fbpar1_folder, beta_vals, "gs2")
     # construct_beta_scan(gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_5_fapar1_fbpar1_folder, beta_vals, "gs2")
+    #
+    # beta_vals = np.linspace(0.02, 0.04, 3)
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt48_nvpa36_nmu18_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa24_nmu18_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_dt5em4_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_noupwind_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_center_dgdz_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
 
-    #  beta_vals = np.linspace(0.02, 0.04, 3)
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt48_nvpa36_nmu18_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa24_nmu18_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_dt5em4_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_noupwind_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_center_dgdz_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-
-    beta_vals = np.linspace(0.0, 0.04, 9)
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_2_folder,
+    # beta_vals = np.linspace(0.0, 0.04, 9)
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_2_folder,
+    # #                       beta_vals, "stella")
+    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder,
     #                       beta_vals, "stella")
-    construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder,
-                          beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder,
-    #                       beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder,
-    #                       beta_vals, "stella")
-    # beta_vals = np.linspace(0.0, 0.04, 5)
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
-    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder,
-    #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder,
+    # #                       beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder,
+    # #                       beta_vals, "stella")
+    # # beta_vals = np.linspace(0.0, 0.04, 5)
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
+    # # construct_beta_scan(stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder,
+    # #                     beta_vals, "stella")
 
 
     return
