@@ -201,101 +201,85 @@ def plot_beta_scans_with_resolution_checks():
                 "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
                 "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
                 "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt48_nvpa24_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
                 "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt48_nvpa36_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa24_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
                 "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                # "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_dt5em4_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                # "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_noupwind_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                # "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_center_dgdz_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
                 ],
                 [
                 "GS2, hr",
                 "GS2, lr",
                 "stella, hr",
-                "stella, lr",
                 "stella, lr + nt64",
-                "stella, lr + nvpa36",
-                "stella, lr + nt128",
                 "stella, vlr + nt64",
-                "stella, vlr + nt128",
-                "stella, vlr + nt256",
-                "stella, vlr + nt512",
-                # "stella, vlr + nt64, dt=5e-4",
-                # "stella, vlr + nt64, no z/vpa upwinding",
-                # "stella, vlr + nt64, center_dgdz",
+                "stella, vlr + nt32",
                 ],
                 marker_size=8
                 )
 
     ## ky=0.5. ntheta resolution
-    make_beta_plots_from_pickles(
-                [
-                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
-                ],
-                [
-                "GS2, hr",
-                "GS2, lr",
-                "stella, vlr + nt64",
-                "stella, vlr + nt128",
-                "stella, vlr + nt256",
-                "stella, vlr + nt512",
-                ],
-                marker_size=8,
-                omega_diff=True
-                )
+    # make_beta_plots_from_pickles(
+    #             [
+    #             "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+    #             ],
+    #             [
+    #             "GS2, hr",
+    #             "GS2, lr",
+    #             "stella, vlr + nt64",
+    #             "stella, vlr + nt128",
+    #             "stella, vlr + nt256",
+    #             "stella, vlr + nt512",
+    #             ],
+    #             marker_size=8,
+    #             omega_diff=True
+    #             )
 
 
     ## ky=1. ntheta resolution
-    make_beta_plots_from_pickles(
-                [
-                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                ],
-                [
-                "GS2, hr",
-                "GS2, lr",
-                "stella, vlr + nt64",
-                "stella, vlr + nt128",
-                "stella, vlr + nt256",
-                "stella, vlr + nt512",
-                ],
-                marker_size=8
-                )
+    # make_beta_plots_from_pickles(
+    #             [
+    #             "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_ky_1_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             ],
+    #             [
+    #             "GS2, hr",
+    #             "GS2, lr",
+    #             "stella, vlr + nt64",
+    #             "stella, vlr + nt128",
+    #             "stella, vlr + nt256",
+    #             "stella, vlr + nt512",
+    #             ],
+    #             marker_size=8
+    #             )
 
     ## ky=5. ntheta resolution
-    make_beta_plots_from_pickles(
-                [
-                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                "sims/" + stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-                ],
-                [
-                "GS2, hr",
-                "GS2, lr",
-                "stella, vlr + nt64",
-                "stella, vlr + nt128",
-                "stella, vlr + nt256",
-                "stella, vlr + nt512",
-                ],
-                marker_size=8
-                )
+    # make_beta_plots_from_pickles(
+    #             [
+    #             "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             "sims/" + stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_ky_5_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+    #             ],
+    #             [
+    #             "GS2, hr",
+    #             "GS2, lr",
+    #             "stella, vlr + nt64",
+    #             "stella, vlr + nt128",
+    #             "stella, vlr + nt256",
+    #             "stella, vlr + nt512",
+    #             ],
+    #             marker_size=8
+    #             )
 
     return
 
