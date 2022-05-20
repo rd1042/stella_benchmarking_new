@@ -1,5 +1,5 @@
 &zgrid_parameters
- nzed = 256
+ nzed = 128
  ntubes = 1
  nperiod = 2
  boundary_option="default"
@@ -12,10 +12,10 @@
 &millergeo_parameters
  nzed_local = 128
  rhoc = 0.5
- shat = 0.78 ! Changed from 0.796
- qinp = 1.38 ! Changed from 1.4
- rmaj = 2.72 ! Changed from 2.77778
- rgeo = 2.72 ! Changed from 2.77778
+ shat = 0.78
+ qinp = 1.38
+ rmaj = 2.72
+ rgeo = 2.72
  shift = 0.0
  kappa = 1.0
  kapprim = 0.0
@@ -35,7 +35,7 @@
 
 &parameters
  zeff = 1.0
- beta = 0.01000
+ beta = 0.04000
  vnew_ref = 0.01
  rhostar = 0.01
 /
@@ -75,13 +75,13 @@
  fphi =   1.0
  fapar =  1.0
  fbpar = 1.0
- stream_implicit = .false. 
+ stream_implicit = .false.
  mirror_implicit = .false.
  zed_upwind = 0.02
  time_upwind = 0.02
  vpa_upwind = 0.02
  delt = 0.03
- nstep = 300000
+ nstep = 80000
 /
 &species_knobs
  nspec= 2
@@ -92,24 +92,24 @@
  mass=   1.0
  dens=   1.0
  temp=   1.0
- tprim = 2.537 ! Changed from 2.49
- fprim = 0.809 ! Changed from 0.8
+ tprim = 2.537
+ fprim = 0.809
  type='ion'
 /
 
 &species_parameters_2
  z=     -1.0
- mass=   0.00028 ! Changed from 2.7e-4
+ mass=   0.00028
  dens=   1.0
  temp=   1.0
- tprim = 2.537 ! Changed from 2.49
- fprim = 0.809 ! Changed from 0.8
+ tprim = 2.537
+ fprim = 0.809
  type='electron'
 /
 
 &stella_diagnostics_knobs
- nwrite = 2000
- nsave = 3000 
+ nwrite = 500
+ nsave = 3000
  save_for_restart = .false.
  write_omega = .true.
  write_phi_vs_time = .false.

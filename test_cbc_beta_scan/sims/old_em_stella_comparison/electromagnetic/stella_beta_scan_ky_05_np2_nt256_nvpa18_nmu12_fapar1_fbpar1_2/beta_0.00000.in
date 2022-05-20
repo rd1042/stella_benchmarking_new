@@ -81,7 +81,7 @@
  time_upwind = 0.02
  vpa_upwind = 0.02
  delt = 0.03
- nstep = 80000
+ nstep = 160000
 /
 &species_knobs
  nspec= 2
@@ -108,7 +108,7 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 500
+ nwrite = 1000
  nsave = 3000 
  save_for_restart = .false.
  write_omega = .true.
