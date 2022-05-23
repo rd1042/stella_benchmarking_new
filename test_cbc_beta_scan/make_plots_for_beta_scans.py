@@ -407,10 +407,164 @@ def plot_beta_scans_with_resolution_checks():
 
     return
 
+def plot_beta_scans_with_resolution_checks_for_tdotp():
+    """ """
 
+    def make_beta_plots_from_pickles_local(pickle_longnames, labels, save_name,
+                                        marker_size=1, lw=1, omega_diff=False,
+                                        fractional=False,
+                                        omega_diff_ylabel=r"$\omega - \omega_{ref}$",
+                                        gamma_diff_ylabel=r"$\gamma - \gamma_{ref}$",
+                                        ylabel_fontsize=14,
+                                        xlabel_fontsize=14
+                                        ):
+        """Either plot Omega(beta), or, if omega_diff=True, plot (Omega-Omega_ref) (beta),
+        where Omega_ref is taken from the first pickle. """
+
+        marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
+        fig = plt.figure(figsize=(12,8))
+        ax1 = fig.add_subplot(211)
+        ax2 = fig.add_subplot(212, sharex=ax1)
+
+        for folder_idx, pickle_longname in enumerate(pickle_longnames):
+            myfile = open(pickle_longname, "rb")
+            [beta_vals, gamma_vals, omega_vals] = pickle.load(myfile)
+            myfile.close()
+            if not omega_diff:
+                ax1.plot(beta_vals, omega_vals, label=labels[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
+                ax2.plot(beta_vals, gamma_vals, label=labels[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
+            else:
+                if folder_idx==0:
+                    # This is the reference beta
+                    beta_ref = beta_vals
+                    gamma_ref = gamma_vals
+                    omega_ref = omega_vals
+                ## Whether or not this is the reference beta scan, plot Omega-Omega_ref
+                # Find where beta vals match.
+                beta_to_compare = []
+                gamma_diff = []
+                omega_diff = []
+                for beta_idx, beta_val in enumerate(beta_vals):
+                    ## Find if the beta val is within a small tolerance of any
+                    ## beta_ref vals
+                    closest_beta_ref_idx = np.argmin(abs(beta_ref - beta_val))
+                    if abs(beta_ref[closest_beta_ref_idx] - beta_val) < 1e-6:
+                        beta_to_compare.append(beta_val)
+                        if fractional:
+                            gamma_diff.append((gamma_vals[beta_idx] - gamma_ref[closest_beta_ref_idx])*100/gamma_ref[closest_beta_ref_idx])
+                            omega_diff.append((omega_vals[beta_idx] - omega_ref[closest_beta_ref_idx])*100/omega_ref[closest_beta_ref_idx])
+                        else:
+                            gamma_diff.append(gamma_vals[beta_idx] - gamma_ref[closest_beta_ref_idx])
+                            omega_diff.append(omega_vals[beta_idx] - omega_ref[closest_beta_ref_idx])
+                ax1.plot(beta_to_compare, omega_diff, label=labels[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
+                ax2.plot(beta_to_compare, gamma_diff, label=labels[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
+
+
+        for ax in [ax1, ax2]:
+            ax.grid(True)
+
+        ax1.legend(loc="best")
+        if not omega_diff:
+            ax1.set_ylabel(r"$\omega$", fontsize=ylabel_fontsize)
+            ax2.set_ylabel(r"$\gamma$", fontsize=ylabel_fontsize)
+        else:
+            ax1.set_ylabel(omega_diff_ylabel, fontsize=ylabel_fontsize)
+            ax2.set_ylabel(gamma_diff_ylabel, fontsize=ylabel_fontsize)
+        ax2.set_xlabel(r"$\beta$", fontsize=xlabel_fontsize)
+        plt.savefig(save_name)
+        plt.close()
+
+        return
+
+    ## ky=0.5. Trying a few things out
+    make_beta_plots_from_pickles_local(
+                [
+                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "GS2, hr (ntheta=64)",
+                "GS2, lr (ntheta=48)",
+                "stella, hr (ntheta=64)",
+                "stella, lr (ntheta=64)",
+                "stella, lr (ntheta=128)",
+                "stella, lr (ntheta=256)",
+                "stella, lr (ntheta=512)",
+                ],
+                "absolute_comparison.png",
+                marker_size=8, lw=2,
+                ylabel_fontsize=14,
+                xlabel_fontsize=14
+                )
+
+    make_beta_plots_from_pickles_local(
+                [
+                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "GS2, hr",
+                "GS2, lr",
+                "stella, hr",
+                "stella, lr + nt64",
+                "stella, lr + nt128",
+                "stella, lr + nt256",
+                "stella, lr + nt512",
+                ],
+                "relative_comparison.png",
+                marker_size=8, lw=2,
+                omega_diff=True,
+                omega_diff_ylabel=r"$\omega - \omega_{GS2, hr}$",
+                gamma_diff_ylabel=r"$\gamma - \gamma_{GS2, hr}$",
+                ylabel_fontsize=14,
+                xlabel_fontsize=14
+                )
+
+    make_beta_plots_from_pickles_local(
+                [
+                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "GS2, hr (ntheta=64)",
+                "GS2, lr (ntheta=48)",
+                "stella, hr (ntheta=64)",
+                "stella, lr (ntheta=64)",
+                "stella, lr (ntheta=128)",
+                "stella, lr (ntheta=256)",
+                "stella, lr (ntheta=512)",
+                ],
+                "fractional_relative_comparison.png",
+                marker_size=8, lw=2,
+                omega_diff=True,
+                omega_diff_ylabel=r"$(\omega - \omega_{GS2, hr})/\omega_{GS2, hr}$ (%)",
+                gamma_diff_ylabel=r"$(\gamma - \gamma_{GS2, hr})/\omega_{GS2, hr}$ (%)",
+                ylabel_fontsize=14,
+                xlabel_fontsize=14,
+                fractional=True
+                )
+
+
+    return
 
 if __name__ == "__main__":
     # plot_different_beta_scans()
     # plot_stella_scan_vs_gs2_pickle()
     # plot_stella_scan_vs_gs2_pickle_for_poster()
-    plot_beta_scans_with_resolution_checks()
+    # plot_beta_scans_with_resolution_checks()
+    plot_beta_scans_with_resolution_checks_for_tdotp()
