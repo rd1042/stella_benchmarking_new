@@ -214,8 +214,6 @@ def make_beta_pair_plots_from_pickles(pickle_longname_pairs, labels, marker_size
     ax2 = fig.add_subplot(212, sharex=ax1)
 
     for pair_idx, pickle_longname_pair in enumerate(pickle_longname_pairs):
-        print("pickle_longname_pair = ", pickle_longname_pair)
-        print("pickle_longname_pair[0] = ", pickle_longname_pair[0])
         pickle_longname_1 = pickle_longname_pair[0]
         pickle_longname_2 = pickle_longname_pair[1]
         myfile = open(pickle_longname_1, "rb")
@@ -223,8 +221,6 @@ def make_beta_pair_plots_from_pickles(pickle_longname_pairs, labels, marker_size
         myfile.close()
         # This is the reference beta
         beta_ref = beta_vals
-        print("pickle_longname_1 = ", pickle_longname_1)
-        print("beta_ref = ", beta_ref)
         gamma_ref = gamma_vals
         omega_ref = omega_vals
 
@@ -266,46 +262,66 @@ def make_beta_pair_plots_from_pickles(pickle_longname_pairs, labels, marker_size
 def plot_beta_scans_with_resolution_checks():
     """ """
     ## ky=0.5. Trying a few things out
-    # make_beta_plots_from_pickles(
-    #             [
-    #             "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             ],
-    #             [
-    #             "GS2, hr",
-    #             "GS2, lr",
-    #             "stella, hr",
-    #             "stella, lr + nt64",
-    #             "stella, vlr + nt64",
-    #             "stella, vlr + nt32",
-    #             ],
-    #             marker_size=8
-    #             )
-    #
-    # make_beta_plots_from_pickles(
-    #             [
-    #             "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
-    #             ],
-    #             [
-    #             "GS2, hr",
-    #             "GS2, lr",
-    #             "stella, hr",
-    #             "stella, lr + nt64",
-    #             "stella, vlr + nt64",
-    #             "stella, vlr + nt32",
-    #             ],
-    #             marker_size=8,
-    #             omega_diff=True
-    #             )
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "GS2, hr",
+                "GS2, lr",
+                "stella, hr",
+                "stella, lr + nt64",
+                "stella, vlr + nt64",
+                "stella, vlr + nt32",
+                ],
+                marker_size=8
+                )
+
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "GS2, hr",
+                "GS2, lr",
+                "stella, hr",
+                "stella, lr + nt64",
+                "stella, vlr + nt64",
+                "stella, vlr + nt32",
+                ],
+                marker_size=8,
+                omega_diff=True
+                )
+
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + old_stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + new_stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + old_stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                 "sims/" + new_stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                "sims/" + old_stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                 "sims/" + new_stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "electromagnetic vlr + nt128",
+                "electromagnetic-new vlr + nt128",
+                "electromagnetic vlr + nt256",
+                "electromagnetic-new vlr + nt256",
+                "electromagnetic vlr + nt512",
+                "electromagnetic-new vlr + nt512",
+                ],
+                marker_size=8,
+                )
 
     make_beta_pair_plots_from_pickles(
                 [
