@@ -81,7 +81,7 @@
  time_upwind = 0.02
  vpa_upwind = 0.02
  delt = 0.03
- nstep = 80000
+ nstep = 40000
 /
 &species_knobs
  nspec= 2
