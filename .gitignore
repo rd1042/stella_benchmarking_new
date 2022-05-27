@@ -23,6 +23,11 @@
 !test_cbc_beta_scan/sims/old_em_stella_comparison/electromagnetic-new/*/*.pickle
 !test_cbc_beta_scan/sims/old_em_stella_comparison/electromagnetic-new/*/*.sh
 !test_cbc_beta_scan/sims/old_em_stella_comparison/electromagnetic-new/*/template*
+!test_cbc_beta_scan/sims/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/*.png
+!test_cbc_beta_scan/sims/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/*.in
+!test_cbc_beta_scan/sims/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/*.pickle
+!test_cbc_beta_scan/sims/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/*.sh
+!test_cbc_beta_scan/sims/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/template*
 !test_cbc_beta_scan/*.py
 !test_cbc_beta_scan/*.sh
 !generate_sims/*.py
