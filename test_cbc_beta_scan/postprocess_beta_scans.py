@@ -179,7 +179,7 @@ if __name__ == "__main__":
     postprocess_folder(compare_em_new + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     postprocess_folder(compare_em_new + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     postprocess_folder(compare_em_new + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
-    compare_em_new_impl_str = "old_em_stella_comparison/electromagnetic-new_streaming_implicit/"
+    compare_em_new_impl_str = "old_em_stella_comparison/electromagnetic-new_stream_implicit/"
     postprocess_folder(compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     postprocess_folder(compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     postprocess_folder(compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
