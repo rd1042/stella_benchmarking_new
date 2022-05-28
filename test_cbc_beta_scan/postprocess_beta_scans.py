@@ -39,8 +39,10 @@ def make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_s
 
     ## Set axis limits; convergence should be better than 0.1, so use this
     tolerance=0.1
-    ax1.set_ylim(freqom[-1]-tolerance, freqom[-1]+tolerance)
-    ax2.set_ylim(gamma_stable[-1]-tolerance, gamma_stable[-1]+tolerance)
+    if np.isfinite(freqom[-1]):
+        ax1.set_ylim(freqom[-1]-tolerance, freqom[-1]+tolerance)
+    if np.isfinite(gamma_stable[-1]):
+        ax2.set_ylim(gamma_stable[-1]-tolerance, gamma_stable[-1]+tolerance)
 
     for ax in [ax1, ax2]:
         ax.grid(True)
