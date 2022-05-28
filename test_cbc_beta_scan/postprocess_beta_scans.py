@@ -167,15 +167,24 @@ def postprocess_folder(folder_shortname, sim_type, param_scanned="beta"):
 if __name__ == "__main__":
     # postprocess_folder("gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1", "gs2")
     # postprocess_folder("gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1", "gs2")
-    postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1", "stella")
-    compare_em_old = "old_em_stella_comparison/electromagnetic/"
-    postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
-    postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
-    postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1", "stella")
+    # compare_em_old = "old_em_stella_comparison/electromagnetic/"
+    # postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    # postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    # postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     compare_em_new = "old_em_stella_comparison/electromagnetic-new/"
     postprocess_folder(compare_em_new + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     postprocess_folder(compare_em_new + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     postprocess_folder(compare_em_new + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    compare_em_new_impl_str = "old_em_stella_comparison/electromagnetic-new_streaming_implicit/"
+    postprocess_folder(compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    postprocess_folder(compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    postprocess_folder(compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+
+    postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
+    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
+    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
+    postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")
