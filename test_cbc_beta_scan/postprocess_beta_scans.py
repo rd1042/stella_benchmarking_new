@@ -68,7 +68,7 @@ def make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar):
     ax3.set_ylabel(r"$\vert B_\parallel \vert$")
     ax2.set_xlabel(r"$z/\pi$")
 
-    for ax in [ax1, ax2]:
+    for ax in [ax1, ax2, ax3]:
         ax.grid(True)
 
     save_name = sim_longname + "_fields_z.png"
