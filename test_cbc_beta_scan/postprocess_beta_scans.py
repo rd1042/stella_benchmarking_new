@@ -231,7 +231,7 @@ if __name__ == "__main__":
     # postprocess_folder("gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1", "gs2")
     # postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1", "stella")
     # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1", "stella")
-    # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1", "stella")
+    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1", "stella")
     # postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1", "stella")
     # compare_em_old = "old_em_stella_comparison/electromagnetic/"
     # postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
@@ -259,7 +259,7 @@ if __name__ == "__main__":
     # gfort_build = "viking_gfortran_build/"
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
-    make_plot_for_single_sim("sims/viking_gfortran_build/stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit/" +
-                             "beta_0.04000_investigation")
+    # make_plot_for_single_sim("sims/viking_gfortran_build/stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit/" +
+    #                          "beta_0.04000_investigation")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")
