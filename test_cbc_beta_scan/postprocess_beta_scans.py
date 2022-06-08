@@ -58,7 +58,7 @@ def make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar):
     fig = plt.figure(figsize=(12,8))
     ax1 = fig.add_subplot(311)
     ax2 = fig.add_subplot(312, sharex=ax1)
-    ax2 = fig.add_subplot(313, sharex=ax1)
+    ax3 = fig.add_subplot(313, sharex=ax1)
     norm_val = np.max(abs_phi)
     ax1.plot(z/np.pi, abs_phi/norm_val)
     ax2.plot(z/np.pi, abs_apar/norm_val)
