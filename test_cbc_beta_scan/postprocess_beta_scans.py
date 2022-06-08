@@ -70,6 +70,7 @@ def make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar):
 
     for ax in [ax1, ax2, ax3]:
         ax.grid(True)
+    plt.tight_layout()
     save_name = sim_longname + "_fields_z.png"
     plt.savefig(save_name)
     plt.close()
