@@ -256,10 +256,10 @@ if __name__ == "__main__":
     # postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     # postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     # postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
-    gfort_build = "viking_gfortran_build/"
+    # gfort_build = "viking_gfortran_build/"
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
-    make_plot_for_single_sim(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit/" +
+    make_plot_for_single_sim("sims/viking_gfortran_build/stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit/" +
                              "beta_0.04000_investigation")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")
