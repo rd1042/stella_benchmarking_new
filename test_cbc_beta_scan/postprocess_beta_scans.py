@@ -16,6 +16,7 @@ sys.path.append("../postprocessing_tools")
 import helper_linear_sims as help_lin
 from helper_ncdf import view_ncdf_variables
 from extract_sim_data import get_omega_data, get_phiz_data, get_aparz_data, get_bparz_data
+from plotting_helper import plot_phi_z_for_sim, plot_apar_z_for_sim, plot_bpar_z_for_sim
 
 def get_beta_from_outnc_longname(outnc_longname):
     """ """
@@ -164,7 +165,7 @@ def postprocess_folder_stella(folder_shortname, param_scanned="beta"):
             print("None")
         try:
             z, real_bpar, imag_bpar = get_bparz_data(sim_longname, "stella")
-            abs_bpar = help_lin.get_abs(real_bpar, imag_apar)
+            abs_bpar = help_lin.get_abs(real_bpar, imag_bpar)
         except None:
             print("None")
         make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable)
@@ -203,33 +204,60 @@ def postprocess_folder(folder_shortname, sim_type, param_scanned="beta"):
 
     return
 
-def make_plot_for_single_sim(sim_longname):
+def make_plot_for_single_sim(sim_longname, sim_type):
     """ """
     sim_shortname = re.split("/", sim_longname)[-1]
-    # view_ncdf_variables(outnc_longname)
-    ## Get beta
-    time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
-    #try:
-    z, real_phi, imag_phi = get_phiz_data(sim_longname, "stella")
-    abs_phi = help_lin.get_abs(real_phi, imag_phi)
-    try:
-        z, real_apar, imag_apar = get_aparz_data(sim_longname, "stella")
-        abs_apar = help_lin.get_abs(real_apar, imag_apar)
-    except None:
-        print("None")
-    try:
-        z, real_bpar, imag_bpar = get_bparz_data(sim_longname, "stella")
-        abs_bpar = help_lin.get_abs(real_bpar, imag_apar)
-    except None:
-        print("None")
-    make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable)
-    make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar)
+    if sim_type == "stella":
+        ## Get beta
+        time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
+        #try:
+        z, real_phi, imag_phi = get_phiz_data(sim_longname, "stella")
+        abs_phi = help_lin.get_abs(real_phi, imag_phi)
+        try:
+            z, real_apar, imag_apar = get_aparz_data(sim_longname, "stella")
+            abs_apar = help_lin.get_abs(real_apar, imag_apar)
+        except None:
+            print("None")
+        try:
+            z, real_bpar, imag_bpar = get_bparz_data(sim_longname, "stella")
+            abs_bpar = help_lin.get_abs(real_bpar, imag_bpar)
+        except None:
+            print("None")
+        make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable)
+        make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar)
+    elif sim_type == "gs2":
+        outnc_longname = sim_longname + ".out.nc"
+        print("outnc_longname = ", outnc_longname)
+        folder_longname = re.split(sim_shortname, sim_longname)[0]
+        (fitted_growth_rate, growth_rate_error,
+         converged_frequency, freq_error) = help_lin.calculate_omega_and_plot_for_single(outnc_longname,
+                        save_path=(folder_longname + "/"),
+                        plot_growth_rates=True,
+                        figtitle=sim_shortname)
+        fig = plt.figure(figsize=(12,8))
+        ax1 = fig.add_subplot(311)
+        ax2 = fig.add_subplot(312, sharex=ax1)
+        ax3 = fig.add_subplot(313, sharex=ax1)
+        plot_phi_z_for_sim(ax1, sim_longname, "GS2", sim_type="gs2")
+        plot_apar_z_for_sim(ax2, sim_longname, "GS2", sim_type="gs2")
+        plot_bpar_z_for_sim(ax3, sim_longname, "GS2", sim_type="gs2")
+        ax1.set_ylabel(r"$\vert \phi \vert$")
+        ax2.set_ylabel(r"$\vert A_\parallel \vert$")
+        ax3.set_ylabel(r"$\vert B_\parallel \vert$")
+        ax3.set_xlabel(r"$z/\pi$")
+        for ax in [ax1, ax2, ax3]:
+            ax.grid(True)
+        plt.tight_layout()
+        save_name = sim_longname + "_fields_z.png"
+        plt.savefig(save_name)
+        plt.close()
+
     return
 
 if __name__ == "__main__":
     # postprocess_folder("gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1", "gs2")
     # postprocess_folder("gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1", "gs2")
-    postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1", "stella")
     # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1", "stella")
     # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1", "stella")
     # postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1", "stella")
@@ -260,6 +288,7 @@ if __name__ == "__main__":
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
     # make_plot_for_single_sim("sims/viking_gfortran_build/stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit/" +
-    #                          "beta_0.04000_investigation")
+    #                          "beta_0.04000_investigation", "stella")
+    make_plot_for_single_sim("sims/gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1/beta0_0.0400", "gs2")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")
