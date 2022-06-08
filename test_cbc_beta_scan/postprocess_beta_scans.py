@@ -205,9 +205,7 @@ def postprocess_folder(folder_shortname, sim_type, param_scanned="beta"):
 
 def make_plot_for_single_sim(sim_longname):
     """ """
-    sim_shortname = re.split("/", outnc_longname)[-1]
-    sim_shortname = re.split(".out.nc", sim_shortname)[0]
-    sim_longname = re.split(".out.nc", outnc_longname)[0]
+    sim_shortname = re.split("/", sim_longname)[-1]
     # view_ncdf_variables(outnc_longname)
     ## Get beta
     time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
