@@ -160,9 +160,13 @@ def postprocess_folder_stella(folder_shortname, param_scanned="beta"):
         try:
             z, real_apar, imag_apar = get_aparz_data(sim_longname, "stella")
             abs_apar = help_lin.get_abs(real_apar, imag_apar)
+        except None:
+            print("None")
         try:
             z, real_bpar, imag_bpar = get_bparz_data(sim_longname, "stella")
             abs_bpar = help_lin.get_abs(real_bpar, imag_apar)
+        except None:
+            print("None")
         make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable)
         make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar)
         # (fitted_growth_rate, growth_rate_error,
