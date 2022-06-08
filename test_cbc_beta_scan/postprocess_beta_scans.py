@@ -203,6 +203,31 @@ def postprocess_folder(folder_shortname, sim_type, param_scanned="beta"):
 
     return
 
+def make_plot_for_single_sim(sim_longname):
+    """ """
+    sim_shortname = re.split("/", outnc_longname)[-1]
+    sim_shortname = re.split(".out.nc", sim_shortname)[0]
+    sim_longname = re.split(".out.nc", outnc_longname)[0]
+    # view_ncdf_variables(outnc_longname)
+    ## Get beta
+    time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
+    #try:
+    z, real_phi, imag_phi = get_phiz_data(sim_longname, "stella")
+    abs_phi = help_lin.get_abs(real_phi, imag_phi)
+    try:
+        z, real_apar, imag_apar = get_aparz_data(sim_longname, "stella")
+        abs_apar = help_lin.get_abs(real_apar, imag_apar)
+    except None:
+        print("None")
+    try:
+        z, real_bpar, imag_bpar = get_bparz_data(sim_longname, "stella")
+        abs_bpar = help_lin.get_abs(real_bpar, imag_apar)
+    except None:
+        print("None")
+    make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable)
+    make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar)
+    return
+
 if __name__ == "__main__":
     # postprocess_folder("gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1", "gs2")
     # postprocess_folder("gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1", "gs2")
@@ -235,6 +260,8 @@ if __name__ == "__main__":
     # postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     gfort_build = "viking_gfortran_build/"
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
-    postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
+    # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
+    make_plot_for_single_sim(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit/" +
+                             "beta_0.04000_investigation")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")
