@@ -53,6 +53,30 @@ def make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_s
 
     return
 
+def make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar):
+    """ """
+    fig = plt.figure(figsize=(12,8))
+    ax1 = fig.add_subplot(311)
+    ax2 = fig.add_subplot(312, sharex=ax1)
+    ax2 = fig.add_subplot(313, sharex=ax1)
+    norm_val = np.max(abs_phi)
+    ax1.plot(z/np.pi, abs_phi/norm_val)
+    ax2.plot(z/np.pi, abs_apar/norm_val)
+    ax3.plot(z/np.pi, abs_bpar/norm_val)
+    ax1.set_ylabel(r"$\vert \phi \vert$")
+    ax2.set_ylabel(r"$\vert A_\parallel \vert$")
+    ax3.set_ylabel(r"$\vert B_\parallel \vert$")
+    ax2.set_xlabel(r"$z/\pi$")
+
+    for ax in [ax1, ax2]:
+        ax.grid(True)
+
+    save_name = sim_longname + "_fields_z.png"
+    plt.savefig(save_name)
+    plt.close()
+
+    return
+
 def postprocess_folder_gs2(folder_shortname, param_scanned="beta"):
     """For a folder, get Omega and beta, and save to pickle"""
 
@@ -130,8 +154,17 @@ def postprocess_folder_stella(folder_shortname, param_scanned="beta"):
         ## Get beta
         beta_longlist.append(get_beta_from_outnc_longname(outnc_longname))
         time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
-
+        #try:
+        z, real_phi, imag_phi = get_phiz_data(sim_longname, "stella")
+        abs_phi = help_lin.get_abs(real_phi, imag_phi)
+        try:
+            z, real_apar, imag_apar = get_aparz_data(sim_longname, "stella")
+            abs_apar = help_lin.get_abs(real_apar, imag_apar)
+        try:
+            z, real_bpar, imag_bpar = get_bparz_data(sim_longname, "stella")
+            abs_bpar = help_lin.get_abs(real_bpar, imag_apar)
         make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable)
+        make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar)
         # (fitted_growth_rate, growth_rate_error,
         #  converged_frequency, freq_error) = help_lin.calculate_omega_and_plot_for_single(outnc_longname,
         #                 save_path=(folder_longname + "/"),
