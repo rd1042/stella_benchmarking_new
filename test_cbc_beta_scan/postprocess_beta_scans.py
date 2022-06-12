@@ -234,33 +234,45 @@ def make_plot_for_single_sim(sim_longname, sim_type):
                         save_path=(folder_longname + "/"),
                         plot_growth_rates=True,
                         figtitle=sim_shortname)
-        fig = plt.figure(figsize=(12,8))
-        ax1 = fig.add_subplot(311)
-        ax2 = fig.add_subplot(312, sharex=ax1)
-        ax3 = fig.add_subplot(313, sharex=ax1)
-        plot_phi_z_for_sim(ax1, sim_longname, "GS2", sim_type="gs2")
-        plot_apar_z_for_sim(ax2, sim_longname, "GS2", sim_type="gs2")
-        plot_bpar_z_for_sim(ax3, sim_longname, "GS2", sim_type="gs2")
-        ax1.set_ylabel(r"$\vert \phi \vert$")
-        ax2.set_ylabel(r"$\vert A_\parallel \vert$")
-        ax3.set_ylabel(r"$\vert B_\parallel \vert$")
-        ax3.set_xlabel(r"$z/\pi$")
-        for ax in [ax1, ax2, ax3]:
-            ax.grid(True)
-        plt.tight_layout()
-        save_name = sim_longname + "_fields_z.png"
-        plt.savefig(save_name)
-        plt.close()
+        # fig = plt.figure(figsize=(12,8))
+        # ax1 = fig.add_subplot(311)
+        # ax2 = fig.add_subplot(312, sharex=ax1)
+        # ax3 = fig.add_subplot(313, sharex=ax1)
+        z, real_phi, imag_phi = get_phiz_data(sim_longname, "gs2")
+        abs_phi = help_lin.get_abs(real_phi, imag_phi)
+        try:
+            z, real_apar, imag_apar = get_aparz_data(sim_longname, "gs2")
+            abs_apar = help_lin.get_abs(real_apar, imag_apar)
+        except None:
+            print("None")
+        try:
+            z, real_bpar, imag_bpar = get_bparz_data(sim_longname, "gs2")
+            abs_bpar = help_lin.get_abs(real_bpar, imag_bpar)
+        except None:
+            print("None")
+
+        make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar)
+
+        # ax1.set_ylabel(r"$\vert \phi \vert$")
+        # ax2.set_ylabel(r"$\vert A_\parallel \vert$")
+        # ax3.set_ylabel(r"$\vert B_\parallel \vert$")
+        # ax3.set_xlabel(r"$z/\pi$")
+        # for ax in [ax1, ax2, ax3]:
+        #     ax.grid(True)
+        # plt.tight_layout()
+        # save_name = sim_longname + "_fields_z.png"
+        # plt.savefig(save_name)
+        # plt.close()
 
     return
 
 if __name__ == "__main__":
     # postprocess_folder("gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1", "gs2")
     # postprocess_folder("gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1", "gs2")
-    postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1", "stella")
     # compare_em_old = "old_em_stella_comparison/electromagnetic/"
     # postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     # postprocess_folder(compare_em_old + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
@@ -274,21 +286,21 @@ if __name__ == "__main__":
     # postprocess_folder(compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     # postprocess_folder(compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
     #
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
-    postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")
-    gfort_compare_em_new = "viking_gfortran_build/old_em_stella_comparison/electromagnetic-new/"
-    postprocess_folder(gfort_compare_em_new + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
-    gfort_compare_em_new_impl_str = "viking_gfortran_build/old_em_stella_comparison/electromagnetic-new_stream_implicit/"
-    postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
-    postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
-    postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
-    gfort_build = "viking_gfortran_build/"
-    postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
-    postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
-    make_plot_for_single_sim("sims/viking_gfortran_build/stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit/" +
-                             "beta_0.04000_investigation", "stella")
-    # make_plot_for_single_sim("sims/gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1/beta0_0.0400", "gs2")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
+    # postprocess_folder("stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")
+    # gfort_compare_em_new = "viking_gfortran_build/old_em_stella_comparison/electromagnetic-new/"
+    # postprocess_folder(gfort_compare_em_new + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    # gfort_compare_em_new_impl_str = "viking_gfortran_build/old_em_stella_comparison/electromagnetic-new_stream_implicit/"
+    # postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    # postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    # postprocess_folder(gfort_compare_em_new_impl_str + "stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_2", "stella")
+    # gfort_build = "viking_gfortran_build/"
+    # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
+    # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit", "stella")
+    # make_plot_for_single_sim("sims/viking_gfortran_build/stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit/" +
+    #                          "beta_0.04000_investigation", "stella")
+    make_plot_for_single_sim("sims/gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1/beta0_0.0400", "gs2")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")

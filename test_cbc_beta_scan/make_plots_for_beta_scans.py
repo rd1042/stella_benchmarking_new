@@ -298,6 +298,33 @@ def plot_beta_scans_with_resolution_checks():
                 marker_size=8,
                 omega_diff=True
                 )
+    ### Benchmark stella with implicit streaming
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/viking_gfortran_build/" + stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/viking_gfortran_build/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/viking_gfortran_build/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "GS2, hr",
+                "GS2, lr",
+                "stella, hr",
+                "stella, lr + nt64",
+                "stella, vlr + nt64",
+                "stella, vlr + nt32",
+                "stella, lr (str. impl.) + nt64",
+                "stella, vlr (str. impl.) + nt64",
+                "stella, vlr (str. impl.) + nt32",
+                ],
+                marker_size=8,
+                omega_diff=True
+                )
 
     # make_beta_plots_from_pickles(
     #             [

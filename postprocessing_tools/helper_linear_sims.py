@@ -685,7 +685,7 @@ def get_abs(re_part, im_part):
 
     # There's a risk that the real and imaginary
     # components separately are finite, but the abs(value) is not.
-    scaling_val = max(re_part)
+    scaling_val = np.max(abs(re_part))
     re_part = re_part/scaling_val; im_part = im_part/scaling_val
     abs_val = np.sqrt(re_part**2 + im_part**2)
     return abs_val * scaling_val
