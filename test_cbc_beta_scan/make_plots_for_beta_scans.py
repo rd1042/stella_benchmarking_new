@@ -78,7 +78,8 @@ stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit_fo
 stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit_folder = "stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit"
 stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit_folder = "stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit"
 stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit_folder = "stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit"
-
+stella_beta_scan_bespoke_explicit_folder = "stella_bespoke_explicit"
+stella_beta_scan_bespoke_stream_implicit_folder = "stella_bespoke_str_impl"
 
 def get_sim_longnames(folder_longname):
     """ """
@@ -451,6 +452,118 @@ def plot_beta_scans_with_resolution_checks():
 
     return
 
+def make_beta_scan_plots_for_ipp_greifswald_talk():
+    """ """
+
+    def make_beta_plots_from_pickles_for_talk(pickle_longnames, labels,
+                                        marker_size=1, lw=1, omega_diff=False):
+        """Either plot Omega(beta), or, if omega_diff=True, plot (Omega-Omega_ref) (beta),
+        where Omega_ref is taken from the first pickle. """
+
+        marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
+        fig = plt.figure(figsize=(12,8))
+        ax1 = fig.add_subplot(211)
+        ax2 = fig.add_subplot(212, sharex=ax1)
+
+        for folder_idx, pickle_longname in enumerate(pickle_longnames):
+            myfile = open(pickle_longname, "rb")
+            [beta_vals, gamma_vals, omega_vals] = pickle.load(myfile)
+            myfile.close()
+            if not omega_diff:
+                ax1.plot(beta_vals, omega_vals, label=labels[folder_idx], marker=marker_list[folder_idx], markersize=marker_size, lw=lw, mfc="none",)
+                ax2.plot(beta_vals, gamma_vals, label=labels[folder_idx], marker=marker_list[folder_idx], markersize=marker_size, lw=lw, mfc="none",)
+            else:
+                if folder_idx==0:
+                    # This is the reference beta
+                    beta_ref = beta_vals
+                    gamma_ref = gamma_vals
+                    omega_ref = omega_vals
+                ## Whether or not this is the reference beta scan, plot Omega-Omega_ref
+                # Find where beta vals match.
+                beta_to_compare = []
+                gamma_diff = []
+                omega_diff = []
+                for beta_idx, beta_val in enumerate(beta_vals):
+                    ## Find if the beta val is within a small tolerance of any
+                    ## beta_ref vals
+                    closest_beta_ref_idx = np.argmin(abs(beta_ref - beta_val))
+                    if abs(beta_ref[closest_beta_ref_idx] - beta_val) < 1e-6:
+                        beta_to_compare.append(beta_val)
+                        gamma_diff.append(gamma_vals[beta_idx] - gamma_ref[closest_beta_ref_idx])
+                        omega_diff.append(omega_vals[beta_idx] - omega_ref[closest_beta_ref_idx])
+                ax1.plot(beta_to_compare, np.array(omega_diff)*100, label=labels[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size, lw=lw)
+                ax2.plot(beta_to_compare, np.array(gamma_diff)*100, label=labels[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size, lw=lw)
+
+        label_fontsize = 14
+
+        for ax in [ax1, ax2]:
+            ax.grid(True)
+            ax.tick_params("x", which="both", labelsize=label_fontsize)
+            ax.tick_params("y", which="both", labelsize=label_fontsize)
+            #ax.set_yticks(fontsize=label_fontsize)
+        ax1.tick_params("x", which="both", labelbottom=False)
+        my_legendfontsize = 14
+        my_fontsize = 20
+        my_rotation=70
+        my_padding = 20
+        ax1.legend(loc="best", fontsize=my_legendfontsize)
+        if not omega_diff:
+            ax1.set_ylabel(r"frequency $\omega$", fontsize=my_fontsize, rotation=my_rotation, labelpad=my_padding)
+            ax2.set_ylabel(r"growth rate $\gamma$", fontsize=my_fontsize, rotation=my_rotation, labelpad=my_padding)
+            save_name = "for_ipp_a.png"
+        else:
+            save_name = "for_ipp_b.png"
+            ax1.set_ylabel(r"$\Delta\omega (\%)$", fontsize=my_fontsize, labelpad=my_padding, rotation=my_rotation)
+            ax2.set_ylabel(r"$\Delta\gamma (\%)$", fontsize=my_fontsize, labelpad=my_padding, rotation=my_rotation)
+        ax2.set_xlabel(r"$\beta$", fontsize=my_fontsize)
+        plt.tight_layout()
+        plt.savefig(save_name)
+        plt.close()
+
+        return
+    ## ky=0.5. Trying a few things out
+    make_beta_plots_from_pickles_for_talk(
+                [
+                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_bespoke_explicit_folder + "/beta_gamma_omega.pickle",
+                # "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_bespoke_stream_implicit_folder + "/beta_gamma_omega.pickle",
+                # "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "GS2",
+                "stella, fully explicit (RK3)",
+                # "stella, vlr + nt32",
+                "stella, streaming implicit",
+                # "stella, vlr (str. impl.) + nt32",
+                ],
+                marker_size=10,
+                lw=3,
+                omega_diff=False
+                )
+    make_beta_plots_from_pickles_for_talk(
+                [
+                "sims/" + gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_bespoke_explicit_folder + "/beta_gamma_omega.pickle",
+                # "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + stella_beta_scan_bespoke_stream_implicit_folder + "/beta_gamma_omega.pickle",
+                # "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "GS2",
+                "stella, fully explicit (RK3)",
+                # "stella, vlr + nt32",
+                "stella, streaming implicit",
+                # "stella, vlr (str. impl.) + nt32",
+                ],
+                marker_size=10,
+                lw=3,
+                omega_diff=True
+                )
+    ### Benchmark stella with implicit streaming
+
+    return
+
 def plot_beta_scans_with_resolution_checks_for_tdotp():
     """ """
 
@@ -616,5 +729,6 @@ if __name__ == "__main__":
     # plot_different_beta_scans()
     # plot_stella_scan_vs_gs2_pickle()
     # plot_stella_scan_vs_gs2_pickle_for_poster()
-    plot_beta_scans_with_resolution_checks()
+    # plot_beta_scans_with_resolution_checks()
     # plot_beta_scans_with_resolution_checks_for_tdotp()
+    make_beta_scan_plots_for_ipp_greifswald_talk()
