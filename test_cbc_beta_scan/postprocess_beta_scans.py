@@ -24,6 +24,7 @@ def get_beta_from_outnc_longname(outnc_longname):
     sim_shortname = re.split("/", outnc_longname)[-1]
     sim_shortname = re.split(".out.nc", sim_shortname)[0]
     beta_str = re.split("beta_", sim_shortname)[-1]
+    beta_str = re.split("_", beta_str)[0]
     return float(beta_str)
 
 def make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable):
