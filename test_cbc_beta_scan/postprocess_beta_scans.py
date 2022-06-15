@@ -305,5 +305,5 @@ if __name__ == "__main__":
     # make_plot_for_single_sim("sims/gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1/beta0_0.0400", "gs2")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar1_streaming_implicit", "stella")
     # postprocess_folder(gfort_build + "stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_streaming_implicit", "stella")
-    postprocess_folder("stella_bespoke_explicit", "stella")
+    # postprocess_folder("stella_bespoke_explicit", "stella")
     postprocess_folder("stella_bespoke_str_impl", "stella")
