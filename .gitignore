@@ -51,4 +51,5 @@
 !test_cbc_beta_scan/sims/viking_gfortran_build/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/*.pickle
 !test_cbc_beta_scan/sims/viking_gfortran_build/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/*.sh
 !test_cbc_beta_scan/sims/viking_gfortran_build/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/template*
+!test_cbc_beta_scan/sims/beta_0.04000_investigation/*.in
 

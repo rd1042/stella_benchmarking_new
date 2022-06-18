@@ -517,8 +517,9 @@ def make_beta_scan_plots_for_ipp_greifswald_talk():
             ax2.set_ylabel(r"$\Delta\gamma (\%)$", fontsize=my_fontsize, labelpad=my_padding, rotation=my_rotation)
         ax2.set_xlabel(r"$\beta$", fontsize=my_fontsize)
         plt.tight_layout()
-        plt.savefig(save_name)
-        plt.close()
+        plt.show()
+        # plt.savefig(save_name)
+        # plt.close()
 
         return
     ## ky=0.5. Trying a few things out
