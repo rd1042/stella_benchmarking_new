@@ -260,7 +260,6 @@ def get_phiz_data_gs2(sim_longname):
     except FileNotFoundError:
         return get_phiz_data_gs2_outnc(sim_longname)
 
-
 def get_phiz_data_gs2_outnc(sim_longname):
     """ """
     theta, phi = extract_data_from_ncdf((sim_longname + ".out.nc"), "theta","phi")

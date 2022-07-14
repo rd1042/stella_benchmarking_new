@@ -18,6 +18,7 @@ from helper_ncdf import view_ncdf_variables
 from extract_sim_data import get_omega_data, get_phiz_data, get_aparz_data, get_bparz_data
 from plotting_helper import plot_phi_z_for_sim, plot_apar_z_for_sim, plot_bpar_z_for_sim
 
+
 def get_beta_from_outnc_longname(outnc_longname):
     """ """
 
