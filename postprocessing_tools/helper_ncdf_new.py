@@ -427,7 +427,12 @@ def plot_multiple_growth_rates(sims, title, save_loc="./", labels=[]):
     #plt.close()
     return
 
-
+def view_ncdf_variables_with_xarray(sim_name):
+    """View the names all variables in the netcdf file"""
+    data = xr.open_dataset(sim_name)
+    print(list(data.keys()))
+    return
+    
 if __name__ == "__main__":
     outnc_longname = LINEAR_SIMS + "lowq0_psinkx_scan_millerparams_1/run_psin_0.15_ky_0.15_kx_0.03/input.out.nc"
     view_ncdf_variables(outnc_longname)
