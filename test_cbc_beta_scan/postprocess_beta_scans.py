@@ -77,7 +77,6 @@ def make_field_z_plot_for_stella(sim_longname, z, abs_phi, abs_apar, abs_bpar):
     save_name = sim_longname + "_fields_z.png"
     plt.savefig(save_name)
     plt.close()
-
     return
 
 def postprocess_folder_gs2(folder_shortname, param_scanned="beta"):
@@ -203,7 +202,6 @@ def postprocess_folder(folder_shortname, sim_type, param_scanned="beta"):
         postprocess_folder_gs2(folder_shortname, param_scanned=param_scanned)
     elif sim_type == "stella":
         postprocess_folder_stella(folder_shortname, param_scanned=param_scanned)
-
     return
 
 def make_plot_for_single_sim(sim_longname, sim_type):
@@ -265,7 +263,6 @@ def make_plot_for_single_sim(sim_longname, sim_type):
         # save_name = sim_longname + "_fields_z.png"
         # plt.savefig(save_name)
         # plt.close()
-
     return
 
 if __name__ == "__main__":
