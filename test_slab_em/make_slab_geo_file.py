@@ -4,12 +4,9 @@
 import re
 import numpy as np
 
-if __name__ == "__main__":
-    print("Hello world!")
-    slab_geo_template = "stella_sims/input_cbc.geometry"
-    slab_geo_outfile = "stella_sims/unsheared_slab.geometry"
-
-    template_file = open(slab_geo_template, "r")
+def make_unsheared_slab_geo(template, outfile_name):
+    """ """
+    template_file = open(template, "r")
     template_lines = template_file.readlines()
     template_file.close()
 
@@ -27,8 +24,8 @@ if __name__ == "__main__":
         slab_geo_line=values[0].rjust(nchars) + values[1].rjust(nchars) + values[2].rjust(nchars)
         # Replace bmag, which is values[3]
         slab_geo_line+= "0.1000E+01".rjust(nchars)
-        # gradpar unchanged
-        slab_geo_line+= values[4].rjust(nchars)
+        # Replace gradpar with 1
+        slab_geo_line+= "0.1000E+01".rjust(nchars)
         ## Replace gd21, gds22, gds23, which are values[5, 6, 7]
         ## See E. Highcock thesis for these quantities
         # gds2 = 1
@@ -43,6 +40,16 @@ if __name__ == "__main__":
         slab_geo_line+="\n"
         slab_geo_text+=slab_geo_line
 
-    slab_geo_file = open(slab_geo_outfile, "w")
+    slab_geo_file = open(outfile_name, "w")
     slab_geo_file.write(slab_geo_text)
     slab_geo_file.close()
+
+    return
+
+if __name__ == "__main__":
+    print("Hello world!")
+    # slab_geo_template = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar1/input_fully_explicit_ntheta72.geometry"
+    # slab_geo_outfile = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar1/unsheared_slab_ntheta72.geometry"
+    slab_geo_template = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar1/input_ntheta144_dummy.geometry"
+    slab_geo_outfile = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar1/unsheared_slab_ntheta144.geometry"
+    make_unsheared_slab_geo(slab_geo_template, slab_geo_outfile)
