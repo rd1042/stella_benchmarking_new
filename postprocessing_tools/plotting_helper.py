@@ -3,7 +3,7 @@
 from extract_sim_data import get_omega_data, get_phiz_data, get_aparz_data, get_bparz_data
 from extract_sim_data import find_apar_phi_ratio, find_bpar_phi_ratio
 from extract_sim_data import get_gs2_omega_from_plaintext, get_omega_data_gs2_outnc
-from helper_ncdf import view_ncdf_variables, extract_data_from_ncdf, extract_data_from_ncdf_with_xarray
+from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf, extract_data_from_ncdf_with_xarray
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import cycle

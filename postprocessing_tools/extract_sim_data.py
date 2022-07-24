@@ -1,6 +1,6 @@
 """ """
 
-from helper_ncdf import view_ncdf_variables, extract_data_from_ncdf
+from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf
 import numpy as np
 import sys
 import re
