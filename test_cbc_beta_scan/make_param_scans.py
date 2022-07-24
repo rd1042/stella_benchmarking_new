@@ -361,21 +361,21 @@ def construct_stella_beta_scans_fapar1_fbpar0_streaming_mirror_implicit_with_res
 
     return
 
-def construct_stella_beta_scans_fapar1_fbpar0_streaming_mirror_implicit_with_resolution_checks():
+def construct_beta_scans_fapar1_fbpar0_streaming_mirror_implicit_with_resolution_checks():
     """ """
     beta_vals = np.linspace(0.0, 0.04, 9)
     construct_beta_scan(stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder,
                           beta_vals, "stella")
-    construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder,
-                          beta_vals, "stella")
-    construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder,
-                          beta_vals, "stella")
-    construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder,
-                          beta_vals, "stella")
-    construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_mirror_implicit_folder,
-                          beta_vals, "stella")
-    construct_beta_scan(stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_mirror_implicit_folder,
-                          beta_vals, "stella")
+    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder,
+    #                       beta_vals, "stella")
+    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder,
+    #                       beta_vals, "stella")
+    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder,
+    #                       beta_vals, "stella")
+    # construct_beta_scan(stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_mirror_implicit_folder,
+    #                       beta_vals, "stella")
+    # construct_beta_scan(stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_mirror_implicit_folder,
+    #                       beta_vals, "stella")
 
     return
 
@@ -396,6 +396,6 @@ if __name__ == "__main__":
     # make_beta_scans_for_stella_2spec()
     # construct_ky_beta_scans_with_resolution_checks()
     # construct_beta_scans_fapar1_fbpar0_streaming_implicit_with_resolution_checks()
-    # construct_beta_scans_fapar1_fbpar0_streaming_mirror_implicit_with_resolution_checks()
+    construct_beta_scans_fapar1_fbpar0_streaming_mirror_implicit_with_resolution_checks()
     # construct_beta_scans_fapar1_fbpar0_explicit_with_resolution_checks()
-    construct_gs2_beta_scans_fapar1_fbpar0()
+    # construct_gs2_beta_scans_fapar1_fbpar0()
