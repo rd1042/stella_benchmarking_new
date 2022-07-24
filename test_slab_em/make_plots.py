@@ -3,7 +3,7 @@
 import sys
 sys.path.append("../postprocessing_tools")
 from plotting_helper import make_beta_scan_plots, make_comparison_plots, plot_gmvus, plot_gzvs
-from helper_ncdf import view_ncdf_variables, extract_data_from_ncdf, extract_data_from_ncdf_with_xarray, view_ncdf_variables_with_xarray
+from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf, extract_data_from_ncdf_with_xarray, view_ncdf_variables_with_xarray
 from extract_sim_data import find_bpar_phi_ratio, find_apar_phi_ratio
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,18 +14,18 @@ import pickle
 
 IMAGE_DIR = "./images/"
 
-basic_em_sim = "stella_sims/input_slab_ky0.1_explicit"
-mandell_beta1_kperp1 = "stella_sims/input_slab_ky0.1_explicit_mandell1"
-mandell_beta1_kperp001_new = "mandell_sims/input_slab_ky0.01_beta1_new"
-mandell_beta1_kperp1_new = "mandell_sims/input_slab_ky1_beta1_new"
-mandell_sf1_kperp1_new = "mandell_sims/input_slab_ky1_sf1_new"
-mandell_sf1_kperp001_new = "mandell_sims/input_slab_ky0.01_sf1_new"
-mandell_sf0002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.002_new"
-mandell_sf00002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.0002_new"
-mandell_sf000002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.00002_new"
-mandell_sf10_kperp001_new = "mandell_sims/input_slab_ky0.01_sf10_new"
-mandell_beta1_kperp1_long_t = "stella_sims/input_slab_ky0.1_explicit_mandell2"
-mandell_beta1_kperp1_long_t_marconi = "mandell_sims/input_slab_ky0.1_beta1"
+# basic_em_sim = "stella_sims/input_slab_ky0.1_explicit"
+# mandell_beta1_kperp1 = "stella_sims/input_slab_ky0.1_explicit_mandell1"
+# mandell_beta1_kperp001_new = "mandell_sims/input_slab_ky0.01_beta1_new"
+# mandell_beta1_kperp1_new = "mandell_sims/input_slab_ky1_beta1_new"
+# mandell_sf1_kperp1_new = "mandell_sims/input_slab_ky1_sf1_new"
+# mandell_sf1_kperp001_new = "mandell_sims/input_slab_ky0.01_sf1_new"
+# mandell_sf0002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.002_new"
+# mandell_sf00002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.0002_new"
+# mandell_sf000002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.00002_new"
+# mandell_sf10_kperp001_new = "mandell_sims/input_slab_ky0.01_sf10_new"
+# mandell_beta1_kperp1_long_t = "stella_sims/input_slab_ky0.1_explicit_mandell2"
+# mandell_beta1_kperp1_long_t_marconi = "mandell_sims/input_slab_ky0.1_beta1"
 
 def examine_sim_output(sim_longname):
     """ """
@@ -280,14 +280,14 @@ def find_ksaw_properties_from_outnc_with_apar(outnc_longname):
     return
 
 def compare_sims(outnc_longnames, sim_types, labels, normalise=False, scatter=False,
-                 title=None):
+                 title=None, include_im = False):
     """ """
 
     t_list = []
     z_list = []
     phi_vs_t_list = []
-    linestyles=((0,(1,0)), (0, (2,2)), (0,(5,1,1,1)), (0,(1,1)))
-    linewidths = [4, 3, 2, 2]
+    linestyles=((0,(1,0)), (0, (2,2)), (0,(5,1,1,1)), (0,(1,1)), (0,(1,0)), (0, (2,2)))
+    linewidths = [4, 4, 3, 3, 2, 2]
     for idx, outnc_longname in enumerate(outnc_longnames):
         if sim_types[idx] == "stella":
             t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'zed', 'phi_vs_t', 'beta')
@@ -311,8 +311,15 @@ def compare_sims(outnc_longnames, sim_types, labels, normalise=False, scatter=Fa
         # print("len(z) = ", len(z))
         # sys.exit()
     fig = plt.figure(figsize=(12,8))
-    ax1 = fig.add_subplot(211)
-    ax2 = fig.add_subplot(212, sharex=ax1)
+    if include_im:
+        ax1 = fig.add_subplot(211)
+        ax2 = fig.add_subplot(212, sharex=ax1)
+        lower_ax = ax2
+        axes = [ax1, ax2]
+    else:
+        ax1 = fig.add_subplot(111)
+        lower_ax = ax1
+        axes = [ax1]
     for idx, outnc_longname in enumerate(outnc_longnames):
         # print("outnc_longname=", outnc_longname)
         t = t_list[idx]; z = z_list[idx]; phi_vs_t = phi_vs_t_list[idx];
@@ -321,48 +328,68 @@ def compare_sims(outnc_longnames, sim_types, labels, normalise=False, scatter=Fa
         ax1.plot(t, phi_vs_t[:,int(len(z)*0.5),0], label=(labels[idx] + ", z=" + str(float(z[int(len(z)*0.5)]))), ls=linestyles[idx], lw=linewidths[idx])
         if scatter:
             ax1.scatter(t, phi_vs_t[:,int(len(z)*0.5),0], marker="x", s=40)
-        ax2.plot(t, phi_vs_t[:,int(len(z)*0.5),1], ls=linestyles[idx], lw=linewidths[idx])
-    ax2.set_xlabel("t")
-    ax2.set_ylabel("Im(phi)")
+        if include_im:
+            ax2.plot(t, phi_vs_t[:,int(len(z)*0.5),1], ls=linestyles[idx], lw=linewidths[idx])
+    lower_ax.set_xlabel("t")
+    if include_im:
+        ax2.set_ylabel("Im(phi)")
     ax1.set_ylabel("Re(phi)")
     ax1.legend(loc="best")
-    for ax in [ax1, ax2]:
+    for ax in axes:
         ax.grid(True)
     if title is not None:
         fig.suptitle(title)
     plt.tight_layout()
     plt.show()
 
-    fig = plt.figure()
-    ax1 = fig.add_subplot(211)
-    ax2 = fig.add_subplot(212, sharex=ax1)
+    fig = plt.figure(figsize=(12,8))
+    if include_im:
+        ax1 = fig.add_subplot(211)
+        ax2 = fig.add_subplot(212, sharex=ax1)
+        lower_ax = ax2
+        axes = [ax1, ax2]
+    else:
+        ax1 = fig.add_subplot(111)
+        lower_ax = ax1
+        axes = [ax1]
     for idx, outnc_longname in enumerate(outnc_longnames):
         t = t_list[idx]; z = z_list[idx]; phi_vs_t = phi_vs_t_list[idx];
         ax1.plot(z, phi_vs_t[0,:,0], label=(labels[idx] + ", t=0"), ls=linestyles[idx], lw=linewidths[idx])
-        ax2.plot(z, phi_vs_t[0,:,1], ls=linestyles[idx], lw=linewidths[idx])
-    ax2.set_xlabel("z")
-    ax2.set_ylabel("Im(phi)")
+        if include_im:
+            ax2.plot(z, phi_vs_t[0,:,1], ls=linestyles[idx], lw=linewidths[idx])
+    lower_ax.set_xlabel("z")
+    if include_im:
+        ax2.set_ylabel("Im(phi)")
     ax1.set_ylabel("Re(phi)")
     ax1.legend(loc="best")
-    for ax in [ax1, ax2]:
+    for ax in axes:
         ax.grid(True)
     if title is not None:
         fig.suptitle(title)
     plt.tight_layout()
     plt.show()
 
-    fig = plt.figure()
-    ax1 = fig.add_subplot(211)
-    ax2 = fig.add_subplot(212, sharex=ax1)
+    fig = plt.figure(figsize=(12,8))
+    if include_im:
+        ax1 = fig.add_subplot(211)
+        ax2 = fig.add_subplot(212, sharex=ax1)
+        lower_ax = ax2
+        axes = [ax1, ax2]
+    else:
+        ax1 = fig.add_subplot(111)
+        lower_ax = ax1
+        axes = [ax1]
     for idx, outnc_longname in enumerate(outnc_longnames):
         t = t_list[idx]; z = z_list[idx]; phi_vs_t = phi_vs_t_list[idx];
         ax1.plot(z, phi_vs_t[-1,:,0], label=(labels[idx] + ", t=tfinal"), ls=linestyles[idx], lw=linewidths[idx])
-        ax2.plot(z, phi_vs_t[-1,:,1], ls=linestyles[idx], lw=linewidths[idx])
-    ax2.set_xlabel("z")
-    ax2.set_ylabel("Im(phi)")
+        if include_im:
+            ax2.plot(z, phi_vs_t[-1,:,1], ls=linestyles[idx], lw=linewidths[idx])
+    lower_ax.set_xlabel("z")
+    if include_im:
+        ax2.set_ylabel("Im(phi)")
     ax1.set_ylabel("Re(phi)")
     ax1.legend(loc="best")
-    for ax in [ax1, ax2]:
+    for ax in axes:
         ax.grid(True)
     if title is not None:
         fig.suptitle(title)
@@ -549,15 +576,7 @@ def benchmark_stella_vs_gs2():
     # gs2_long_sim = "sims/gs2_ky1_beta1_zero_gradients_fapar0_fbpar1/input_long.out.nc"
     # compare_sims([gs2_long_sim, stella_sim], ["gs2", "stella"], ["gs2", "stella (explicit)"], normalise=True)
     #
-    gs2_long_sim = "sims/gs2_ky1_beta1_zero_gradients_fapar1_fbpar0/input_long.out.nc"
-    stella_sim = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_fully_explicit.out.nc"
-    stella_sim_str_impl = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_streaming.out.nc"
-    stella_sim_str_impl_new = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_streaming_init_matching_gs2.out.nc"
-    compare_sims([gs2_long_sim, stella_sim, stella_sim_str_impl, stella_sim_str_impl_new],
-                 ["gs2", "stella", "stella", "stella", "stella"],
-                 ["gs2", "stella (explicit)", "stella (implicit)", "stella (implicit, gs2-like init)"],
-                 normalise=False,
-                 title="fapar=1, fbpar=0")
+
 
     # gs2_long_sim = "sims/gs2_ky1_beta1_zero_gradients_fapar0_fbpar0/input_long.out.nc"
     # stella_sim = "sims/stella_ky1_beta1_zero_gradients_fapar0_fbpar0/input_fully_explicit.out.nc"
@@ -574,6 +593,40 @@ def benchmark_stella_vs_gs2():
     #              ["stella", "stella", "stella"],
     #              ["nwrite=10", "nwrite=25", "nwrite=100"],
     #               normalise=False, scatter=True)
+    return
+
+def benchmark_stella_vs_gs2_fapar1_fbpar0():
+    """ """
+    gs2_sim = "sims/gs2_ky1_beta1_zero_gradients_fapar1_fbpar0/input_long.out.nc"
+    gs2_sim_tup0 = "sims/gs2_ky1_beta1_zero_gradients_fapar1_fbpar0/input_long_fexpr_0.5.out.nc"
+    gs2_sim_tup0_zup0 = "sims/gs2_ky1_beta1_zero_gradients_fapar1_fbpar0/input_long_fexpr_0.5_bakdif0.out.nc"
+    stella_sim = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_fully_explicit.out.nc"
+    stella_sim_str_impl = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_streaming.out.nc"
+    stella_sim_str_impl_zup0_tup0 = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_streaming_zup0_tup0.out.nc"
+    stella_sim_str_impl_zup0 = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_streaming_zup0.out.nc"
+    stella_sim_str_impl_tup0 = "sims/stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_streaming_tup0.out.nc"
+    compare_sims([gs2_sim, stella_sim, stella_sim_str_impl,
+                  stella_sim_str_impl_zup0, stella_sim_str_impl_tup0,
+                  stella_sim_str_impl_zup0_tup0],
+                 ["gs2", "stella", "stella", "stella", "stella",
+                 "stella", "stella",],
+                 ["gs2", "stella (explicit)", "stella (implicit, zupw=tupw=0.02)",
+                  "stella (implicit, zupw=0, tupw=0.02)", "stella (implicit, zupw=0.2, tupw=0)",
+                  "stella (implicit, zupw=tupw=0)"],
+                 normalise=False,
+                 title="fapar=1, fbpar=0")
+
+    compare_sims([gs2_sim, gs2_sim_tup0, gs2_sim_tup0_zup0,
+                  stella_sim_str_impl,
+                  stella_sim_str_impl_zup0_tup0],
+                 ["gs2", "gs2", "gs2", "stella", "stella",
+                  ],
+                 ["gs2", "gs2 (tupw=0)", "gs2 (zupw=tupw=0)",
+                  "stella (implicit, zupw=0, tupw=0.02)",
+                  "stella (implicit, zupw=tupw=0)"],
+                 normalise=False,
+                 title="fapar=1, fbpar=0")
+
     return
 
 def examine_second_sim():
@@ -660,7 +713,8 @@ if __name__ == "__main__":
     # find_ksaw_properties_from_outnc(mandell_sf10_kperp001_new + ".out.nc")
     # examine_gs2_sim()
 
-    benchmark_stella_vs_gs2()
+    # benchmark_stella_vs_gs2()
+    benchmark_stella_vs_gs2_fapar1_fbpar0()
     # view_ncdf_variables_with_xarray("sims/stella_ky1_beta1_zero_gradients/input_fully_explicit.out.nc")
     # make_plots_for_movies("sims/stella_ky1_beta1_zero_gradients/input_fully_explicit.out.nc",
     #                        "stella", "movies/stella_ky1_beta1_zero_gradients")
