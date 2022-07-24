@@ -4,12 +4,13 @@ import sys
 sys.path.append("../postprocessing_tools")
 from plotting_helper import make_comparison_plots, plot_gmvus, plot_gzvs, make_beta_scan_plots
 from plotting_helper import make_beta_scan_plots_for_poster
-from helper_ncdf import view_ncdf_variables, extract_data_from_ncdf
+from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf
 import matplotlib.pyplot as plt
 import numpy as np
 import glob
 import re
 import pickle
+import make_param_scans as mps
 
 ## Define folder names here
 # stella
@@ -726,10 +727,135 @@ def plot_beta_scans_with_resolution_checks_for_tdotp():
 
     return
 
+def compare_fapar1_fbpar0_beta_scan():
+    """ """
+
+    ######################## fully explicit ################################
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar0_explicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar0_explicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar0_explicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_explicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "stella (explicit), nt=32",
+                "stella (explicit), nt=64",
+                "stella (explicit), nt=128",
+                "stella (explicit), nt=256",
+                "gs2, np=3, nt=48",
+                "gs2, np=4, nt=64",
+                ],
+                omega_diff=False
+                                )
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar0_explicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_explicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_explicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_explicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "stella (explicit), nt=64",
+                "stella (explicit), nt=64, nvpa=24, nmu=18",
+                "stella (explicit), np=4, nt=64  nvpa=36, nmu=24",
+                "stella (explicit), nt=256",
+                "gs2, np=3, nt=48",
+                "gs2, np=4, nt=64",
+                ],
+                omega_diff=False
+                            )
+    ######################## streaming implicit ################################
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "stella (str. implicit), nt=32",
+                "stella (str. implicit), nt=64",
+                "stella (str. implicit), nt=128",
+                "stella (str. implicit), nt=256",
+                "gs2, np=3, nt=48",
+                "gs2, np=4, nt=64",
+                ],
+                omega_diff=False
+                                )
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "stella (str. implicit), nt=32",
+                "stella (str. implicit), nt=64, nvpa=24, nmu=18",
+                "stella (str. implicit), np=4, nt=64  nvpa=36, nmu=24",
+                "stella (str. implicit), nt=256",
+                "gs2, np=3, nt=48",
+                "gs2, np=4, nt=64",
+                ],
+                omega_diff=False
+                                )
+    ######################## streaming + mirror implicit #######################
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "stella (str. + m. implicit), nt=32",
+                "stella (str. + m. implicit), nt=64",
+                "stella (str. + m. implicit), nt=128",
+                "stella (str. + m. implicit), nt=256",
+                "gs2, np=3, nt=48",
+                "gs2, np=4, nt=64",
+                ],
+                omega_diff=False
+                                )
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "stella (str. + m. implicit), nt=32",
+                "stella (str. + m. implicit), nt=64, nvpa=24, nmu=18",
+                "stella (str. + m. implicit), np=4, nt=64  nvpa=36, nmu=24",
+                "stella (str. + m. implicit), nt=256",
+                "gs2, np=3, nt=48",
+                "gs2, np=4, nt=64",
+                ],
+                omega_diff=False
+                                )
+
+
+    return
+
 if __name__ == "__main__":
     # plot_different_beta_scans()
     # plot_stella_scan_vs_gs2_pickle()
     # plot_stella_scan_vs_gs2_pickle_for_poster()
     # plot_beta_scans_with_resolution_checks()
     # plot_beta_scans_with_resolution_checks_for_tdotp()
-    make_beta_scan_plots_for_ipp_greifswald_talk()
+    # make_beta_scan_plots_for_ipp_greifswald_talk()
+    compare_fapar1_fbpar0_beta_scan()

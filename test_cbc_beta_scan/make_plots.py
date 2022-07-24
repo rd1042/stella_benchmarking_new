@@ -8,6 +8,7 @@ from helper_ncdf import view_ncdf_variables, extract_data_from_ncdf
 from extract_sim_data import find_bpar_phi_ratio, find_apar_phi_ratio
 import matplotlib.pyplot as plt
 import numpy as np
+import make_param_scans as mps
 
 IMAGE_DIR = "./images/"
 ### Give the names of all the sims here - avoids needing to type them out
@@ -1017,6 +1018,8 @@ def make_all_plots():
     analyse_fbpar0_beta0001_results()
 
     return
+
+
 
 if __name__ == "__main__":
     ## Compare
