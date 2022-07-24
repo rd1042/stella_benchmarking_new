@@ -1,7 +1,7 @@
 """There are several different ways to calculate Omega, and
 the 'best way' is undetermined."""
 
-from helper_ncdf import extract_data_from_ncdf
+from helper_ncdf_new import extract_data_from_ncdf
 import numpy as np
 from scipy.optimize import curve_fit
 import math
