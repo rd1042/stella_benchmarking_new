@@ -383,10 +383,10 @@ def construct_beta_scans_fapar1_fbpar0_streaming_mirror_implicit_with_resolution
 def construct_gs2_beta_scans_fapar1_fbpar0():
     """ """
     beta_vals = np.linspace(0.0, 0.04, 9)
-    # construct_beta_scan(gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder,
-    #                       beta_vals, "gs2")
-    # construct_beta_scan(gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder,
-    #                       beta_vals, "gs2")
+    construct_beta_scan(gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder,
+                          beta_vals, "gs2")
+    construct_beta_scan(gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder,
+                          beta_vals, "gs2")
     construct_beta_scan(gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar0_folder,
                           beta_vals, "gs2")
 
