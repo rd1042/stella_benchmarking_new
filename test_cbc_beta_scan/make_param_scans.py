@@ -418,7 +418,7 @@ if __name__ == "__main__":
     # make_beta_scans_for_stella_2spec()
     # construct_ky_beta_scans_with_resolution_checks()
     # construct_beta_scans_fapar1_fbpar0_streaming_implicit_with_resolution_checks()
-    construct_beta_scans_fapar1_fbpar0_zupw0_streaming_implicit_with_resolution_checks()
+    construct_stella_beta_scans_fapar1_fbpar0_zupw0_streaming_implicit_with_resolution_checks()
     # construct_beta_scans_fapar1_fbpar0_streaming_mirror_implicit_with_resolution_checks()
     # construct_beta_scans_fapar1_fbpar0_explicit_with_resolution_checks()
     # construct_gs2_beta_scans_fapar1_fbpar0()
