@@ -318,14 +318,19 @@ if __name__ == "__main__":
     # postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_implicit_folder, "stella")
     # postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_implicit_folder, "stella")
     # postprocess_folder(mps.stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_implicit_folder, "stella")
-    
+
     # postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
-    postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
-    postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
-    postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
-    postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
-    postprocess_folder(mps.stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
+    # postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
+    # postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
+    # postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
+    # postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
+    # postprocess_folder(mps.stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_mirror_implicit_folder, "stella")
+
+    postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar0_streaming_implicit_folder, "stella")
+    postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar0_streaming_implicit_folder, "stella")
+    postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_zupw0_fapar1_fbpar0_streaming_implicit_folder, "stella")
+    postprocess_folder(mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_zupw0_fapar1_fbpar0_streaming_implicit_folder, "stella")
 
     # postprocess_folder(mps.gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder, "gs2")
     # postprocess_folder(mps.gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder, "gs2")
-    postprocess_folder(mps.gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar0_folder, "gs2")
+    # postprocess_folder(mps.gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar0_folder, "gs2")
