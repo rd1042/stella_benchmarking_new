@@ -167,7 +167,7 @@ def make_beta_plots_from_pickles(pickle_longnames, labels, marker_size=1, omega_
     where Omega_ref is taken from the first pickle. """
 
     marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
-    fig = plt.figure()
+    fig = plt.figure(figsize=(14,16))
     ax1 = fig.add_subplot(211)
     ax2 = fig.add_subplot(212, sharex=ax1)
 
@@ -786,6 +786,25 @@ def compare_fapar1_fbpar0_beta_scan():
                 "stella (str. implicit), nt=64",
                 "stella (str. implicit), nt=128",
                 "stella (str. implicit), nt=256",
+                "gs2, np=3, nt=48",
+                "gs2, np=4, nt=64",
+                ],
+                omega_diff=False
+                                )
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_zupw0_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_zupw0_fapar1_fbpar0_streaming_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_fapar1_fbpar0_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "stella (str. implicit, zupw=0), nt=32",
+                "stella (str. implicit, zupw=0), nt=64",
+                "stella (str. implicit, zupw=0), nt=128",
+                "stella (str. implicit, zupw=0), nt=256",
                 "gs2, np=3, nt=48",
                 "gs2, np=4, nt=64",
                 ],
