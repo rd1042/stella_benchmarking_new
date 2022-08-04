@@ -17,10 +17,9 @@ import xarray as xr
 
 sys.path.append("../postprocessing_tools")
 import helper_linear_sims as help_lin
-from helper_ncdf import view_ncdf_variables
 from extract_sim_data import get_omega_data, get_phiz_data, get_aparz_data, get_bparz_data
 from plotting_helper import plot_phi_z_for_sim, plot_apar_z_for_sim, plot_bpar_z_for_sim
-from helper_ncdf import view_ncdf_variables
+from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf_with_xarray
 import plot_2d_utils as plot2dutils
 
 comparison_folder = "sims/beta_0.04000_investigation/"
@@ -38,6 +37,8 @@ def make_comparison(outnc_longnames, gamma_buffer = 0.01, omega_buffer = 0.01,lw
     phiz_list = []
     aparz_list = []
     bparz_list = []
+    bmag_list = []
+    bmag_z_list = []
     for outnc_longname in outnc_longnames:
         ## For each sim, we want to compare:
         # Mode structures
@@ -52,12 +53,18 @@ def make_comparison(outnc_longnames, gamma_buffer = 0.01, omega_buffer = 0.01,lw
                 sim_type = "gs2"
                 # print("sim_name: ", sim_shortname)
                 # view_ncdf_variables(outnc_longname)
+                bmag, bmag_z = extract_data_from_ncdf_with_xarray(outnc_longname, "bmag", "theta")
+                bmag_list.append(bmag)
+                bmag_z_list.append(bmag_z)
             else:
                 sim_type = "stella"
                 # print("sim_name: ", sim_shortname)
                 # data = xr.open_dataset(outnc_longname)
                 # print("data.keys = ", data.keys())
                 # sys.exit()
+                bmag, bmag_z = extract_data_from_ncdf_with_xarray(outnc_longname, "bmag", "zed")
+                bmag_list.append(bmag)
+                bmag_z_list.append(bmag_z)
             time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, sim_type)
             #try:
             z, real_phi, imag_phi = get_phiz_data(sim_longname, sim_type)
@@ -89,14 +96,14 @@ def make_comparison(outnc_longnames, gamma_buffer = 0.01, omega_buffer = 0.01,lw
             # Probably caused by an incomplete simulation.
             pass
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(14,12))
     ax1 = fig.add_subplot(211)
     ax2 = fig.add_subplot(212, sharex=ax1)
     omega_linestyles=cycle(["-","--","-."])
     gamma_linestyles=cycle(["-","--","-."])
     for sim_idx, sim_shortname in enumerate(sim_shortnames):
-        ax1.plot(tvals_list[sim_idx]-tend_list[sim_idx], omega_list[sim_idx], label=sim_shortname, ls=next(omega_linestyles))
-        ax2.plot(tvals_list[sim_idx]-tend_list[sim_idx], gamma_list[sim_idx], label=sim_shortname, ls=next(gamma_linestyles))
+        ax1.plot(tvals_list[sim_idx]-tend_list[sim_idx], omega_list[sim_idx], label=sim_shortname, ls=next(omega_linestyles),lw=lw)
+        ax2.plot(tvals_list[sim_idx]-tend_list[sim_idx], gamma_list[sim_idx], label=sim_shortname, ls=next(gamma_linestyles),lw=lw)
 
     max_omega_final = np.max(np.array(omega_final_list))
     min_omega_final = np.min(np.array(omega_final_list))
@@ -115,7 +122,22 @@ def make_comparison(outnc_longnames, gamma_buffer = 0.01, omega_buffer = 0.01,lw
 
     plt.show()
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(14,12))
+    ax1 = fig.add_subplot(111)
+
+    bmag_linestyles = ["-", "--", ":"]
+    for sim_idx, sim_shortname in enumerate(sim_shortnames[:2]):
+        ax1.plot(bmag_z_list[sim_idx]/np.pi, bmag_list[sim_idx], label=sim_shortname, ls=bmag_linestyles[sim_idx], lw=lw)
+
+    ax1.legend(loc="best")
+    ax1.set_xlabel(r"$z/\pi$")
+    ax1.set_ylabel(r"$B$")
+    for ax in [ax1]:
+        ax.grid(True)
+
+    plt.show()
+
+    fig = plt.figure(figsize=(14,12))
     ax1 = fig.add_subplot(311)
     ax2 = fig.add_subplot(312, sharex=ax1)
     ax3 = fig.add_subplot(313, sharex=ax1)
@@ -123,9 +145,9 @@ def make_comparison(outnc_longnames, gamma_buffer = 0.01, omega_buffer = 0.01,lw
     apar_linestyles=cycle(["-","--","-."])
     bpar_linestyles=cycle(["-","--","-."])
     for sim_idx, sim_shortname in enumerate(sim_shortnames):
-        ax1.plot(zvals_list[sim_idx]/np.pi, phiz_list[sim_idx], label=sim_shortname, ls=next(phi_linestyles))
-        ax2.plot(zvals_list[sim_idx]/np.pi, aparz_list[sim_idx], label=sim_shortname, ls=next(apar_linestyles))
-        ax3.plot(zvals_list[sim_idx]/np.pi, bparz_list[sim_idx], label=sim_shortname, ls=next(bpar_linestyles))
+        ax1.plot(zvals_list[sim_idx]/np.pi, phiz_list[sim_idx], label=sim_shortname, ls=next(phi_linestyles),lw=lw)
+        ax2.plot(zvals_list[sim_idx]/np.pi, aparz_list[sim_idx], label=sim_shortname, ls=next(apar_linestyles),lw=lw)
+        ax3.plot(zvals_list[sim_idx]/np.pi, bparz_list[sim_idx], label=sim_shortname, ls=next(bpar_linestyles),lw=lw)
 
     ax1.legend(loc="best")
     ax3.set_xlabel(r"$z/\pi$")
@@ -181,6 +203,84 @@ def compare_ntheta32_vs_64_sims():
     # Flatten into a 1D list
     outnc_longnames =  [element for sublist in outnc_lists for element in sublist]
     make_comparison(outnc_longnames)
+    return
+
+def compare_explicit_with_dgdz_fbpar0():
+    """ """
+    # See GS2 and stella ntheta=32 and ntheta=64 (fiducial points only)
+    outnc_longnames_1 = glob.glob(comparison_folder + "gs2_fbpar0/*.out.nc")
+    outnc_longnames_6 = glob.glob(comparison_folder + "stella_explicit_centered_dgdz_fbpar0/*.out.nc")
+    outnc_lists = [outnc_longnames_1,
+                   outnc_longnames_6
+                   ]
+    # Flatten into a 1D list
+    outnc_longnames =  [element for sublist in outnc_lists for element in sublist]
+    make_comparison(outnc_longnames)
+    return
+
+def compare_implicit_explicit_with_dgdz():
+    """ """
+    # See GS2 and stella ntheta=32 and ntheta=64 (fiducial points only)
+    outnc_longnames_1 = glob.glob(comparison_folder + "gs2/*.out.nc")
+    outnc_longnames_2 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32.out.nc"]
+    outnc_longnames_3 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32_zupwind0.out.nc"]
+    outnc_longnames_3 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32_zupwind0_vpaupwind0.out.nc"]
+    outnc_longnames_4 = [comparison_folder + "stella_str_impl_ntheta64/stella_str_impl_ntheta64.out.nc"]
+    outnc_longnames_5 = [comparison_folder + "stella_explicit_centered_dgdz/stella_explict_zupw1.out.nc" ,
+                         comparison_folder + "stella_explicit_centered_dgdz/stella_explict_zupw0.3.out.nc" ]
+    outnc_longnames_6 = glob.glob(comparison_folder + "stella_explicit_centered_dgdz/*.out.nc")
+    ### This compares all the explcit sims to reference gs2 + reference stella implciit
+    outnc_lists = [outnc_longnames_1,
+                   outnc_longnames_2,
+                   #outnc_longnames_3,
+                   #outnc_longnames_4,
+                   #outnc_longnames_5,
+                   outnc_longnames_6
+                   ]
+    # Flatten into a 1D list
+    outnc_longnames =  [element for sublist in outnc_lists for element in sublist]
+    make_comparison(outnc_longnames)
+
+    ### This compares all the 2 reference explcit sims & reference gs2 to stella implicit options
+    outnc_lists = [outnc_longnames_1,
+                   outnc_longnames_2,
+                   outnc_longnames_3,
+                   outnc_longnames_4,
+                   outnc_longnames_5,
+                   #outnc_longnames_6
+                   ]
+    # Flatten into a 1D list
+    outnc_longnames =  [element for sublist in outnc_lists for element in sublist]
+    make_comparison(outnc_longnames)
+    return
+
+def compare_implicit_explicit_with_dgdz_src_h():
+    """ """
+    # See GS2 and stella ntheta=32 and ntheta=64 (fiducial points only)
+    outnc_longnames_1 = glob.glob(comparison_folder + "gs2/*.out.nc")
+    outnc_longnames_2 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32.out.nc"]
+    outnc_longnames_3 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32_zupwind0.out.nc"]
+    outnc_longnames_3 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32_zupwind0_vpaupwind0.out.nc"]
+    outnc_longnames_4 = [comparison_folder + "stella_str_impl_ntheta64/stella_str_impl_ntheta64.out.nc"]
+    outnc_longnames_5 = [comparison_folder + "stella_explicit_centered_dgdz/stella_explict_zupw1.out.nc" ,
+                         comparison_folder + "stella_explicit_centered_dgdz/stella_explict_zupw0.3.out.nc" ]
+    outnc_longnames_6 = glob.glob(comparison_folder + "stella_explicit_centered_dgdz/*.out.nc")
+    outnc_longnames_7 = [comparison_folder + "stella_explicit_centered_dgdz_src_h/stella_explict_zupw0_src_h.out.nc",
+                         comparison_folder + "stella_explicit_centered_dgdz_src_h/stella_explict_zupw1_src_h.out.nc",
+                            ]
+    ### This compares all the explcit sims to reference gs2 + reference stella implciit
+    outnc_lists = [outnc_longnames_1,
+                   outnc_longnames_2,
+                   #outnc_longnames_3,
+                   #outnc_longnames_4,
+                   outnc_longnames_5,
+                   #outnc_longnames_6,
+                   outnc_longnames_7
+                   ]
+    # Flatten into a 1D list
+    outnc_longnames =  [element for sublist in outnc_lists for element in sublist]
+    make_comparison(outnc_longnames)
+
     return
 
 def compare_blowup():
@@ -461,7 +561,10 @@ if __name__ == "__main__":
     print("Hello world")
     # compare_blowup()
     # compare_ntheta32_vs_64_sims()
-    # compare_ntheta32_sims()
+    # compare_explicit_with_dgdz_fbpar0()
+    # compare_implicit_explicit_with_dgdz()
+    compare_implicit_explicit_with_dgdz_src_h()
+    #compare_ntheta32_sims()
     # compare_ntheta64_sims()
     # compare_all_sims()
-    examine_moments_for_blowup()
+    # examine_moments_for_blowup()

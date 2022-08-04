@@ -1,6 +1,7 @@
 """ """
 
 from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf
+from helper_ncdf_new import view_ncdf_variables_with_xarray, extract_data_from_ncdf_with_xarray
 import numpy as np
 import sys
 import re
@@ -10,8 +11,8 @@ def get_omega_data(sim_longname, sim_type):
     """ """
 
     if sim_type == "stella":
-        time, freqom_final, gammaom_final, freqom, gammaom = get_omega_data_stella(sim_longname)
-        time, gamma_stable = get_gamma_stable_stella(sim_longname)
+        time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data_stella(sim_longname)
+        #time, gamma_stable = get_gamma_stable_stella(sim_longname)
     elif sim_type == "gs2":
         time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data_gs2(sim_longname)
     else:
@@ -24,101 +25,99 @@ def get_omega_data_stella(sim_longname):
     (NB. Some .omega files contain NaN values)
     Read this file, and put data in arrays. We also want to calculate
     the growth rate from the phi2_vs_kxky entry in the .out.nc file."""
-    omega_filename = sim_longname + ".omega"
-    omega_file = open(omega_filename, "r")
-    omega_data=np.loadtxt(omega_filename,dtype='float')
-    omega_file.close()
 
-    # Find the number of unique kx, kx, and construct omega-related arrays with dims (kx.ky)
-    kx_array = np.array(sorted(set(omega_data[:,2])))
-    ky_array = np.array(sorted(set(omega_data[:,1])))
-    if ((len(kx_array) * len(ky_array)) > 1):
+    try:
+        time, kx, ky, phi2_t, omega_t_kxky_ri = extract_data_from_ncdf_with_xarray(
+                (sim_longname + ".out.nc"), "t", "kx", "ky", "phi2", "omega")
+        # phi2 has dimension t
+        # omega has dimension (t, kx, ky, ri)
+    except None:
+        pass
+
+    if ((len(kx) * len(ky)) > 1):
         print("Multiple modes - not currently supproted!")
         sys.exit()
-        freqom_kxky = np.zeros((len(kx_array), len(ky_array)))
-        gammaom_kxky = np.zeros((len(kx_array), len(ky_array)))
-        gamma_p2_kxky = np.zeros((len(kx_array), len(ky_array)))
-
-        # Extract t and phi2(t) from .out.nc
-        time, phi2_kxky = extract_data_from_ncdf((sim_longname + ".out.nc"), "t", "phi2_kxky")
-
-        # Loop through the lists, putting values into the arrays
-        # NB we assume that stella changes t, then ky, then kx when writing to file
-        print("(len(kx_array) * len(ky_array)) = ", (len(kx_array) * len(ky_array)))
-        for kx_idx in range(0, len(kx_array)):
-            for ky_idx in range(0, len(ky_array)):
-
-                # Find real(omega) and im(omega) for this kx, ky, ignoring nans and infs
-                # Also find the finite phi2 entries, and their corresponding t values.
-                mode_data = data[np.where((data[:,2] == kx_array[kx_idx]) & (data[:,1] == ky_array[ky_idx]))]
-                finite_mode_data = mode_data[np.where((np.isfinite(mode_data[:,3])) & (np.isfinite(mode_data[:,4])))]
-                mode_phi2 = phi2_kxky[:,kx_idx,ky_idx]
-                finite_mode_phi2_idxs = np.where(np.isfinite(mode_phi2))
-                fintite_mode_phi2 = mode_phi2[finite_mode_phi2_idxs]
-                finite_mode_t = time[finite_mode_phi2_idxs]
-
-                # If phi2 is too small, stella porbably has trouble fitting
-                # an expontential to it. Filter out low-phi2 values to avoid noise.
-                if fintite_mode_phi2[-1] < min_phi2:
-                    freqom_kxky[kx_idx, ky_idx] = 0
-                    gammaom_kxky[kx_idx, ky_idx] = 0
-                else:
-                    freqom_kxky[kx_idx, ky_idx] = finite_mode_data[-1,3]
-                    gammaom_kxky[kx_idx, ky_idx] = finite_mode_data[-1,4]
-
-                # Calculate growth rate based on phi2(t).
-                gamma_p2_kxky[kx_idx, ky_idx] = (1/(2*(finite_mode_t[-1]-finite_mode_t[0])) *
-                                    (np.log(fintite_mode_phi2[-1]) - np.log(fintite_mode_phi2[0])) )
-        return [kx_array, ky_array, freqom_kxky, gammaom_kxky, gamma_p2_kxky]
+        # freqom_kxky = np.zeros((len(kx_array), len(ky_array)))
+        # gammaom_kxky = np.zeros((len(kx_array), len(ky_array)))
+        # gamma_p2_kxky = np.zeros((len(kx_array), len(ky_array)))
+        #
+        # # Extract t and phi2(t) from .out.nc
+        # time, phi2_kxky = extract_data_from_ncdf((sim_longname + ".out.nc"), "t", "phi2_kxky")
+        #
+        # # Loop through the lists, putting values into the arrays
+        # # NB we assume that stella changes t, then ky, then kx when writing to file
+        # print("(len(kx_array) * len(ky_array)) = ", (len(kx_array) * len(ky_array)))
+        # for kx_idx in range(0, len(kx_array)):
+        #     for ky_idx in range(0, len(ky_array)):
+        #
+        #         # Find real(omega) and im(omega) for this kx, ky, ignoring nans and infs
+        #         # Also find the finite phi2 entries, and their corresponding t values.
+        #         mode_data = data[np.where((data[:,2] == kx_array[kx_idx]) & (data[:,1] == ky_array[ky_idx]))]
+        #         finite_mode_data = mode_data[np.where((np.isfinite(mode_data[:,3])) & (np.isfinite(mode_data[:,4])))]
+        #         mode_phi2 = phi2_kxky[:,kx_idx,ky_idx]
+        #         finite_mode_phi2_idxs = np.where(np.isfinite(mode_phi2))
+        #         fintite_mode_phi2 = mode_phi2[finite_mode_phi2_idxs]
+        #         finite_mode_t = time[finite_mode_phi2_idxs]
+        #
+        #         # If phi2 is too small, stella porbably has trouble fitting
+        #         # an expontential to it. Filter out low-phi2 values to avoid noise.
+        #         if fintite_mode_phi2[-1] < min_phi2:
+        #             freqom_kxky[kx_idx, ky_idx] = 0
+        #             gammaom_kxky[kx_idx, ky_idx] = 0
+        #         else:
+        #             freqom_kxky[kx_idx, ky_idx] = finite_mode_data[-1,3]
+        #             gammaom_kxky[kx_idx, ky_idx] = finite_mode_data[-1,4]
+        #
+        #         # Calculate growth rate based on phi2(t).
+        #         gamma_p2_kxky[kx_idx, ky_idx] = (1/(2*(finite_mode_t[-1]-finite_mode_t[0])) *
+        #                             (np.log(fintite_mode_phi2[-1]) - np.log(fintite_mode_phi2[0])) )
+        # return [kx_array, ky_array, freqom_kxky, gammaom_kxky, gamma_p2_kxky]
     else:
-        #time, phi2 = extract_data_from_ncdf((sim_longname + ".out.nc"), "t", "phi2")
-        time = omega_data[:,0]
-        # This gives us omega instantaneous
-        #freqom_final = omega_data[-1, 3]
-        #gammaom_final = omega_data[-1, 4]
-        # This gives us omega average
-        freqom_final = omega_data[-1, 5]
-        gammaom_final = omega_data[-1, 6]
+        freq_t = omega_t_kxky_ri[:,0,0,0]
+        gamma_t = omega_t_kxky_ri[:,0,0,1]
+        freqom_final = freq_t[-1]
+        gammaom_final = gamma_t[-1]
+        gamma_stable_list = calculate_gamma_stable(time, phi2_t)
 
-        #return time, freqom_final, gammaom_final, omega_data[:,3], omega_data[:,4]
-        return time, freqom_final, gammaom_final, omega_data[:,5], omega_data[:,6]
+        # Return everything execpt the first idx (i.e. ignore t=0)
+        return np.array(time[1:]), freqom_final, gammaom_final, np.array(freq_t[1:]), np.array(gamma_t[1:]), np.array(gamma_stable_list)
 
-def get_gamma_stable_stella(sim_longname):
-    """Get an estimate for the growth rate by looking at stella's |phi|^2(t).
-    To get an estimate of gamma(t), we do the following:
-    gamma(t) = 1/(2 (t2 - t1)) * ln(phi^2 (t2) / phi^2 (t1))
-    where t2 = t, t1 = nearest(t/2)
-    i.e. this scheme always gives the growth rate by looking at the growth over
-    the latter half of the simulation time"""
-    out_longname = sim_longname + ".out"
-    outfile = open(out_longname, "r")
-    out_lines = outfile.readlines()
-    t_list = []
-    phi2_list = []
-    for line in out_lines:
-        # A line looks like  istep=      0 time=  0.0000E+00  |phi|^2=  0.2739E-05 |apar|^2=   0.0000E+00
-        elements = re.split("=", line)
-        # elements = ["istep", "      0 time", "  0.0000E+00  |phi|^2", "  0.2739E-05 |apar|^2", "   0.0000E+00"]
-        time_elem = elements[2].strip() # "0.0000E+00  |phi|^2"
-        time_elem = re.split("\s+", time_elem)[0] # "0.0000E+00"
-        t_list.append(float(time_elem))
-        phi2_elem = elements[3].strip()
-        phi2_elem = re.split("\s+", phi2_elem)[0]
-        try:
-            phi2_list.append(float(phi2_elem))
-        except ValueError:
-            # This might occur because phi2 looks like '0.1306+101' i.e. missing "e" before "+"
-            print("Float error: phi2_elem = ", phi2_elem)
-            phi2_elem = re.sub("\+", "e+", phi2_elem)
-            print("post-replacement: phi2_elem = ", phi2_elem)
-            phi2_list.append(float(phi2_elem))
-
-    gamma_list = calculate_gamma_stable(t_list, phi2_list)
-
-    t_array = np.array(t_list[1:])
-    gamma_array = np.array(gamma_list)
-
-    return t_array, gamma_array
+# def get_gamma_stable_stella(sim_longname):
+#     """Get an estimate for the growth rate by looking at stella's |phi|^2(t).
+#     To get an estimate of gamma(t), we do the following:
+#     gamma(t) = 1/(2 (t2 - t1)) * ln(phi^2 (t2) / phi^2 (t1))
+#     where t2 = t, t1 = nearest(t/2)
+#     i.e. this scheme always gives the growth rate by looking at the growth over
+#     the latter half of the simulation time"""
+#     out_longname = sim_longname + ".out"
+#     outfile = open(out_longname, "r")
+#     out_lines = outfile.readlines()
+#     t_list = []
+#     phi2_list = []
+#     for line in out_lines:
+#         # A line looks like  istep=      0 time=  0.0000E+00  |phi|^2=  0.2739E-05 |apar|^2=   0.0000E+00
+#         elements = re.split("=", line)
+#         # elements = ["istep", "      0 time", "  0.0000E+00  |phi|^2", "  0.2739E-05 |apar|^2", "   0.0000E+00"]
+#         time_elem = elements[2].strip() # "0.0000E+00  |phi|^2"
+#         time_elem = re.split("\s+", time_elem)[0] # "0.0000E+00"
+#         t_list.append(float(time_elem))
+#         phi2_elem = elements[3].strip()
+#         phi2_elem = re.split("\s+", phi2_elem)[0]
+#         try:
+#             phi2_list.append(float(phi2_elem))
+#         except ValueError:
+#             # This might occur because phi2 looks like '0.1306+101' i.e. missing "e" before "+"
+#             print("Float error: phi2_elem = ", phi2_elem)
+#             phi2_elem = re.sub("\+", "e+", phi2_elem)
+#             print("post-replacement: phi2_elem = ", phi2_elem)
+#             phi2_list.append(float(phi2_elem))
+#
+#     gamma_list = calculate_gamma_stable(t_list, phi2_list)
+#
+#     t_array = np.array(t_list[1:])
+#     gamma_array = np.array(gamma_list)
+#
+#     return t_array, gamma_array
 
 def calculate_gamma_stable(t_list, phi2_list):
     """ """
@@ -363,7 +362,7 @@ def get_aparz_data_gs2(sim_longname):
             print("Not currently supported")
             sys.exit()
 
-        real_apar = final_fields_data[:,5]; imag_apar = final_fields_data[:,6]
+        real_apar = final_fields_data[:,5]/2; imag_apar = final_fields_data[:,6]/2
         return theta, real_apar, imag_apar
     except FileNotFoundError:
         return get_aparz_data_gs2_outnc(sim_longname)
