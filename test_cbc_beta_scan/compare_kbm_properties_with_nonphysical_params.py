@@ -58,7 +58,7 @@ def make_comparison(outnc_longnames, gamma_buffer = 0.01, omega_buffer = 0.01,lw
                 bmag_z_list.append(bmag_z)
             else:
                 sim_type = "stella"
-                # print("sim_name: ", sim_shortname)
+                print("sim_name: ", sim_shortname)
                 # data = xr.open_dataset(outnc_longname)
                 # print("data.keys = ", data.keys())
                 # sys.exit()
@@ -92,7 +92,7 @@ def make_comparison(outnc_longnames, gamma_buffer = 0.01, omega_buffer = 0.01,lw
             aparz_list.append(abs_apar/max_abs_phi)
             bparz_list.append(abs_bpar/max_abs_phi)
             print(sim_shortname, freqom[-1], gamma_stable[-1])
-        except (IndexError, FileNotFoundError):
+        except (None): #(IndexError, FileNotFoundError):
             # Probably caused by an incomplete simulation.
             pass
 
@@ -267,7 +267,12 @@ def compare_implicit_explicit_with_dgdz_src_h():
     outnc_longnames_6 = glob.glob(comparison_folder + "stella_explicit_centered_dgdz/*.out.nc")
     outnc_longnames_7 = [comparison_folder + "stella_explicit_centered_dgdz_src_h/stella_explict_zupw0_src_h.out.nc",
                          comparison_folder + "stella_explicit_centered_dgdz_src_h/stella_explict_zupw1_src_h.out.nc",
+                         comparison_folder + "stella_explicit_centered_dgdz_src_h/stella_implicit_zupw0_src_h_fapar1_fbpar1.out.nc",
                             ]
+    outnc_longnames_8 = [
+                comparison_folder + "stella_src_h_fapar1_fbpar1/stella_str_mirror_implicit_zupw0_src_h_fapar1_fbpar1.out.nc",
+                comparison_folder + "stella_src_h_fapar1_fbpar1/stella_str_mirror_implicit_zupw0_src_h_fapar1_fbpar1_delt5E-2.out.nc",
+                        ]
     ### This compares all the explcit sims to reference gs2 + reference stella implciit
     outnc_lists = [outnc_longnames_1,
                    outnc_longnames_2,
@@ -275,7 +280,8 @@ def compare_implicit_explicit_with_dgdz_src_h():
                    #outnc_longnames_4,
                    outnc_longnames_5,
                    #outnc_longnames_6,
-                   outnc_longnames_7
+                   outnc_longnames_7,
+                   outnc_longnames_8
                    ]
     # Flatten into a 1D list
     outnc_longnames =  [element for sublist in outnc_lists for element in sublist]

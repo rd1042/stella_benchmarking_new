@@ -316,8 +316,75 @@ def benchmark_stella_vs_gs2_fapar1_fbpar0_for_thesis():
 
     return
 
+def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1():
+    """ """
+    gs2_implicit_dt5Em2 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt5E-2.out.nc"
+    # stella_implicit_dt5Em2 = "sims/for_thesis_stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_nz36_dt5E-2.out.nc"
+    stella_explicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_explicit_src_h.out.nc"
+    stella_implicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h.out.nc"
+    stella_implicit_src_h_dt4Em2 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_dt4E-2.out.nc"
+    stella_implicit_src_h_dt4Em2_tupw002 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_dt4E-2_tupw002.out.nc"
+
+    compare_sims_for_thesis("phi",
+            [# gs2_implicit_dt25Em5,
+             gs2_implicit_dt5Em2,
+             stella_explicit_src_h_dt4Em4,
+             stella_implicit_src_h_dt4Em4,
+             stella_implicit_src_h_dt4Em2,
+             #stella_implicit_src_h_dt4Em2_tupw002
+             #stella_implicit_dt25Em5
+             ],
+            ["gs2",
+             "stella", "stella", "stella", #"stella"
+             ],
+            [
+            # "gs2(dt=2.5E-4)",
+            "gs2(dt=5E-4)",
+            "stella (explicit, src. h)",
+            "stella (impl, src. h, dt=4E-4, zupw=tupw=0)",
+            "stella (impl, src. h, dt=4E-2, zupw=tupw=0)",#, "stella (explicit, centered dg/dz)",
+            #"stella (impl, src. h, dt=4E-2, tupw=0.02)"#, "stella (explicit, centered dg/dz)",
+            # "stella (dt=2.5E-4)",
+            ],
+             save_name="for_thesis_phi_t_fapar1_fbpar1_src_h.eps")
+
+def benchamrk_stella_src_h_stella_vs_gs2_fapar1_fbpar0():
+    """ """
+    gs2_implicit_dt5Em2 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar0/input_nz36_dt5E-2.out.nc"
+    stella_implicit_dt5Em2 = "sims/for_thesis_stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_nz36_dt5E-2.out.nc"
+    stella_explicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_explicit_src_h_fapar1_fbpar0.out.nc"
+    # stella_implicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h.out.nc"
+    stella_implicit_src_h_dt4Em2 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_fapar1_fbpar0_dt4E-2.out.nc"
+
+
+    compare_sims_for_thesis("phi",
+            [# gs2_implicit_dt25Em5,
+             gs2_implicit_dt5Em2, stella_implicit_dt5Em2,
+             stella_explicit_src_h_dt4Em4,
+             #stella_implicit_src_h_dt4Em4,
+             stella_implicit_src_h_dt4Em2
+             #stella_implicit_dt25Em5
+             ],
+            ["gs2",
+             "stella", "stella", "stella", # "stella"
+             ],
+            [
+            # "gs2(dt=2.5E-4)",
+            "gs2(dt=5E-4)",
+            "stella (implicit, dt=4E-2)",
+            "stella (explicit, src. h)",
+            #"stella (impl, src. h, dt=4E-4)",
+            "stella (impl, src. h, dt=4E-2)"#, "stella (explicit, centered dg/dz)",
+            # "stella (dt=2.5E-4)",
+            ],
+             save_name="for_thesis_phi_t_fapar1_fbpar0_src_h.eps")
+
+    return
+
 if __name__ == "__main__":
     print("Hello world")
 
-    benchmark_stella_vs_gs2_fapar0_fbpar0_for_thesis()
-    benchmark_stella_vs_gs2_fapar1_fbpar0_for_thesis()
+    # benchmark_stella_vs_gs2_fapar0_fbpar0_for_thesis()
+    # benchmark_stella_vs_gs2_fapar1_fbpar0_for_thesis()
+    benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1()
+    # benchamrk_stella_src_h_stella_vs_gs2_fapar1_fbpar0()
