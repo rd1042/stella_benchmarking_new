@@ -177,7 +177,8 @@ def postprocess_folder_stella(folder_shortname, param_scanned="beta"):
         #                 plot_growth_rates=True,
         #                 figtitle=sim_shortname)
 
-        growth_rate_longlist.append(gamma_stable[-1])
+        # growth_rate_longlist.append(gamma_stable[-1])
+        growth_rate_longlist.append(gammaom_final[-1])
         freq_longlist.append(freqom_final)
 
     ## Sort beta and Omega
