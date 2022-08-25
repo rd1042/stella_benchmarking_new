@@ -78,6 +78,12 @@ stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar0_streaming_mirror_imp
 stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_mirror_implicit_folder = "stella_beta_scan_ky_05_np2_nt64_nvpa24_nmu18_fapar1_fbpar0_streaming_mirror_implicit"
 stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_mirror_implicit_folder = "stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar0_streaming_mirror_implicit"
 
+## New simulations - src in h
+stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder = "stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit"
+stella_src_h_beta_scan_ky_05_np4_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder = "stella_src_h_beta_scan_ky_05_np4_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit"
+stella_src_h_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder = "stella_src_h_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit"
+stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder = "stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit"
+
 # gs2
 gs2_fapar0_fbpar1_me1_folder = "gs2_fapar0_fbpar1_me1_beta_scan"
 gs2_fapar1_fbpar0_me1_folder = "gs2_fapar1_fbpar0_me1_beta_scan"
@@ -94,7 +100,10 @@ gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_1_fapar1_fbpar1_folder="gs2_beta_scan_
 gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_1_fapar1_fbpar1_folder="gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_1_fapar1_fbpar1"
 gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_5_fapar1_fbpar1_folder="gs2_beta_scan_ky_05_np4_nt64_ng12_ne24_ky_5_fapar1_fbpar1"
 gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_5_fapar1_fbpar1_folder="gs2_beta_scan_ky_05_np3_nt48_ng8_ne18_ky_5_fapar1_fbpar1"
-
+gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder="gs2_beta_scan_ky_05_np_2_nt32_ng8_ne18_fapar1_fbpar1"
+gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1_folder="gs2_beta_scan_ky_05_np_2_nt64_ng8_ne18_fapar1_fbpar1"
+gs2_beta_scan_ky_05_np4_nt32_ng8_ne18_fapar1_fbpar1_folder="gs2_beta_scan_ky_05_np_4_nt32_ng8_ne18_fapar1_fbpar1"
+gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder="gs2_beta_scan_ky_05_np_4_nt64_ng8_ne18_fapar1_fbpar1"
 
 def construct_beta_scan(folder_shortname, value_list, sim_type):
     folder_name = "sims/" + folder_shortname
@@ -411,14 +420,29 @@ def construct_gs2_beta_scans_fapar1_fbpar0():
 
     return
 
-
+def construct_src_h_benchmark_beta_scans_fapar1_fbpar1_resolution_checks():
+    """ """
+    beta_vals = np.linspace(0.0, 0.04, 21)
+    construct_beta_scan(gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
+    construct_beta_scan(gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
+    construct_beta_scan(gs2_beta_scan_ky_05_np4_nt32_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
+    construct_beta_scan(gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
+    construct_beta_scan(stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
+                          beta_vals, "stella")
+    construct_beta_scan(stella_src_h_beta_scan_ky_05_np4_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
+                          beta_vals, "stella")
+    construct_beta_scan(stella_src_h_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
+                          beta_vals, "stella")
+    construct_beta_scan(stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
+                          beta_vals, "stella")
 if __name__ == "__main__":
     print("Hello world")
     # make_beta_scans_for_me1()
     # make_beta_scans_for_stella_2spec()
     # construct_ky_beta_scans_with_resolution_checks()
     # construct_beta_scans_fapar1_fbpar0_streaming_implicit_with_resolution_checks()
-    construct_stella_beta_scans_fapar1_fbpar0_zupw0_streaming_implicit_with_resolution_checks()
+    # construct_stella_beta_scans_fapar1_fbpar0_zupw0_streaming_implicit_with_resolution_checks()
     # construct_beta_scans_fapar1_fbpar0_streaming_mirror_implicit_with_resolution_checks()
     # construct_beta_scans_fapar1_fbpar0_explicit_with_resolution_checks()
     # construct_gs2_beta_scans_fapar1_fbpar0()
+    construct_src_h_benchmark_beta_scans_fapar1_fbpar1_resolution_checks()
