@@ -423,18 +423,18 @@ def construct_gs2_beta_scans_fapar1_fbpar0():
 def construct_src_h_benchmark_beta_scans_fapar1_fbpar1_resolution_checks():
     """ """
     beta_vals = np.linspace(0.0, 0.04, 21)
-    construct_beta_scan(gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
-    construct_beta_scan(gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
+    #construct_beta_scan(gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
+    #construct_beta_scan(gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
     construct_beta_scan(gs2_beta_scan_ky_05_np4_nt32_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
-    construct_beta_scan(gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
-    construct_beta_scan(stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
-                          beta_vals, "stella")
-    construct_beta_scan(stella_src_h_beta_scan_ky_05_np4_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
-                          beta_vals, "stella")
-    construct_beta_scan(stella_src_h_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
-                          beta_vals, "stella")
-    construct_beta_scan(stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
-                          beta_vals, "stella")
+    #construct_beta_scan(gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder, beta_vals, "gs2")
+    #construct_beta_scan(stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
+    #                      beta_vals, "stella")
+    #construct_beta_scan(stella_src_h_beta_scan_ky_05_np4_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
+    #                      beta_vals, "stella")
+    #construct_beta_scan(stella_src_h_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
+    #                      beta_vals, "stella")
+    #construct_beta_scan(stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder,
+    #                      beta_vals, "stella")
 if __name__ == "__main__":
     print("Hello world")
     # make_beta_scans_for_me1()
