@@ -10,6 +10,7 @@ import numpy as np
 import glob
 import re
 import pickle
+from scipy.special import iv
 
 gs2_sim_fapar0_fbpar0 = "sims/gs2_slab_fapar0_fbpar0/input.out.nc"
 gs2_sim_fapar0_fbpar0_lr = "sims/gs2_slab_fapar0_fbpar0/input_ngauss6_negrid8.out.nc"
@@ -162,7 +163,6 @@ def compare_field_for_thesis(field_name, outnc_longnames, sim_types, sim_labels,
     plt.close()
     return
 
-
 def compare_phi_for_thesis(outnc_longnames, sim_types, sim_labels, **kwargs):
     """ """
     compare_field_for_thesis("phi", outnc_longnames, sim_types, sim_labels, **kwargs)
@@ -274,9 +274,132 @@ def test_field_solve_in_h():
                  "stella (nvgrid=12, nmu=6) (in h)",
                  ]
                  , save_name="h_field_solve_test_fapar1_fbpar1_bpar.eps",)
-    return 
+    return
+
+def test_analytic_field_solve_in_h():
+    """ """
+    m_ion = 1
+    m_electron = 2.8E-4
+    B = 1
+
+    def calculate_phi(kperp):
+        """ """
+        b_ion = 0.5*kperp*kperp*m_ion/(B*B)
+        b_electron = 0.5*kperp*kperp*m_electron/(B*B)
+        gamzero_ion = np.exp(-b_ion)*iv(0,b_ion)
+        gamzero_electron = np.exp(-b_electron)*iv(0,b_electron)
+
+        phi = 0.5*(gamzero_ion + gamzero_electron)
+
+        return phi
+
+    def calculate_bpar(kperp, beta):
+        """ """
+        b_ion = 0.5*kperp*kperp*m_ion/(B*B)
+        b_electron = 0.5*kperp*kperp*m_electron/(B*B)
+        gamone_ion = np.exp(-b_ion)*(iv(0,b_ion) - iv(1,b_ion) )
+        gamone_electron = np.exp(-b_electron)*(iv(0,b_electron) - iv(1,b_electron) )
+        bpar = (-0.5*beta/B) * (gamone_ion - gamone_electron )
+        return bpar
+
+    # outnc_longname = "sims/stella_slab_fapar1_fbpar1_h/input_nvpa48_nmu24.out.nc"
+    outnc_longname = "sims/stella_slab_fapar1_fbpar1_h/input_vpamax4_vperpmax4.out.nc"
+    field_key_stella = "phi_vs_t"
+    (z, field_vs_t) = extract_data_from_ncdf_with_xarray(outnc_longname,
+            'zed', field_key_stella)
+    field_t0 = np.array(field_vs_t[0,0,:,0,0,:])
+    # shape is now (zed, ri)
+    print("stella phi = ", field_t0)
+    phi = calculate_phi(1)
+    print("analytic phi = ", phi)
+    print("stella/analytic = ", field_t0[0]/phi)
+
+    field_key_stella = "bpar_vs_t"
+    (z, field_vs_t) = extract_data_from_ncdf_with_xarray(outnc_longname,
+            'zed', field_key_stella)
+    field_t0 = np.array(field_vs_t[0,0,:,0,0,:])
+    print("stella bpar = ", field_t0)
+    kperp = 1; beta=1
+    bpar = calculate_bpar(kperp, beta)
+    print("analytic bpar = ", bpar)
+    print("stella/analytic = ", field_t0[0]/bpar)
+
+    return
+
+def vspace_res_test_field_solve_in_h_for_thesis():
+    """Plot % error in phi, bpar and abs(apar) in various cases:
+    (1) Fixed vperpmax, nmu. plotting (error in field) vs nvpa for several vpamax
+    (2) Fixed vpamax, nvpa, plotting (error in field) vs nvmu for several vperpmax
+    For each of these, plot the result for field solve in h and field solve in h.
+    """
+
+    def make_plot(which):
+        """ """
+        marker_size = 12
+        label_fontsize = 40
+        legend_fontsize = 14
+        marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
+        lw_list = [4, 3, 3, 2]
+        ls_list = ["-", "--", "-.", (0, (4,1,2,1))]
+
+        my_xticklength = 7
+        my_xtickwidth = 2
+        my_xticklength_minor = 4
+        my_xtickwidth_minor = 1
+
+        x_ticklabelfontsize = 20
+        y_ticklabelfontsize = 20
+        y_labelfontsize = 30
+        x_labelfontsize = 30
+        bracket_fontsize = 70
+        itg_fontsize = 30
+
+        top = 0.98
+        left = 0.14
+        right = 0.98
+        bottom = 0.13
+        vspace = 0.02
+        hspace = 0.04
+        height = (top - bottom - 2*vspace)/3
+        row3_bottom = bottom
+        row2_bottom = bottom + height + vspace
+        row1_bottom = row2_bottom + height + vspace
+        width = (right - left - hspace)/2
+        col1_left = left
+        col2_left = left + width + hspace
+
+        fig = plt.figure(figsize=(12,16))
+        ax1 = fig.add_axes((col1_left, row1_bottom, width, height))
+        ax2 = fig.add_axes((col2_left, row1_bottom, width, height))
+        ax3 = fig.add_axes((col1_left, row2_bottom, width, height))
+        ax4 = fig.add_axes((col2_left, row2_bottom, width, height))
+        ax5 = fig.add_axes((col1_left, row3_bottom, width, height))
+        ax6 = fig.add_axes((col2_left, row3_bottom, width, height))
+
+        if which=="vpa":
+            for ax in [ax5, ax6]:
+                ax.set_xlabel(r"nvpa", fontsize=x_labelfontsize)
+        elif which=="vperp":
+            for ax in [ax5, ax6]:
+                ax.set_xlabel(r"nvperp", fontsize=x_labelfontsize)
+
+        ax1.set_ylabel(r"$\Delta \tilde{\phi}_k (\%)$ ", fontsize=y_labelfontsize)
+        ax3.set_ylabel(r"$\Delta \tilde{A}_{\parallel k}$ ", fontsize=y_labelfontsize)
+        ax5.set_ylabel(r"$\Delta \tilde{B}_{\parallel k} (\%)$ ", fontsize=y_labelfontsize)
+        if which=="vpa":
+            plt.savefig("vpa_res_field_solve.eps")
+        if which=="vperp":
+            plt.savefig("vperp_res_field_solve.eps")
+        plt.close()
+
+    make_plot("vpa")
+    make_plot("vperp")
+    return
+
 
 if __name__ == "__main__":
     print("Hello world")
     # make_field_solve_test_plots_for_thesis()
-    test_field_solve_in_h()
+    # test_field_solve_in_h()
+    # test_analytic_field_solve_in_h()
+    vspace_res_test_field_solve_in_h_for_thesis()

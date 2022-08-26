@@ -61,8 +61,8 @@
 &vpamu_grids_parameters
  nvgrid = 24
  nmu = 12
- vpa_max = 3.0
- vperp_max = 3.0
+ vpa_max = 4.0
+ vperp_max = 4.0
 /
 
 &dist_fn_knobs

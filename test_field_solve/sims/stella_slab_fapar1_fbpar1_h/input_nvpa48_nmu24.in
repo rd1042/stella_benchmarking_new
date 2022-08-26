@@ -59,8 +59,8 @@
 /
 
 &vpamu_grids_parameters
- nvgrid = 24
- nmu = 12
+ nvgrid = 48
+ nmu = 24
  vpa_max = 3.0
  vperp_max = 3.0
 /
