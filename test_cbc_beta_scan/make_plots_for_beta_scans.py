@@ -872,6 +872,34 @@ def compare_fapar1_fbpar0_beta_scan():
 
     return
 
+def benchmark_plot_stella_src_h_vs_gs2():
+    """ """
+    make_beta_plots_from_pickles(
+                [
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np4_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np2_nt64_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                #"sims/" + mps.gs2_beta_scan_ky_05_np4_nt32_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                "stella (nt=32, np=2)",
+                "stella (nt=64, np=2)",
+                "stella (nt=32, np=4)",
+                "stella (nt=64, np=4)",
+                "gs2 (nt=32, np=2)",
+                "gs2 (nt=64, np=2)",
+                #"gs2 (nt=32, np=4)",
+                "gs2 (nt=64, np=4)",
+                ],
+                omega_diff=False
+                                )
+    return
+
+
 if __name__ == "__main__":
     # plot_different_beta_scans()
     # plot_stella_scan_vs_gs2_pickle()
@@ -879,4 +907,5 @@ if __name__ == "__main__":
     # plot_beta_scans_with_resolution_checks()
     # plot_beta_scans_with_resolution_checks_for_tdotp()
     # make_beta_scan_plots_for_ipp_greifswald_talk()
-    compare_fapar1_fbpar0_beta_scan()
+    # compare_fapar1_fbpar0_beta_scan()
+    benchmark_plot_stella_src_h_vs_gs2()
