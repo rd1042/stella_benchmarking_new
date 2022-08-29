@@ -53,13 +53,13 @@
 !test_cbc_beta_scan/sims/viking_gfortran_build/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/template*
 !test_cbc_beta_scan/sims/beta_0.04000_investigation/*.in
 !test_cbc_beta_scan/sims/beta_0.04000_investigation/*/*.in
+!test_slab_em/*.py
+!test_slab_em/sims/*/*.in
+test_slab_em/sims/*/.*.in
+test_slab_em/sims/*/*.used_inputs.in
 !test_field_solve/*.py
 test_field_solve/sims/*/*.in
 !test_field_solve/sims/*/template_input_file
 !test_field_solve/sims/*/*.pickle
 test_field_solve/sims/*/.*.in
 test_field_solve/sims/*/*.used_inputs.in
-!test_slab_em/*.py
-!test_slab_em/sims/*/*.in
-test_slab_em/sims/*/.*.in
-test_slab_em/sims/*/*.used_inputs.in

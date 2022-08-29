@@ -20,7 +20,7 @@ def construct_nvpa_vpamax_scan(folder_shortname):
     template_name = folder_name + "/template_input_file"
     template_runscript = None
 
-    vpamax_vals = np.array([1, 1.5, 2, 2.5, 3, 4])
+    vpamax_vals = np.array([0.1, 0.3, 0.5, 0.8, 1, 1.5, 2, 3])
     nvpa_vals = np.array([4, 6, 8, 10, 12, 15, 18, 21, 24, 30, 36, 48, 60, 72, 96, 120, 144])
 
     # Check folder exists
@@ -42,7 +42,7 @@ def construct_nmu_vperpmax_scan(folder_shortname):
     template_name = folder_name + "/template_input_file"
     template_runscript = None
 
-    vperpmax_vals = np.array([1, 1.5, 2, 2.5, 3, 4])
+    vperpmax_vals = np.array([0.1, 0.3, 0.5, 0.8, 1, 1.5, 2, 3])
     nmu_vals = np.array([4, 6, 8, 10, 12, 15, 18, 21, 24, 30, 36, 48, 60, 72, 96, 120, 144])
 
     # Check folder exists
@@ -126,7 +126,7 @@ def make_input_file(template, template_runscript, parameters, values, beware_int
 
 def make_sims_phi_bpar_test():
     """ """
-    # construct_nvpa_vpamax_scan(phi_bpar_h_vpa_scan_folder)
+    #construct_nvpa_vpamax_scan(phi_bpar_h_vpa_scan_folder)
     construct_nmu_vperpmax_scan(phi_bpar_h_vperp_scan_folder)
 
     return

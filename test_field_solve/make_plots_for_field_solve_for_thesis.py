@@ -12,6 +12,7 @@ import re
 import pickle
 from scipy.special import iv
 import make_sims_for_thesis as make_sims
+import os
 
 gs2_sim_fapar0_fbpar0 = "sims/gs2_slab_fapar0_fbpar0/input.out.nc"
 gs2_sim_fapar0_fbpar0_lr = "sims/gs2_slab_fapar0_fbpar0/input_ngauss6_negrid8.out.nc"
@@ -357,25 +358,46 @@ def calculate_bpar_zjzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=1)
 def get_phi_bpar_results_from_outnc_files(folder_longname):
     """ """
     print("Hello")
+    ## If the pickle exists, use the pickle
+    pickle_longname = "sims/" + folder_longname + "/field_results.pickle"
     print("folder_longname = ", folder_longname)
-    outnc_longnames = glob.glob("sims/" + folder_longname + "/*.out.nc")
-    print("outnc_longnames = ", outnc_longnames)
-    vals_1 = []
-    vals_2 = []
-    phi_vals = []
-    apar_vals = []
-    bpar_vals = []
-    for outnc_longname in outnc_longnames:
-        sim_longname = re.split(".out.nc", outnc_longname)[0]
-        vals_str_list = re.split("_", sim_longname)
-        vals_1.append(float(vals_str_list[-2]))
-        vals_2.append(int(vals_str_list[-1]))
-        field_key_stella = "phi_vs_t"
-        (phi_vs_t, apar_vs_t, bpar_vs_t) = extract_data_from_ncdf_with_xarray(outnc_longname,
-                        "phi_vs_t", "apar_vs_t", "bpar_vs_t")
-        phi_vals.append(phi_vs_t[0,0,0,0,0,0])
-        apar_vals.append(apar_vs_t[0,0,0,0,0,0])
-        bpar_vals.append(bpar_vs_t[0,0,0,0,0,0])
+    if os.path.isfile(pickle_longname):
+        print("have pickle")
+        myfile = open(pickle_longname, "rb")
+        print("loaded pickle")
+        [vals_1, vals_2, phi_vals, apar_vals, bpar_vals] = pickle.load(myfile)
+        myfile.close()
+        print("vals_1 = ", vals_1)
+        print("vals_2 = ", vals_2)
+        print("phi_vals = ", phi_vals)
+    else:
+        outnc_longnames = glob.glob("sims/" + folder_longname + "/*.out.nc")
+        print("outnc_longnames = ", outnc_longnames)
+        vals_1 = []
+        vals_2 = []
+        phi_vals = []
+        apar_vals = []
+        bpar_vals = []
+        for outnc_longname in outnc_longnames:
+            sim_longname = re.split(".out.nc", outnc_longname)[0]
+            vals_str_list = re.split("_", sim_longname)
+            vals_1.append(float(vals_str_list[-2]))
+            vals_2.append(int(vals_str_list[-1]))
+            field_key_stella = "phi_vs_t"
+            (phi_vs_t, apar_vs_t, bpar_vs_t) = extract_data_from_ncdf_with_xarray(outnc_longname,
+                            "phi_vs_t", "apar_vs_t", "bpar_vs_t")
+            phi_vals.append(phi_vs_t[0,0,0,0,0,0])
+            apar_vals.append(apar_vs_t[0,0,0,0,0,0])
+            bpar_vals.append(bpar_vs_t[0,0,0,0,0,0])
+        vals_1 = np.array(vals_1)
+        vals_2 = np.array(vals_2)
+        phi_vals = np.array(phi_vals)
+        apar_vals = np.array(apar_vals)
+        bpar_vals = np.array(bpar_vals)
+
+        myfile = open(pickle_longname, "wb")
+        pickle.dump([vals_1, vals_2, phi_vals, apar_vals, bpar_vals], myfile)
+        myfile.close()
 
     return vals_1, vals_2, phi_vals, apar_vals, bpar_vals
 
@@ -430,12 +452,18 @@ def vspace_res_test_field_solve_for_thesis():
         ax6 = fig.add_axes((col2_left, row3_bottom, width, height))
 
         if which=="vpa":
+            print("nvpa_vals = ", nvpa_vals)
+            print("phi_vals = ", phi_vals)
+            print("A")
             unique_vpamax = sorted(set(vpamax_vals))
+            print("B")
             vpamax_array = np.array(vpamax_vals)
             nvpa_array = np.array(nvpa_vals)
-            phi_array = np.array(phi_vals) - analytic_phi
-            apar_array = np.array(apar_vals)
-            bpar_array = np.array(bpar_vals) - analytic_bpar
+            print("C")
+            phi_array = (phi_vals) - analytic_phi
+            apar_array = (apar_vals)
+            bpar_array = (bpar_vals) - analytic_bpar
+            print("E")
 
             for unique_vpamax_val in unique_vpamax:
                 idxs = np.argwhere(np.abs(vpamax_array-unique_vpamax_val)<1E-4)
@@ -446,9 +474,12 @@ def vspace_res_test_field_solve_for_thesis():
             for ax in [ax5, ax6]:
                 ax.set_xlabel(r"nvpa", fontsize=x_labelfontsize)
         elif which=="vperp":
+            print("Got this far")
             unique_vperpmax = sorted(set(vperpmax_vals))
             vperpmax_array = np.array(vperpmax_vals)
             nmu_array = np.array(nmu_vals)
+            print("nmu_array = ", nmu_array)
+            print("phi_vals = ", phi_vals)
             phi_array = np.array(phi_vals) - analytic_phi
             apar_array = np.array(apar_vals)
             bpar_array = np.array(bpar_vals) - analytic_bpar
@@ -472,9 +503,13 @@ def vspace_res_test_field_solve_for_thesis():
 
     analytic_phi = calculate_phi_zjzeroexp(1, "h")
     analytic_bpar = calculate_bpar_zjzeroexp(1, 1, "h")
-    # vpamax_vals, nvpa_vals, phi_vals, apar_vals, bpar_vals = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vpa_scan_folder)
+
+    #vpamax_vals, nvpa_vals, phi_vals, apar_vals, bpar_vals = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vpa_scan_folder)
+    print("Got this far 1")
     vperpmax_vals, nmu_vals, phi_vals, apar_vals, bpar_vals = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vperp_scan_folder)
-    #make_plot("vpa")
+    #print("Got this far 2")
+    # make_plot("vpa")
+    #print("Got this far 3")
     make_plot("vperp")
     return
 
