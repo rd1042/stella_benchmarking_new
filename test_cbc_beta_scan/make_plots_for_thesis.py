@@ -142,6 +142,8 @@ def make_beta_plots_from_pickles_for_thesis(pickle_longnames, labels, marker_siz
 
 
     else:
+        ax1.plot((min_beta, max_beta), (0,0), c="gray", zorder=-10)
+        ax2.plot((min_beta, max_beta), (0,0), c="gray", zorder=-10)
         ax1.set_ylabel(r"$\Delta\tilde{\omega}_{ref}$ ($\%$)", fontsize=label_fontsize)
         ax2.set_ylabel(r"$\Delta\tilde{\gamma}_{ref}$ ($\%$)", fontsize=label_fontsize)
     ax2.set_xlabel(r"$\beta$", fontsize=label_fontsize)
@@ -149,7 +151,6 @@ def make_beta_plots_from_pickles_for_thesis(pickle_longnames, labels, marker_siz
     plt.close()
 
     return
-
 
 def make_omega_beta_plots_fapar1_fbpar1_1():
     """ """

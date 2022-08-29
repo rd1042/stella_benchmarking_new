@@ -70,19 +70,19 @@ def make_input_files_1d(template, template_runscript, parameter, value_list, fil
   return
 
 def make_input_files_2d(template, template_runscript, parameter1, parameter2, value_list1,
-                        value_list2, filename_prefix, folder="."):
+                        value_list2, filename_prefix, folder=".", **kwargs):
   """Constructs many input files, changing a single parameter to values based
   a list"""
 
   for value1 in value_list1:
       for value2 in value_list2:
           make_input_file(template, template_runscript, [parameter1, parameter2], [value1, value2], filename_prefix=filename_prefix,
-                        folder=folder)
+                        folder=folder, **kwargs)
 
   return
 
 def make_input_file(template, template_runscript, parameters, values, beware_integers=False, filename_prefix="",
-                    filename=False, folder="."):
+                    filename=False, folder=".", dtypes=None):
     """Constructs an input file based on the template, changing an arbitrary number of
     parameters."""
 
@@ -95,14 +95,13 @@ def make_input_file(template, template_runscript, parameters, values, beware_int
     template_file.close()
     values_str = ""
     for i, parameter in enumerate(parameters):
+      if dtypes is not None:
+          dtype = dtypes[i]
+      else:
+          dtype = None
       value = values[i]
-      if beware_integers:
-          if isinstance(value, int):
-              value_str = str(value)
-          elif isinstance(value, float):
-            value_str = ('%.4f' % value)
-          else:
-              print("Error! Type not recognised. value = ", value)
+      if dtype == "int":
+        value_str = str(int(value))
       else:
           value_str = ('%.8f' % value)
 
