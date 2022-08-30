@@ -328,48 +328,45 @@ def test_analytic_field_solve_in_h():
 
     return
 
-def calculate_phi_zjzeroexp(kperp, dist, m_ion=1, m_electron=2.8E-4, B=1):
+def calculate_fields_zjzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=1):
     """ """
     b_ion = 0.5*kperp*kperp*m_ion/(B*B)
     b_electron = 0.5*kperp*kperp*m_electron/(B*B)
     gamzero_ion = np.exp(-b_ion)*iv(0,b_ion)
     gamzero_electron = np.exp(-b_electron)*iv(0,b_electron)
-    if dist == "h":
-        phi = 0.5*(gamzero_ion + gamzero_electron)
-    else:
-        print("gbar not yet supported")
-        sys.exit()
-    return phi
-
-def calculate_bpar_zjzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=1):
-    """ """
-    b_ion = 0.5*kperp*kperp*m_ion/(B*B)
-    b_electron = 0.5*kperp*kperp*m_electron/(B*B)
     gamone_ion = np.exp(-b_ion)*(iv(0,b_ion) - iv(1,b_ion) )
     gamone_electron = np.exp(-b_electron)*(iv(0,b_electron) - iv(1,b_electron) )
+    antot1 = (gamzero_ion + gamzero_electron)
+    antot3 = (-0.5*beta/B) * (gamone_ion - gamone_electron )
     if dist == "h":
-        bpar = (-0.5*beta/B) * (gamone_ion - gamone_electron )
+        print("In the h part")
+        gamtot_h = 2
+        phi = antot1/gamtot_h
+        apar = 0
+        bpar = antot3
     else:
-        print("gbar not yet supported")
-        sys.exit()
-    return bpar
+        print("In the gbar part")
+        gamtot = 2 - (gamzero_ion + gamzero_electron)
+        gamtot13 =  (gamone_electron - gamone_ion)/B
+        gamtot31 = beta*(gamone_ion - gamone_electron)/(2*B)
+        gamtot33 = 1 + beta*(gamone_ion + gamone_electron)/B
+
+        phi = (antot1 - (gamtot13/gamtot33)*antot3 ) / (gamtot - gamtot13*gamtot31/gamtot33 )
+        apar = 0
+        bpar = (antot3 - (gamtot31/gamtot)*antot1) / (gamtot33 - gamtot13*gamtot31/gamtot)
+    return phi, apar, bpar
+
 
 
 def get_phi_bpar_results_from_outnc_files(folder_longname):
     """ """
-    print("Hello")
     ## If the pickle exists, use the pickle
     pickle_longname = "sims/" + folder_longname + "/field_results.pickle"
     print("folder_longname = ", folder_longname)
     if os.path.isfile(pickle_longname):
-        print("have pickle")
         myfile = open(pickle_longname, "rb")
-        print("loaded pickle")
         [vals_1, vals_2, phi_vals, apar_vals, bpar_vals] = pickle.load(myfile)
         myfile.close()
-        print("vals_1 = ", vals_1)
-        print("vals_2 = ", vals_2)
-        print("phi_vals = ", phi_vals)
     else:
         outnc_longnames = glob.glob("sims/" + folder_longname + "/*.out.nc")
         print("outnc_longnames = ", outnc_longnames)
@@ -410,7 +407,7 @@ def vspace_res_test_field_solve_for_thesis():
 
     def make_plot(which):
         """ """
-        marker_size = 12
+        marker_size = 60
         label_fontsize = 40
         legend_fontsize = 14
         marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
@@ -452,65 +449,98 @@ def vspace_res_test_field_solve_for_thesis():
         ax6 = fig.add_axes((col2_left, row3_bottom, width, height))
 
         if which=="vpa":
-            print("nvpa_vals = ", nvpa_vals)
-            print("phi_vals = ", phi_vals)
-            print("A")
-            unique_vpamax = sorted(set(vpamax_vals))
-            print("B")
-            vpamax_array = np.array(vpamax_vals)
-            nvpa_array = np.array(nvpa_vals)
-            print("C")
-            phi_array = (phi_vals) - analytic_phi
-            apar_array = (apar_vals)
-            bpar_array = (bpar_vals) - analytic_bpar
-            print("E")
+            unique_vpamax = sorted(set(vpamax_vals_h))
+            vpamax_array = np.array(vpamax_vals_h)
+            nvpa_array = np.array(nvpa_vals_h)
+            phi_array = 100*((phi_vals_h) - analytic_phi_h)/analytic_phi_h
+            apar_array = (apar_vals_h)
+            bpar_array = 100*((bpar_vals_h) - analytic_bpar_h)/analytic_bpar_h
 
-            for unique_vpamax_val in unique_vpamax:
+            for vpamax_idx, unique_vpamax_val in enumerate(unique_vpamax):
                 idxs = np.argwhere(np.abs(vpamax_array-unique_vpamax_val)<1E-4)
-                ax1.scatter(nvpa_array[idxs], phi_array[idxs])
-                ax3.scatter(nvpa_array[idxs], apar_array[idxs])
-                ax5.scatter(nvpa_array[idxs], bpar_array[idxs])
+                ax1.scatter(nvpa_array[idxs], phi_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
+                ax3.scatter(nvpa_array[idxs], apar_array[idxs], marker=marker_list[vpamax_idx],
+                            s=marker_size, label="vpamax="+str(unique_vpamax_val))
+                ax5.scatter(nvpa_array[idxs], bpar_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
+
+            unique_vpamax = sorted(set(vpamax_vals_gbar))
+            vpamax_array = np.array(vpamax_vals_gbar)
+            nvpa_array = np.array(nvpa_vals_gbar)
+            phi_array = 100*((phi_vals_gbar) - analytic_phi_gbar)/analytic_phi_gbar
+            apar_array = (apar_vals_gbar)
+            bpar_array = 100*((bpar_vals_gbar) - analytic_bpar_gbar)/analytic_bpar_gbar
+            print("phi_array = ", phi_array)
+            print("apar_array = ", apar_array)
+            print("bpar_array = ", bpar_array)
+            for vpamax_idx, unique_vpamax_val in enumerate(unique_vpamax):
+                idxs = np.argwhere(np.abs(vpamax_array-unique_vpamax_val)<1E-4)
+                ax2.scatter(nvpa_array[idxs], phi_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
+                ax4.scatter(nvpa_array[idxs], apar_array[idxs], marker=marker_list[vpamax_idx],
+                            s=marker_size, label="vpamax="+str(unique_vpamax_val))
+                ax6.scatter(nvpa_array[idxs], bpar_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
 
             for ax in [ax5, ax6]:
                 ax.set_xlabel(r"nvpa", fontsize=x_labelfontsize)
         elif which=="vperp":
-            print("Got this far")
-            unique_vperpmax = sorted(set(vperpmax_vals))
-            vperpmax_array = np.array(vperpmax_vals)
-            nmu_array = np.array(nmu_vals)
-            print("nmu_array = ", nmu_array)
-            print("phi_vals = ", phi_vals)
-            phi_array = np.array(phi_vals) - analytic_phi
-            apar_array = np.array(apar_vals)
-            bpar_array = np.array(bpar_vals) - analytic_bpar
+            unique_vperpmax = sorted(set(vperpmax_vals_h))
+            vperpmax_array = np.array(vperpmax_vals_h)
+            nmu_array = np.array(nmu_vals_h)
+            phi_array = 100*((phi_vals_h) - analytic_phi_h)/analytic_phi_h
+            apar_array = (apar_vals_h)
+            bpar_array = 100*((bpar_vals_h) - analytic_bpar_h)/analytic_bpar_h
 
-            for unique_vperpmax_val in unique_vperpmax:
+            for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax):
                 idxs = np.argwhere(np.abs(vperpmax_array-unique_vperpmax_val)<1E-4)
-                ax1.scatter(nmu_array[idxs], phi_array[idxs])
-                ax3.scatter(nmu_array[idxs], apar_array[idxs])
-                ax5.scatter(nmu_array[idxs], bpar_array[idxs])
+                ax1.scatter(nmu_array[idxs], phi_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
+                ax3.scatter(nmu_array[idxs], apar_array[idxs], marker=marker_list[vperpmax_idx],
+                            s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
+                ax5.scatter(nmu_array[idxs], bpar_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
+            ## Repeat for gbar dist.
+            unique_vperpmax = sorted(set(vperpmax_vals_gbar))
+            vperpmax_array = np.array(vperpmax_vals_gbar)
+            nmu_array = np.array(nmu_vals_gbar)
+            phi_array = 100*(np.array(phi_vals_gbar) - analytic_phi_gbar)/analytic_phi_gbar
+            apar_array = np.array(apar_vals_gbar)
+            bpar_array = 100*(np.array(bpar_vals_gbar) - analytic_bpar_gbar)/analytic_bpar_gbar
+
+            for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax):
+                idxs = np.argwhere(np.abs(vperpmax_array-unique_vperpmax_val)<1E-4)
+                ax2.scatter(nmu_array[idxs], phi_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
+                ax4.scatter(nmu_array[idxs], apar_array[idxs], marker=marker_list[vperpmax_idx],
+                            s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
+                ax6.scatter(nmu_array[idxs], bpar_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
             for ax in [ax5, ax6]:
                 ax.set_xlabel(r"nvperp", fontsize=x_labelfontsize)
 
         ax1.set_ylabel(r"$\Delta \tilde{\phi}_k (\%)$ ", fontsize=y_labelfontsize)
         ax3.set_ylabel(r"$\Delta \tilde{A}_{\parallel k}$ ", fontsize=y_labelfontsize)
         ax5.set_ylabel(r"$\Delta \tilde{B}_{\parallel k} (\%)$ ", fontsize=y_labelfontsize)
+        ax3.legend(loc="lower right", fontsize=legend_fontsize, ncol=2)
         if which=="vpa":
+            for ax in [ax1, ax3, ax5]:
+                #ax.set_xlim((0, 150))
+                ax.set_xscale("log")
+                #ax.marker=marker_list[folder_idx], mfc="none", markersize=marker_size
             plt.savefig("vpa_res_field_solve.eps")
         if which=="vperp":
+            for ax in [ax1, ax3, ax5]:
+                ax.set_xscale("log")
             plt.savefig("vperp_res_field_solve.eps")
         plt.close()
 
-    analytic_phi = calculate_phi_zjzeroexp(1, "h")
-    analytic_bpar = calculate_bpar_zjzeroexp(1, 1, "h")
+    analytic_phi_h, analytic_apar_h, analytic_bpar_h = calculate_fields_zjzeroexp(1, 1, "h")
+    analytic_phi_gbar, analytic_apar_gbar, analytic_bpar_gbar = calculate_fields_zjzeroexp(1, 1, "gbar")
+    print("solution with h. phi, bpar = ", analytic_phi_h, analytic_bpar_h)
+    print("solution with gbar. phi, bpar = ", analytic_phi_gbar, analytic_bpar_gbar)
 
-    #vpamax_vals, nvpa_vals, phi_vals, apar_vals, bpar_vals = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vpa_scan_folder)
-    print("Got this far 1")
-    vperpmax_vals, nmu_vals, phi_vals, apar_vals, bpar_vals = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vperp_scan_folder)
-    #print("Got this far 2")
-    # make_plot("vpa")
-    #print("Got this far 3")
+    vpamax_vals_h, nvpa_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vpa_scan_folder)
+    vpamax_vals_gbar, nvpa_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_gbar_vpa_scan_folder)
+    make_plot("vpa")
+
+    vperpmax_vals_h, nmu_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vperp_scan_folder)
+    vperpmax_vals_gbar, nmu_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_gbar_vperp_scan_folder)
     make_plot("vperp")
+
     return
 
 def test_field_solve_apar_for_thesis():

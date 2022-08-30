@@ -127,8 +127,9 @@ def make_input_file(template, template_runscript, parameters, values, beware_int
 def make_sims_phi_bpar_test():
     """ """
     #construct_nvpa_vpamax_scan(phi_bpar_h_vpa_scan_folder)
-    construct_nmu_vperpmax_scan(phi_bpar_h_vperp_scan_folder)
-
+    #construct_nmu_vperpmax_scan(phi_bpar_h_vperp_scan_folder)
+    construct_nvpa_vpamax_scan(phi_bpar_gbar_vpa_scan_folder)
+    construct_nmu_vperpmax_scan(phi_bpar_gbar_vperp_scan_folder)
     return
 
 if __name__ == "__main__":
