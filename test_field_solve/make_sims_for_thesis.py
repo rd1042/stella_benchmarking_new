@@ -14,6 +14,12 @@ phi_bpar_h_vpa_scan_folder = "stella_phi_bpar_h_nvpa_vpamax_scan"
 phi_bpar_h_vperp_scan_folder = "stella_phi_bpar_h_nmu_vperpmax_scan"
 phi_bpar_gbar_vpa_scan_folder = "stella_phi_bpar_gbar_nvpa_vpamax_scan"
 phi_bpar_gbar_vperp_scan_folder = "stella_phi_bpar_gbar_nmu_vperpmax_scan"
+apar_h_vpa_scan_folder = "stella_apar_h_nvpa_vpamax_scan"
+apar_h_vperp_scan_folder = "stella_apar_h_nmu_vperpmax_scan"
+apar_gbar_vpa_scan_folder = "stella_apar_gbar_nvpa_vpamax_scan"
+apar_gbar_vperp_scan_folder = "stella_apar_gbar_nmu_vperpmax_scan"
+apar_h_kperp_scan_folder = "stella_apar_h_kperp_scan"
+apar_gbar_kperp_scan_folder = "stella_apar_gbar_kperp_scan"
 
 def construct_nvpa_vpamax_scan(folder_shortname):
     folder_name = "sims/" + folder_shortname
@@ -55,6 +61,28 @@ def construct_nmu_vperpmax_scan(folder_shortname):
 
     mps.make_input_files_2d(template_name, template_runscript, "vperp_max", "nmu",
                 vperpmax_vals, nmu_vals, "vperpmax_nmu", folder=folder_name, dtypes=["float", "int"])
+    print("folder contents: " + folder_name)
+    os.system('ls -ltr ' + folder_name)
+    return
+
+def construct_kperp_scan(folder_shortname):
+    folder_name = "sims/" + folder_shortname
+    template_name = folder_name + "/template_input_file"
+    template_runscript = None
+
+    ky_vals = np.logspace(-4, 2, 20)
+    kx_vals = np.array([0])
+
+    # Check folder exists
+    if not os.path.isdir(folder_name):
+        sys.exit("folder " + folder_name  + " does not exist!")
+
+    # Check if the template file exists
+    if not os.path.isfile(template_name):
+        sys.exit("template file does not exist!")
+
+    mps.construct_ky_kx_scan_stella(template_name, template_runscript, ky_vals,
+                kx_vals, folder=folder_name)
     print("folder contents: " + folder_name)
     os.system('ls -ltr ' + folder_name)
     return
@@ -132,5 +160,16 @@ def make_sims_phi_bpar_test():
     construct_nmu_vperpmax_scan(phi_bpar_gbar_vperp_scan_folder)
     return
 
+def make_sims_apar_test():
+    """ """
+    # construct_nvpa_vpamax_scan(apar_h_vpa_scan_folder)
+    # construct_nmu_vperpmax_scan(apar_h_vperp_scan_folder)
+    # construct_nvpa_vpamax_scan(apar_gbar_vpa_scan_folder)
+    # construct_nmu_vperpmax_scan(apar_gbar_vperp_scan_folder)
+    construct_kperp_scan(apar_h_kperp_scan_folder)
+    construct_kperp_scan(apar_gbar_kperp_scan_folder)
+    return
+
 if __name__ == "__main__":
-    make_sims_phi_bpar_test()
+    # make_sims_phi_bpar_test()
+    make_sims_apar_test()

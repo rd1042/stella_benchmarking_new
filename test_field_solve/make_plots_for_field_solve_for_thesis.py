@@ -339,13 +339,11 @@ def calculate_fields_zjzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=
     antot1 = (gamzero_ion + gamzero_electron)
     antot3 = (-0.5*beta/B) * (gamone_ion - gamone_electron )
     if dist == "h":
-        print("In the h part")
         gamtot_h = 2
         phi = antot1/gamtot_h
         apar = 0
         bpar = antot3
     else:
-        print("In the gbar part")
         gamtot = 2 - (gamzero_ion + gamzero_electron)
         gamtot13 =  (gamone_electron - gamone_ion)/B
         gamtot31 = beta*(gamone_ion - gamone_electron)/(2*B)
@@ -356,9 +354,32 @@ def calculate_fields_zjzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=
         bpar = (antot3 - (gamtot31/gamtot)*antot1) / (gamtot33 - gamtot13*gamtot31/gamtot)
     return phi, apar, bpar
 
+def calculate_fields_zvpajzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=1):
+    """ """
+    b_ion = 0.5*kperp*kperp*m_ion/(B*B)
+    b_electron = 0.5*kperp*kperp*m_electron/(B*B)
+    gamzero_ion = np.exp(-b_ion)*iv(0,b_ion)
+    gamzero_electron = np.exp(-b_electron)*iv(0,b_electron)
+    gamone_ion = np.exp(-b_ion)*(iv(0,b_ion) - iv(1,b_ion) )
+    gamone_electron = np.exp(-b_electron)*(iv(0,b_electron) - iv(1,b_electron) )
+    antot2 = 0.5*beta*(gamzero_ion/np.sqrt(m_ion) + gamzero_electron/np.sqrt(m_electron))
+    print("np.exp(-b_ion), iv(0,b_ion) = ", np.exp(-b_ion), iv(0,b_ion))
+    # print("gamzero_ion, gamzero_electron, gamone_ion, gamone_electron = ", gamzero_ion, gamzero_electron, gamone_ion, gamone_electron)
+    if dist == "h":
+        print("In the h part")
+        apar_denom_h = kperp*kperp
+        phi = 0
+        apar = antot2/apar_denom_h
+        bpar = 0
+    else:
+        print("In the gbar part")
+        apar_denom = kperp*kperp + beta*(gamzero_ion/m_ion + gamzero_electron/m_electron)
+        phi = 0
+        apar = antot2/apar_denom
+        bpar = 0
+    return phi, apar, bpar
 
-
-def get_phi_bpar_results_from_outnc_files(folder_longname):
+def get_fields_from_outnc_files(folder_longname, kperp=False):
     """ """
     ## If the pickle exists, use the pickle
     pickle_longname = "sims/" + folder_longname + "/field_results.pickle"
@@ -378,8 +399,11 @@ def get_phi_bpar_results_from_outnc_files(folder_longname):
         for outnc_longname in outnc_longnames:
             sim_longname = re.split(".out.nc", outnc_longname)[0]
             vals_str_list = re.split("_", sim_longname)
-            vals_1.append(float(vals_str_list[-2]))
-            vals_2.append(int(vals_str_list[-1]))
+            if kperp:
+                vals_1.append(float(vals_str_list[-3]))
+            else:
+                vals_1.append(float(vals_str_list[-2]))
+                vals_2.append(int(vals_str_list[-1]))
             field_key_stella = "phi_vs_t"
             (phi_vs_t, apar_vs_t, bpar_vs_t) = extract_data_from_ncdf_with_xarray(outnc_longname,
                             "phi_vs_t", "apar_vs_t", "bpar_vs_t")
@@ -452,9 +476,11 @@ def vspace_res_test_field_solve_for_thesis():
             unique_vpamax = sorted(set(vpamax_vals_h))
             vpamax_array = np.array(vpamax_vals_h)
             nvpa_array = np.array(nvpa_vals_h)
-            phi_array = 100*((phi_vals_h) - analytic_phi_h)/analytic_phi_h
-            apar_array = (apar_vals_h)
-            bpar_array = 100*((bpar_vals_h) - analytic_bpar_h)/analytic_bpar_h
+            # Calculate the magnitude of % error for phi, bpar
+            # and magnitude of error for apar (not %, since analytic apar = 0)
+            phi_array = np.abs(100*((phi_vals_h) - analytic_phi_h)/analytic_phi_h)
+            apar_array = np.abs((apar_vals_h))
+            bpar_array = np.abs(100*((bpar_vals_h) - analytic_bpar_h)/analytic_bpar_h)
 
             for vpamax_idx, unique_vpamax_val in enumerate(unique_vpamax):
                 idxs = np.argwhere(np.abs(vpamax_array-unique_vpamax_val)<1E-4)
@@ -466,12 +492,11 @@ def vspace_res_test_field_solve_for_thesis():
             unique_vpamax = sorted(set(vpamax_vals_gbar))
             vpamax_array = np.array(vpamax_vals_gbar)
             nvpa_array = np.array(nvpa_vals_gbar)
-            phi_array = 100*((phi_vals_gbar) - analytic_phi_gbar)/analytic_phi_gbar
-            apar_array = (apar_vals_gbar)
-            bpar_array = 100*((bpar_vals_gbar) - analytic_bpar_gbar)/analytic_bpar_gbar
-            print("phi_array = ", phi_array)
-            print("apar_array = ", apar_array)
-            print("bpar_array = ", bpar_array)
+            # Calculate the magnitude of % error for phi, bpar
+            # and magnitude of error for apar (not %, since analytic apar = 0)
+            phi_array = np.abs(100*((phi_vals_gbar) - analytic_phi_gbar)/analytic_phi_gbar)
+            apar_array = np.abs((apar_vals_gbar))
+            bpar_array = np.abs(100*((bpar_vals_gbar) - analytic_bpar_gbar)/analytic_bpar_gbar)
             for vpamax_idx, unique_vpamax_val in enumerate(unique_vpamax):
                 idxs = np.argwhere(np.abs(vpamax_array-unique_vpamax_val)<1E-4)
                 ax2.scatter(nvpa_array[idxs], phi_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
@@ -484,10 +509,12 @@ def vspace_res_test_field_solve_for_thesis():
         elif which=="vperp":
             unique_vperpmax = sorted(set(vperpmax_vals_h))
             vperpmax_array = np.array(vperpmax_vals_h)
+            # Calculate the magnitude of % error for phi, bpar
+            # and magnitude of error for apar (not %, since analytic apar = 0)
             nmu_array = np.array(nmu_vals_h)
-            phi_array = 100*((phi_vals_h) - analytic_phi_h)/analytic_phi_h
-            apar_array = (apar_vals_h)
-            bpar_array = 100*((bpar_vals_h) - analytic_bpar_h)/analytic_bpar_h
+            phi_array = np.abs(100*((phi_vals_h) - analytic_phi_h)/analytic_phi_h)
+            apar_array = np.abs((apar_vals_h))
+            bpar_array = np.abs(100*((bpar_vals_h) - analytic_bpar_h)/analytic_bpar_h)
 
             for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax):
                 idxs = np.argwhere(np.abs(vperpmax_array-unique_vperpmax_val)<1E-4)
@@ -498,10 +525,12 @@ def vspace_res_test_field_solve_for_thesis():
             ## Repeat for gbar dist.
             unique_vperpmax = sorted(set(vperpmax_vals_gbar))
             vperpmax_array = np.array(vperpmax_vals_gbar)
+            # Calculate the magnitude of % error for phi, bpar
+            # and magnitude of error for apar (not %, since analytic apar = 0)
             nmu_array = np.array(nmu_vals_gbar)
-            phi_array = 100*(np.array(phi_vals_gbar) - analytic_phi_gbar)/analytic_phi_gbar
-            apar_array = np.array(apar_vals_gbar)
-            bpar_array = 100*(np.array(bpar_vals_gbar) - analytic_bpar_gbar)/analytic_bpar_gbar
+            phi_array = np.abs(100*(np.array(phi_vals_gbar) - analytic_phi_gbar)/analytic_phi_gbar)
+            apar_array = np.abs(np.array(apar_vals_gbar))
+            bpar_array = np.abs(100*(np.array(bpar_vals_gbar) - analytic_bpar_gbar)/analytic_bpar_gbar)
 
             for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax):
                 idxs = np.argwhere(np.abs(vperpmax_array-unique_vperpmax_val)<1E-4)
@@ -510,16 +539,17 @@ def vspace_res_test_field_solve_for_thesis():
                             s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
                 ax6.scatter(nmu_array[idxs], bpar_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
             for ax in [ax5, ax6]:
-                ax.set_xlabel(r"nvperp", fontsize=x_labelfontsize)
+                ax.set_xlabel(r"nmu", fontsize=x_labelfontsize)
 
-        ax1.set_ylabel(r"$\Delta \tilde{\phi}_k (\%)$ ", fontsize=y_labelfontsize)
-        ax3.set_ylabel(r"$\Delta \tilde{A}_{\parallel k}$ ", fontsize=y_labelfontsize)
-        ax5.set_ylabel(r"$\Delta \tilde{B}_{\parallel k} (\%)$ ", fontsize=y_labelfontsize)
+        ax1.set_ylabel(r"$\vert\Delta \tilde{\phi}_k\vert (\%)$ ", fontsize=y_labelfontsize)
+        ax3.set_ylabel(r"$\vert\Delta \tilde{A}_{\parallel k}\vert$ ", fontsize=y_labelfontsize)
+        ax5.set_ylabel(r"$\vert\Delta \tilde{B}_{\parallel k}\vert (\%)$ ", fontsize=y_labelfontsize)
         ax3.legend(loc="lower right", fontsize=legend_fontsize, ncol=2)
+        for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+            #ax.set_xlim((0, 150))
+            ax.set_xscale("log")
+            ax.set_yscale("log")
         if which=="vpa":
-            for ax in [ax1, ax3, ax5]:
-                #ax.set_xlim((0, 150))
-                ax.set_xscale("log")
                 #ax.marker=marker_list[folder_idx], mfc="none", markersize=marker_size
             plt.savefig("vpa_res_field_solve.eps")
         if which=="vperp":
@@ -533,12 +563,12 @@ def vspace_res_test_field_solve_for_thesis():
     print("solution with h. phi, bpar = ", analytic_phi_h, analytic_bpar_h)
     print("solution with gbar. phi, bpar = ", analytic_phi_gbar, analytic_bpar_gbar)
 
-    vpamax_vals_h, nvpa_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vpa_scan_folder)
-    vpamax_vals_gbar, nvpa_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_gbar_vpa_scan_folder)
+    vpamax_vals_h, nvpa_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_fields_from_outnc_files(make_sims.phi_bpar_h_vpa_scan_folder)
+    vpamax_vals_gbar, nvpa_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_fields_from_outnc_files(make_sims.phi_bpar_gbar_vpa_scan_folder)
     make_plot("vpa")
 
-    vperpmax_vals_h, nmu_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_h_vperp_scan_folder)
-    vperpmax_vals_gbar, nmu_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_phi_bpar_results_from_outnc_files(make_sims.phi_bpar_gbar_vperp_scan_folder)
+    vperpmax_vals_h, nmu_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_fields_from_outnc_files(make_sims.phi_bpar_h_vperp_scan_folder)
+    vperpmax_vals_gbar, nmu_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_fields_from_outnc_files(make_sims.phi_bpar_gbar_vperp_scan_folder)
     make_plot("vperp")
 
     return
@@ -587,13 +617,73 @@ def test_field_solve_apar_for_thesis():
         col3_left = col2_left + width + hspace
 
         fig = plt.figure(figsize=(14,8))
-        ax1 = fig.add_axes((col1_left, row1_bottom, width, height))
-        ax2 = fig.add_axes((col1_left, row2_bottom, width, height))
-        ax3 = fig.add_axes((col2_left, row1_bottom, width, height))
-        ax4 = fig.add_axes((col2_left, row2_bottom, width, height))
-        ax5 = fig.add_axes((col3_left, row1_bottom, width, height))
-        ax6 = fig.add_axes((col3_left, row2_bottom, width, height))
+        ax1 = fig.add_axes((col1_left, row1_bottom, width, height)) # vpa-res, h
+        ax2 = fig.add_axes((col1_left, row2_bottom, width, height)) # vpa-res, gbar
+        ax3 = fig.add_axes((col2_left, row1_bottom, width, height)) # vperp-res, h
+        ax4 = fig.add_axes((col2_left, row2_bottom, width, height)) # vperp-res, gbar
+        ax5 = fig.add_axes((col3_left, row1_bottom, width, height)) # kperp, h
+        ax6 = fig.add_axes((col3_left, row2_bottom, width, height)) # kperp, gbar
 
+        ## Plot vpa res
+        unique_vpamax_h = sorted(set(vpamax_vals_h))
+        unique_vpamax_gbar = sorted(set(vpamax_vals_gbar))
+        vpamax_array_h = np.array(vpamax_vals_h)
+        nvpa_array_h = np.array(nvpa_vals_h)
+        vpamax_array_gbar = np.array(vpamax_vals_gbar)
+        nvpa_array_gbar = np.array(nvpa_vals_gbar)
+
+        unique_vperpmax_h = sorted(set(vperpmax_vals_h))
+        vperpmax_array_h = np.array(vperpmax_vals_h)
+        nmu_array_h = np.array(nmu_vals_h)
+        unique_vperpmax_gbar = sorted(set(vperpmax_vals_gbar))
+        vperpmax_array_gbar = np.array(vperpmax_vals_gbar)
+        nmu_array_gbar = np.array(nmu_vals_gbar)
+
+        # Calculate the magnitude of % error for phi, bpar
+        # and magnitude of error for apar (not %, since analytic apar = 0)
+        phi_array_vpa = np.abs(phi_vals_h_vpa)
+        bpar_array_vpa = np.abs(bpar_vals_h_vpa)
+        apar_array_h_vpa = np.abs(100*(apar_vals_h_vpa - analytic_apar_h)/analytic_apar_h)
+        apar_array_gbar_vpa = np.abs(100*(apar_vals_gbar_vpa - analytic_apar_gbar)/analytic_apar_gbar)
+        apar_array_h_vperp = np.abs(100*(apar_vals_h_vperp - analytic_apar_h)/analytic_apar_h)
+        apar_array_gbar_vperp = np.abs(100*(apar_vals_gbar_vperp - analytic_apar_gbar)/analytic_apar_gbar)
+        ## Plot vpa-res test
+        for vpamax_idx, unique_vpamax_val in enumerate(unique_vpamax_h):
+            idxs = np.argwhere(np.abs(vpamax_array_h-unique_vpamax_val)<1E-4)
+            ax1.scatter(nvpa_array_h[idxs], apar_array_h_vpa[idxs], marker=marker_list[vpamax_idx], s=marker_size)
+        for vpamax_idx, unique_vpamax_val in enumerate(unique_vpamax_gbar):
+            idxs = np.argwhere(np.abs(vpamax_array_gbar-unique_vpamax_val)<1E-4)
+            ax2.scatter(nvpa_array_gbar[idxs], apar_array_gbar_vpa[idxs], marker=marker_list[vpamax_idx],
+                        s=marker_size, label="vpamax="+str(unique_vpamax_val))
+        ## Plot vperp-res test
+        for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax_h):
+            idxs = np.argwhere(np.abs(vperpmax_array_h-unique_vperpmax_val)<1E-4)
+            ax3.scatter(nmu_array_h[idxs], apar_array_h_vperp[idxs], marker=marker_list[vpamax_idx], s=marker_size)
+        for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax_gbar):
+            idxs = np.argwhere(np.abs(vperpmax_array_gbar-unique_vperpmax_val)<1E-4)
+            # print("unique_vperpmax_val = ", unique_vperpmax_val)
+            # # print("vperpmax_idx = ", vperpmax_idx)
+            # print("nmu_array_gbar[idxs] = ", nmu_array_gbar[idxs])
+            # print("apar_array_gbar_vperp[idxs] = ", apar_array_gbar_vperp[idxs])
+            ax4.scatter(nmu_array_gbar[idxs], apar_array_gbar_vperp[idxs], marker=marker_list[vpamax_idx],
+                        s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
+
+        ## And now kperp
+        # Need to sort the apar vals since apar depends on kperp
+
+        apar_array_h_kperp = np.abs(100*(apar_vals_h_kperp - analytic_apar_h_kperp)/analytic_apar_h_kperp)
+        apar_array_gbar_kperp = np.abs(100*(apar_vals_gbar_kperp - analytic_apar_gbar_kperp)/analytic_apar_gbar_kperp)
+        ax5.scatter(kperp_vals_h, apar_array_h_kperp, marker="s", s=marker_size)
+        ax6.scatter(kperp_vals_gbar, apar_array_gbar_kperp, marker="s", s=marker_size)
+        # ax5.set_ylim((1E-2, 1E2))
+        #plt.show()
+        ax2.set_ylim((1E-8, 40))
+        ax4.set_ylim((1E-9, 3))
+        for ax in [ax2, ax4]:
+            ax.legend(loc="best", ncol=2)
+        for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+            ax.set_xscale("log")
+            ax.set_yscale("log")
         for ax in [ax2]:
             ax.set_xlabel(r"nvpa", fontsize=x_labelfontsize)
         for ax in [ax4]:
@@ -606,8 +696,66 @@ def test_field_solve_apar_for_thesis():
         plt.savefig("apar_field_solve.eps")
         plt.close()
 
+        return
 
+    analytic_phi_h, analytic_apar_h, analytic_bpar_h = calculate_fields_zvpajzeroexp(1, 1, "h")
+    analytic_phi_gbar, analytic_apar_gbar, analytic_bpar_gbar = calculate_fields_zvpajzeroexp(1, 1, "gbar")
+    kperp_vals = np.logspace(-4, 2, 20)
+
+    analytic_apar_h_kperp = []
+    analytic_apar_gbar_kperp = []
+    for kperp_val in kperp_vals:
+        phi_h, apar_h, bpar_h = calculate_fields_zvpajzeroexp(kperp_val, 1, "h")
+        phi_gbar, apar_gbar, bpar_gbar = calculate_fields_zvpajzeroexp(kperp_val, 1, "gbar")
+        analytic_apar_h_kperp.append(apar_h)
+        analytic_apar_gbar_kperp.append(apar_gbar)
+    analytic_apar_h_kperp = np.array(analytic_apar_h_kperp)
+    analytic_apar_gbar_kperp = np.array(analytic_apar_gbar_kperp)
+    print("solution with h. apar = ", analytic_apar_h)
+    print("solution with gbar. apar = ", analytic_apar_gbar)
+    print("solution with h. analytic_apar_h_kperp = ", analytic_apar_h_kperp)
+    print("solution with gbar. analytic_apar_gbar_kperp = ", analytic_apar_gbar_kperp)
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(211)
+    ax2 = fig.add_subplot(212, sharex=ax1)
+    ax1.plot(kperp_vals, analytic_apar_h_kperp, lw=3, label="h")
+    ax2.plot(kperp_vals, analytic_apar_gbar_kperp, lw=3, label="gbar")
+    ax1.set_yscale("log")
+    ax1.legend(loc="best")
+    ax2.legend(loc="best")
+    ax2.set_xlabel("kperp")
+    ax1.set_ylabel("apar, analytic")
+    ax2.set_ylabel("apar, analytic")
+    plt.show()
+    vpamax_vals_h, nvpa_vals_h, phi_vals_h_vpa, apar_vals_h_vpa, bpar_vals_h_vpa = get_fields_from_outnc_files(make_sims.apar_h_vpa_scan_folder)
+    vpamax_vals_gbar, nvpa_vals_gbar, phi_vals_gbar_vpa, apar_vals_gbar_vpa, bpar_vals_gbar_vpa = get_fields_from_outnc_files(make_sims.apar_gbar_vpa_scan_folder)
+    vperpmax_vals_h, nmu_vals_h, phi_vals_h_vperp, apar_vals_h_vperp, bpar_vals_h_vperp = get_fields_from_outnc_files(make_sims.apar_h_vperp_scan_folder)
+    vperpmax_vals_gbar, nmu_vals_gbar, phi_vals_gbar_vperp, apar_vals_gbar_vperp, bpar_vals_gbar_vperp = get_fields_from_outnc_files(make_sims.apar_gbar_vperp_scan_folder)
+    kperp_vals_h, dum, phi_vals_h_kperp, apar_vals_h_kperp, bpar_vals_h_kperp = get_fields_from_outnc_files(make_sims.apar_h_kperp_scan_folder, kperp=True)
+    kperp_vals_gbar, dum, phi_vals_gbar_kperp, apar_vals_gbar_kperp, bpar_vals_gbar_kperp = get_fields_from_outnc_files(make_sims.apar_gbar_kperp_scan_folder, kperp=True)
+    print("kperp_vals_gbar = ", kperp_vals_gbar)
+    print("max(abs(phi_vals_h_kperp)) = ", np.max(abs(phi_vals_h_kperp)))
+    print("max(abs(bpar_vals_h_kperp)) = ", np.max(abs(bpar_vals_h_kperp)))
+    print("max(abs(phi_vals_gbar_kperp)) = ", np.max(abs(phi_vals_gbar_kperp)))
+    print("max(abs(bpar_vals_gbar_kperp)) = ", np.max(abs(bpar_vals_gbar_kperp)))
+    sort_idxs = np.argsort(kperp_vals_h)
+    kperp_vals_h = kperp_vals_h[sort_idxs]
+    apar_vals_h_kperp = apar_vals_h_kperp[sort_idxs]
+    sort_idxs = np.argsort(kperp_vals_gbar)
+    kperp_vals_gbar = kperp_vals_gbar[sort_idxs]
+    apar_vals_gbar_kperp = apar_vals_gbar_kperp[sort_idxs]
+
+    # print("apar_vals_h_kperp = ", apar_vals_h_kperp)
+    # print("apar_vals_gbar_kperp = ", apar_vals_gbar_kperp)
+    # print("phi_vals_h = ", phi_vals_h)
+    # print("bpar_vals_h = ", bpar_vals_h)
+    # print("phi_vals_gbar = ", phi_vals_gbar)
+    # print("apar_vals_gbar = ", apar_vals_gbar)
+    # print("bpar_vals_gbar = ", bpar_vals_gbar)
     make_plot()
+
+    # make_plot("vperp")
     return
 
 
@@ -616,5 +764,5 @@ if __name__ == "__main__":
     # make_field_solve_test_plots_for_thesis()
     # test_field_solve_in_h()
     # test_analytic_field_solve_in_h()
-    vspace_res_test_field_solve_for_thesis()
-    # test_field_solve_apar_for_thesis()
+    # vspace_res_test_field_solve_for_thesis()
+    test_field_solve_apar_for_thesis()
