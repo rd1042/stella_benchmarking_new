@@ -59,10 +59,10 @@
 /
 
 &vpamu_grids_parameters
- nvgrid = 24
- nmu = 12
- vpa_max = 3.0
- vperp_max = 3.0
+ nvgrid = 144
+ nmu = 144
+ vpa_max = 5.0
+ vperp_max = 5.0
 /
 
 &dist_fn_knobs
@@ -90,10 +90,11 @@
  phiinit=   1
  restart_file = "nc/example.nc"
  ginit_option= "field_test_src_h"
- upar0 = 1.0
  width0 = -1.0
  den0 = 0
  den1 = 1
+ upar0 = 1.0
+ which_test = "apar"
 /
 
 &knobs

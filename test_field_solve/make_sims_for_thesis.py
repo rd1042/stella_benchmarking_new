@@ -26,7 +26,7 @@ def construct_nvpa_vpamax_scan(folder_shortname):
     template_name = folder_name + "/template_input_file"
     template_runscript = None
 
-    vpamax_vals = np.array([0.1, 0.3, 0.5, 0.8, 1, 1.5, 2, 3])
+    vpamax_vals = np.array([0.5, 1, 1.5, 2, 3, 4, 5])
     nvpa_vals = np.array([4, 6, 8, 10, 12, 15, 18, 21, 24, 30, 36, 48, 60, 72, 96, 120, 144])
 
     # Check folder exists
@@ -48,7 +48,7 @@ def construct_nmu_vperpmax_scan(folder_shortname):
     template_name = folder_name + "/template_input_file"
     template_runscript = None
 
-    vperpmax_vals = np.array([0.1, 0.3, 0.5, 0.8, 1, 1.5, 2, 3])
+    vperpmax_vals = np.array([0.5, 1, 1.5, 2, 3, 4, 5])
     nmu_vals = np.array([4, 6, 8, 10, 12, 15, 18, 21, 24, 30, 36, 48, 60, 72, 96, 120, 144])
 
     # Check folder exists
@@ -154,18 +154,18 @@ def make_input_file(template, template_runscript, parameters, values, beware_int
 
 def make_sims_phi_bpar_test():
     """ """
-    #construct_nvpa_vpamax_scan(phi_bpar_h_vpa_scan_folder)
-    #construct_nmu_vperpmax_scan(phi_bpar_h_vperp_scan_folder)
+    construct_nvpa_vpamax_scan(phi_bpar_h_vpa_scan_folder)
+    construct_nmu_vperpmax_scan(phi_bpar_h_vperp_scan_folder)
     construct_nvpa_vpamax_scan(phi_bpar_gbar_vpa_scan_folder)
     construct_nmu_vperpmax_scan(phi_bpar_gbar_vperp_scan_folder)
     return
 
 def make_sims_apar_test():
     """ """
-    # construct_nvpa_vpamax_scan(apar_h_vpa_scan_folder)
-    # construct_nmu_vperpmax_scan(apar_h_vperp_scan_folder)
-    # construct_nvpa_vpamax_scan(apar_gbar_vpa_scan_folder)
-    # construct_nmu_vperpmax_scan(apar_gbar_vperp_scan_folder)
+    construct_nvpa_vpamax_scan(apar_h_vpa_scan_folder)
+    construct_nmu_vperpmax_scan(apar_h_vperp_scan_folder)
+    construct_nvpa_vpamax_scan(apar_gbar_vpa_scan_folder)
+    construct_nmu_vperpmax_scan(apar_gbar_vperp_scan_folder)
     construct_kperp_scan(apar_h_kperp_scan_folder)
     construct_kperp_scan(apar_gbar_kperp_scan_folder)
     return

@@ -328,4 +328,3 @@ def test_apar_field_solve():
 
 if __name__ == "__main__":
     print("Hello world")
-    make_field_solve_test_plots_for_thesis()

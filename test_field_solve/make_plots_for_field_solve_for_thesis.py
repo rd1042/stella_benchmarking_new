@@ -180,154 +180,6 @@ def compare_bpar_for_thesis(outnc_longnames, sim_types, sim_labels, **kwargs):
     compare_field_for_thesis("bpar", outnc_longnames, sim_types, sim_labels, **kwargs)
     return
 
-def make_field_solve_test_plots_for_thesis():
-    """Make plots for thesis:
-    fapar=fbpar=0: phi benchmark
-    fapar=1, fbpar=0: benchmarking phi, apar (where apar!=0)
-    fapar=0, fbpar=1: benchmarking phi, bpar
-    fapar=fbpar=1: benchmarking phi, apar, bpar (where a)apar=0, b)apar!=0 ) """
-
-    compare_phi_for_thesis([gs2_sim_fapar0_fbpar0, gs2_sim_fapar0_fbpar0_lr, gs2_sim_fapar0_fbpar0_vlr,
-                 stella_sim_fapar0_fbpar0, stella_sim_fapar0_fbpar0_lr, stella_sim_fapar0_fbpar0_vlr],
-                ["gs2", "gs2", "gs2",
-                 "stella", "stella", "stella"],
-                ["gs2 (nguass=12, negrid=16)", "gs2 (nguass=6, negrid=8)",
-                 "gs2 (nguass=3, negrid=4)",
-                 "stella (nvgrid=24, nmu=12)",
-                 "stella (nvgrid=12, nmu=6)",
-                 "stella (nvgrid=6, nmu=3)",
-                 ],
-                 save_name="field_solve_test_fapar0_fbpar0.eps",
-                 ax1_yticks=[-4, 0, 4],
-                 ax1_yticklabels=[r"$-4$", r"$0$", r"$4$"],
-                 ax2_yticks=[10**(-4), 10**(-3), 10**(-2), 10**(-1), 10**(0), 10**(1)],
-                 ax2_yticklabels=[r"$10^{-4}$", r"$10^{-3}$", r"$10^{-2}$", r"$10^{-1}$",
-                                     r"$10^{0}$", r"$10^{1}$"],
-         )
-    # ### fapar=1, fbpar=0
-    # compare_apar([gs2_sim_fapar1_fbpar0, stella_sim_fapar1_fbpar0],
-    #             ["gs2", "stella"],
-    #             ["gs2", "stella"], title="fapar=1, fbpar=0")
-    # ### fapar=0, fbpar=1
-    compare_phi_for_thesis([gs2_sim_fapar0_fbpar1, stella_sim_fapar0_fbpar1],
-                ["gs2", "stella"],
-                ["gs2", "stella"],
-                save_name="field_solve_test_fapar0_fbpar1_phi.eps",)
-    compare_bpar_for_thesis([gs2_sim_fapar0_fbpar1, stella_sim_fapar0_fbpar1],
-                ["gs2", "stella"],
-                ["gs2", "stella"],
-                save_name="field_solve_test_fapar0_fbpar1_bpar.eps",)
-    ### fapar=1, fbpar=1
-    compare_phi_for_thesis([gs2_sim_fapar1_fbpar1, gs2_sim_fapar1_fbpar1_lr, gs2_sim_fapar1_fbpar1_vlr,
-                stella_sim_fapar1_fbpar1, stella_sim_fapar1_fbpar1_lr, stella_sim_fapar1_fbpar1_vlr
-                ],
-                ["gs2", "gs2", "gs2",
-                 "stella", "stella", "stella"],
-                ["gs2 (nguass=12, negrid=16)", "gs2 (nguass=6, negrid=8)",
-                 "gs2 (nguass=3, negrid=4)",
-                 "stella (nvgrid=24, nmu=12)",
-                 "stella (nvgrid=12, nmu=6)",
-                 "stella (nvgrid=6, nmu=3)",
-                 ]
-                 , save_name="field_solve_test_fapar1_fbpar1_phi.eps",)
-    # compare_apar([gs2_sim_fapar1_fbpar1, gs2_sim_fapar1_fbpar1_lr, gs2_sim_fapar1_fbpar1_vlr,
-    #             stella_sim_fapar1_fbpar1, stella_sim_fapar1_fbpar1_lr, stella_sim_fapar1_fbpar1_vlr
-    #             ],
-    #             ["gs2", "gs2", "gs2",
-    #              "stella", "stella", "stella"],
-    #             ["gs2 (nguass=12, negrid=16)", "gs2 (nguass=6, negrid=8)",
-    #              "gs2 (nguass=3, negrid=4)",
-    #              "stella (nvgrid=24, nmu=12)",
-    #              "stella (nvgrid=12, nmu=6)",
-    #              "stella (nvgrid=6, nmu=3)",
-    #              ]
-    #              , title="fapar=1, fbpar=1")
-    compare_bpar_for_thesis([gs2_sim_fapar1_fbpar1, gs2_sim_fapar1_fbpar1_lr, gs2_sim_fapar1_fbpar1_vlr,
-                stella_sim_fapar1_fbpar1, stella_sim_fapar1_fbpar1_lr, stella_sim_fapar1_fbpar1_vlr
-                ],
-                ["gs2", "gs2", "gs2",
-                 "stella", "stella", "stella"],
-                ["gs2 (nguass=12, negrid=16)", "gs2 (nguass=6, negrid=8)",
-                 "gs2 (nguass=3, negrid=4)",
-                 "stella (nvgrid=24, nmu=12)",
-                 "stella (nvgrid=12, nmu=6)",
-                 "stella (nvgrid=6, nmu=3)",
-                 ]
-                 , save_name="field_solve_test_fapar1_fbpar1_bpar.eps",)
-    return
-
-def test_field_solve_in_h():
-    """ """
-    compare_phi_for_thesis([
-                stella_sim_fapar1_fbpar1, stella_sim_fapar1_fbpar1_h
-                            ],
-                ["stella", "stella"],
-                [
-                 "stella (nvgrid=24, nmu=12)",
-                 "stella (nvgrid=12, nmu=6) (in h)",
-                 ]
-                 , save_name="h_field_solve_test_fapar1_fbpar1_phi.eps",)
-    compare_bpar_for_thesis([
-                stella_sim_fapar1_fbpar1, stella_sim_fapar1_fbpar1_h
-                            ],
-                ["stella", "stella"],
-                [
-                 "stella (nvgrid=24, nmu=12)",
-                 "stella (nvgrid=12, nmu=6) (in h)",
-                 ]
-                 , save_name="h_field_solve_test_fapar1_fbpar1_bpar.eps",)
-    return
-
-def test_analytic_field_solve_in_h():
-    """ """
-    m_ion = 1
-    m_electron = 2.8E-4
-    B = 1
-
-    def calculate_phi(kperp):
-        """ """
-        b_ion = 0.5*kperp*kperp*m_ion/(B*B)
-        b_electron = 0.5*kperp*kperp*m_electron/(B*B)
-        gamzero_ion = np.exp(-b_ion)*iv(0,b_ion)
-        gamzero_electron = np.exp(-b_electron)*iv(0,b_electron)
-
-        phi = 0.5*(gamzero_ion + gamzero_electron)
-
-        return phi
-
-    def calculate_bpar(kperp, beta):
-        """ """
-        b_ion = 0.5*kperp*kperp*m_ion/(B*B)
-        b_electron = 0.5*kperp*kperp*m_electron/(B*B)
-        gamone_ion = np.exp(-b_ion)*(iv(0,b_ion) - iv(1,b_ion) )
-        gamone_electron = np.exp(-b_electron)*(iv(0,b_electron) - iv(1,b_electron) )
-        bpar = (-0.5*beta/B) * (gamone_ion - gamone_electron )
-        return bpar
-
-    # outnc_longname = "sims/stella_slab_fapar1_fbpar1_h/input_nvpa48_nmu24.out.nc"
-    outnc_longname = "sims/stella_slab_fapar1_fbpar1_h/input_vpamax4_vperpmax4.out.nc"
-    field_key_stella = "phi_vs_t"
-    (z, field_vs_t) = extract_data_from_ncdf_with_xarray(outnc_longname,
-            'zed', field_key_stella)
-    field_t0 = np.array(field_vs_t[0,0,:,0,0,:])
-    # shape is now (zed, ri)
-    print("stella phi = ", field_t0)
-    phi = calculate_phi(1)
-    print("analytic phi = ", phi)
-    print("stella/analytic = ", field_t0[0]/phi)
-
-    field_key_stella = "bpar_vs_t"
-    (z, field_vs_t) = extract_data_from_ncdf_with_xarray(outnc_longname,
-            'zed', field_key_stella)
-    field_t0 = np.array(field_vs_t[0,0,:,0,0,:])
-    print("stella bpar = ", field_t0)
-    kperp = 1; beta=1
-    bpar = calculate_bpar(kperp, beta)
-    print("analytic bpar = ", bpar)
-    print("stella/analytic = ", field_t0[0]/bpar)
-
-    return
-
 def calculate_fields_zjzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=1):
     """ """
     b_ion = 0.5*kperp*kperp*m_ion/(B*B)
@@ -338,6 +190,8 @@ def calculate_fields_zjzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=
     gamone_electron = np.exp(-b_electron)*(iv(0,b_electron) - iv(1,b_electron) )
     antot1 = (gamzero_ion + gamzero_electron)
     antot3 = (-0.5*beta/B) * (gamone_ion - gamone_electron )
+    print("gamzero_ion = ", gamzero_ion)
+    print("gamzero_electron = ", gamzero_electron)
     if dist == "h":
         gamtot_h = 2
         phi = antot1/gamtot_h
@@ -363,16 +217,14 @@ def calculate_fields_zvpajzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4,
     gamone_ion = np.exp(-b_ion)*(iv(0,b_ion) - iv(1,b_ion) )
     gamone_electron = np.exp(-b_electron)*(iv(0,b_electron) - iv(1,b_electron) )
     antot2 = 0.5*beta*(gamzero_ion/np.sqrt(m_ion) + gamzero_electron/np.sqrt(m_electron))
-    print("np.exp(-b_ion), iv(0,b_ion) = ", np.exp(-b_ion), iv(0,b_ion))
+    # print("np.exp(-b_ion), iv(0,b_ion) = ", np.exp(-b_ion), iv(0,b_ion))
     # print("gamzero_ion, gamzero_electron, gamone_ion, gamone_electron = ", gamzero_ion, gamzero_electron, gamone_ion, gamone_electron)
     if dist == "h":
-        print("In the h part")
         apar_denom_h = kperp*kperp
         phi = 0
         apar = antot2/apar_denom_h
         bpar = 0
     else:
-        print("In the gbar part")
         apar_denom = kperp*kperp + beta*(gamzero_ion/m_ion + gamzero_electron/m_electron)
         phi = 0
         apar = antot2/apar_denom
@@ -580,6 +432,38 @@ def test_field_solve_apar_for_thesis():
     For each of these, plot the result for field solve in h and field solve in h.
     (3) Fixed vspace-res, varying ky
     """
+    def make_analytic_apar_plot():
+        """ """
+        top = 0.98
+        left = 0.14
+        right = 0.98
+        bottom = 0.15
+        vspace = 0.05
+        hspace = 0.04
+        height = (top - bottom)
+        width = (right - left )
+        col1_left = left
+        col2_left = left + width + hspace
+
+        label_fontsize = 40
+        legend_fontsize = 20
+
+        fig = plt.figure(figsize=(14,8))
+        ax1 = fig.add_axes((col1_left, bottom, width, height)) # vpa-res, h
+        #ax2 = fig.add_axes((col2_left, bottom, width, height)) # vpa-res, gbar
+
+        ax1.plot(kperp_vals, analytic_apar_h_kperp, lw=3, marker="o", mfc="none", markersize=10, label=r"$\tilde{h}_k$")
+        ax1.plot(kperp_vals, analytic_apar_gbar_kperp, lw=3, marker="o", mfc="none", markersize=10, label=r"$\tilde{\bar{g}}_k$")
+        ax1.set_xscale("log")
+        ax1.legend(loc="best", fontsize=legend_fontsize)
+        #ax2.set_xscale("log")
+        ax1.set_yscale("log")
+        ax1.set_xlabel(r"$\tilde{k}_\perp$", fontsize=label_fontsize)
+        ax1.set_ylabel(r"analytic $\tilde{A}_{\parallel k}$", fontsize=label_fontsize)
+        #ax2.set_ylabel(r"analytic $\tilde{A}_{\parallel k}$")
+        plt.savefig("analytic_apar_for_test.eps")
+        plt.close()
+        return
 
     def make_plot():
         """ """
@@ -711,23 +595,13 @@ def test_field_solve_apar_for_thesis():
         analytic_apar_gbar_kperp.append(apar_gbar)
     analytic_apar_h_kperp = np.array(analytic_apar_h_kperp)
     analytic_apar_gbar_kperp = np.array(analytic_apar_gbar_kperp)
-    print("solution with h. apar = ", analytic_apar_h)
-    print("solution with gbar. apar = ", analytic_apar_gbar)
-    print("solution with h. analytic_apar_h_kperp = ", analytic_apar_h_kperp)
-    print("solution with gbar. analytic_apar_gbar_kperp = ", analytic_apar_gbar_kperp)
+    make_analytic_apar_plot()
+    # print("solution with h. apar = ", analytic_apar_h)
+    # print("solution with gbar. apar = ", analytic_apar_gbar)
+    # print("solution with h. analytic_apar_h_kperp = ", analytic_apar_h_kperp)
+    # print("solution with gbar. analytic_apar_gbar_kperp = ", analytic_apar_gbar_kperp)
 
-    fig = plt.figure()
-    ax1 = fig.add_subplot(211)
-    ax2 = fig.add_subplot(212, sharex=ax1)
-    ax1.plot(kperp_vals, analytic_apar_h_kperp, lw=3, label="h")
-    ax2.plot(kperp_vals, analytic_apar_gbar_kperp, lw=3, label="gbar")
-    ax1.set_yscale("log")
-    ax1.legend(loc="best")
-    ax2.legend(loc="best")
-    ax2.set_xlabel("kperp")
-    ax1.set_ylabel("apar, analytic")
-    ax2.set_ylabel("apar, analytic")
-    plt.show()
+
     vpamax_vals_h, nvpa_vals_h, phi_vals_h_vpa, apar_vals_h_vpa, bpar_vals_h_vpa = get_fields_from_outnc_files(make_sims.apar_h_vpa_scan_folder)
     vpamax_vals_gbar, nvpa_vals_gbar, phi_vals_gbar_vpa, apar_vals_gbar_vpa, bpar_vals_gbar_vpa = get_fields_from_outnc_files(make_sims.apar_gbar_vpa_scan_folder)
     vperpmax_vals_h, nmu_vals_h, phi_vals_h_vperp, apar_vals_h_vperp, bpar_vals_h_vperp = get_fields_from_outnc_files(make_sims.apar_h_vperp_scan_folder)
@@ -738,6 +612,8 @@ def test_field_solve_apar_for_thesis():
     print("max(abs(phi_vals_h_kperp)) = ", np.max(abs(phi_vals_h_kperp)))
     print("max(abs(bpar_vals_h_kperp)) = ", np.max(abs(bpar_vals_h_kperp)))
     print("max(abs(phi_vals_gbar_kperp)) = ", np.max(abs(phi_vals_gbar_kperp)))
+    arg = np.argmax(abs(phi_vals_gbar_kperp))
+    print("kperp of max phi = ", kperp_vals_gbar[arg])
     print("max(abs(bpar_vals_gbar_kperp)) = ", np.max(abs(bpar_vals_gbar_kperp)))
     sort_idxs = np.argsort(kperp_vals_h)
     kperp_vals_h = kperp_vals_h[sort_idxs]
@@ -761,8 +637,5 @@ def test_field_solve_apar_for_thesis():
 
 if __name__ == "__main__":
     print("Hello world")
-    # make_field_solve_test_plots_for_thesis()
-    # test_field_solve_in_h()
-    # test_analytic_field_solve_in_h()
     # vspace_res_test_field_solve_for_thesis()
     test_field_solve_apar_for_thesis()
