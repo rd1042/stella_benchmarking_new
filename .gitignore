@@ -60,6 +60,8 @@ test_slab_em/sims/*/*.used_inputs.in
 !test_field_solve/*.py
 test_field_solve/sims/*/*.in
 !test_field_solve/sims/*/template_input_file
+!w7x_em/*.py
+!w7x_em/sims/*.in
 !test_field_solve/sims/*/*.pickle
 test_field_solve/sims/*/.*.in
 test_field_solve/sims/*/*.used_inputs.in

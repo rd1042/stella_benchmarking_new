@@ -402,13 +402,14 @@ def vspace_res_test_field_solve_for_thesis():
             ax.set_xscale("log")
             ax.set_yscale("log")
         if which=="vpa":
-                #ax.marker=marker_list[folder_idx], mfc="none", markersize=marker_size
             plt.savefig("vpa_res_field_solve.eps")
         if which=="vperp":
             for ax in [ax1, ax3, ax5]:
                 ax.set_xscale("log")
             plt.savefig("vperp_res_field_solve.eps")
         plt.close()
+
+        return
 
     analytic_phi_h, analytic_apar_h, analytic_bpar_h = calculate_fields_zjzeroexp(1, 1, "h")
     analytic_phi_gbar, analytic_apar_gbar, analytic_bpar_gbar = calculate_fields_zjzeroexp(1, 1, "gbar")
@@ -637,5 +638,5 @@ def test_field_solve_apar_for_thesis():
 
 if __name__ == "__main__":
     print("Hello world")
-    # vspace_res_test_field_solve_for_thesis()
+    vspace_res_test_field_solve_for_thesis()
     test_field_solve_apar_for_thesis()

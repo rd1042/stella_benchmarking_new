@@ -28,7 +28,6 @@ def compare_beta_scans(stella_folder, gs2_folder, save_name, plot_apar=False, pl
     make_beta_scan_plots(stella_longnames, gs2_longnames, gs2_beta, save_name,
             gs2_pickle=None,  plot_apar=True, plot_bpar=False, plot_format=".png")
 
-
 def make_beta_plots_from_pickles_for_thesis(pickle_longnames, labels, marker_size=1, omega_diff=False,
                                 save_name="test.eps"):
     """Either plot Omega(beta), or, if omega_diff=True, plot (Omega-Omega_ref) (beta),
