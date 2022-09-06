@@ -62,6 +62,8 @@ test_field_solve/sims/*/*.in
 !test_field_solve/sims/*/template_input_file
 !w7x_em/*.py
 !w7x_em/sims/*.in
+!w7x_em/sims/w003_em_linear_fprim_tprim_explicit_scan/template*
+!w7x_em/sims/w003_em_linear_fprim_tprim_implicit_scan/template*
 !test_field_solve/sims/*/*.pickle
 test_field_solve/sims/*/.*.in
 test_field_solve/sims/*/*.used_inputs.in
