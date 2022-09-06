@@ -64,6 +64,8 @@ test_field_solve/sims/*/*.in
 !w7x_em/sims/*.in
 !w7x_em/sims/w003_em_linear_fprim_tprim_explicit_scan/template*
 !w7x_em/sims/w003_em_linear_fprim_tprim_implicit_scan/template*
+!w7x_em/sims/w003_em_linear_fprim_tprim_explicit_scan/submit_jobs.sh
+!w7x_em/sims/w003_em_linear_fprim_tprim_implicit_scan/submit_jobs.sh
 !w7x_em/equilibria/*
 !test_field_solve/sims/*/*.pickle
 test_field_solve/sims/*/.*.in
