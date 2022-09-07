@@ -11,8 +11,8 @@ import re
 import math
 from construct_stella_files_in_folders import make_fprim_tprim_ky_scan
 
-folder_name_1 = "/sims/w003_em_linear_fprim_tprim_explicit_scan"
-folder_name_2 = "/sims/w003_em_linear_fprim_tprim_implicit_scan"
+folder_name_1 = "sims/w003_em_linear_fprim_tprim_explicit_scan"
+folder_name_2 = "sims/w003_em_linear_fprim_tprim_implicit_scan"
 
 if __name__ == "__main__":
     print("Hello world")
@@ -21,5 +21,5 @@ if __name__ == "__main__":
     # ky_vals = [0.05, 0.5, 1, 1.5, 3, 4.5, 6]
     # make_fprim_tprim_ky_scan(folder_name_1, fprim_vals, tprim_vals, ky_vals)
     ky_vals = [0.5]
-    make_fprim_tprim_ky_scan(folder_name_1, fprim_vals, tprim_vals, ky_vals)
+    #make_fprim_tprim_ky_scan(folder_name_1, fprim_vals, tprim_vals, ky_vals)
     make_fprim_tprim_ky_scan(folder_name_2, fprim_vals, tprim_vals, ky_vals)

@@ -28,7 +28,7 @@
 
 &vmec_parameters
  zeta_center = 0.0
- vmec_filename = '../equilibria/wout_KJM_3.nc'
+ vmec_filename = '../../../equilibria/wout_KJM_3.nc'
  torflux=0.49
  nfield_periods = 4
  surface_option = 0

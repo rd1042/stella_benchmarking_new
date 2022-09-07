@@ -10,5 +10,5 @@
 #SBATCH --account=phys-gspt-2019         # Project account
 
 sim_name="input.in"
-mpirun -n 1 /users/rd1042/scratch/stella/stella $sim_name
+mpirun -n 1 /users/rd1042/scratch/em_stella_new/stella $sim_name
 
