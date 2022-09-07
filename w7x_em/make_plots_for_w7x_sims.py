@@ -19,7 +19,6 @@ def get_gradient_from_outnc_longname(outnc_longname):
     gradients_str = re.split("_", gradients_str)[0]
     return float(gradients_str)
 
-
 def make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable):
     """ """
     fig = plt.figure(figsize=(12,8))
@@ -248,6 +247,7 @@ def examine_basic_gradient_scan():
 
     return
 
+    
 if __name__ == "__main__":
     print("Hello world")
     examine_basic_gradient_scan()
