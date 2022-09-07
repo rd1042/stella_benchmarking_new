@@ -62,12 +62,10 @@ test_field_solve/sims/*/*.in
 !test_field_solve/sims/*/template_input_file
 !w7x_em/*.py
 !w7x_em/sims/*.in
-!w7x_em/sims/w003_em_linear_fprim_tprim_explicit_scan/*.pickle
-!w7x_em/sims/w003_em_linear_fprim_tprim_explicit_scan/template*
-!w7x_em/sims/w003_em_linear_fprim_tprim_implicit_scan/*.pickle
-!w7x_em/sims/w003_em_linear_fprim_tprim_implicit_scan/template*
-!w7x_em/sims/w003_em_linear_fprim_tprim_explicit_scan/submit_jobs.sh
-!w7x_em/sims/w003_em_linear_fprim_tprim_implicit_scan/submit_jobs.sh
+!w7x_em/sims/initial_test_sims/*.in
+!w7x_em/sims/w003_*/*.pickle
+!w7x_em/sims/w003_*/template*
+!w7x_em/sims/w003_*/submit_jobs.sh
 !w7x_em/equilibria/*
 !test_field_solve/sims/*/*.pickle
 test_field_solve/sims/*/.*.in
