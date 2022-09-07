@@ -198,7 +198,7 @@ def get_omega_from_subfolder_and_make_plot(outnc_longname):
     sim_shortname = re.split(".out.nc", sim_shortname)[0]
     sim_longname = re.split(".out.nc", outnc_longname)[0]
     # view_ncdf_variables(outnc_longname)
-    time, freqom, gammaom, time_stable, gamma_stable = get_omega_data(sim_longname, "stella")
+    time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
     # These might not be finite - if not, from the finite versions
     # Create a flag to see if finite
     if np.isfinite(freqom).all():
@@ -221,7 +221,6 @@ def get_omega_from_subfolder_and_make_plot(outnc_longname):
     time_gammaom = time[gammaom_finite_idxs]
     gamma_stable_finite_idxs = np.isfinite(gamma_stable)
     gamma_stable_finite = gamma_stable[gamma_stable_finite_idxs]
-    time_gamma_stable = time_stable[gamma_stable_finite_idxs]
 
     freqom_tolerance = 1E-2
     freqom_frac_tolerance = 2E-2
