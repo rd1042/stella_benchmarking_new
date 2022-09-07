@@ -7,7 +7,7 @@ import sys
 
 sys.path.append("../postprocessing_tools")
 import helper_linear_sims as help_lin
-from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf
+from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf_with_xarray
 from extract_sim_data import get_omega_data, get_phiz_data, get_aparz_data, get_bparz_data
 from plotting_helper import plot_phi_z_for_sim, plot_apar_z_for_sim, plot_bpar_z_for_sim
 
@@ -44,7 +44,7 @@ def get_phiz_data_stella(sim_longname):
 
 def get_fprim_tprim_ky(outnc_longname):
     """ """
-    fprim, tprim, ky = extract_data_from_ncdf(outnc_longname, "fprim", "tprim", "ky")
+    fprim, tprim, ky = extract_data_from_ncdf_with_xarray(outnc_longname, "fprim", "tprim", "ky")
     # print("fprim = ", float(fprim[0]))
     # print("tprim = ", float(tprim[0]))
     # print("ky = ", float(ky))
