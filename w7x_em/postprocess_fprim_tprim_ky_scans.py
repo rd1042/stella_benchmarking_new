@@ -5,5 +5,9 @@ import make_fprim_tprim_ky_scans as make_scans
 
 if __name__ == "__main__":
     print("Hello world")
-    postprocess_fprim_tprim_ky_scan(make_scans.folder_name_1)
-    postprocess_fprim_tprim_ky_scan(make_scans.folder_name_2)
+    # postprocess_fprim_tprim_ky_scan(make_scans.folder_name_1)
+    # postprocess_fprim_tprim_ky_scan(make_scans.folder_name_2)
+    postprocess_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_em)
+    postprocess_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es)
+    postprocess_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em)
+    postprocess_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es)

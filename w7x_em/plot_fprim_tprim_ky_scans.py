@@ -488,3 +488,7 @@ if __name__ == "__main__":
 
     make_fprim_tprim_ky_scan(make_scans.folder_name_1)
     make_fprim_tprim_ky_scan(make_scans.folder_name_2)
+    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_em)
+    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es)
+    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em)
+    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es)

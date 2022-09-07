@@ -170,7 +170,7 @@ def postprocess_folder_stella(outnc_longnames, param_scanned="gradients",
 
 def examine_basic_gradient_scan():
     """ """
-    sims_prefix = "sims/em_explicit_gradients_"
+    sims_prefix = "sims/initial_test_sims/em_explicit_gradients_"
 
     outnc_longnames = [sims_prefix + "0" + ".out.nc",       # 0
                        sims_prefix + "1" + ".out.nc",       # 1
@@ -179,7 +179,7 @@ def examine_basic_gradient_scan():
                        sims_prefix + "3_all_electron" + ".out.nc",  # 4
                        sims_prefix + "3_all_ion" + ".out.nc",       # 5
                        sims_prefix + "3_double_beta" + ".out.nc",   # 6
-                       "sims/em_implicit_gradients_3.out.nc"        # 7
+                       "sims/initial_test_sims/em_implicit_gradients_3.out.nc"        # 7
                       ]
     (gradient_longlist, z_longlist, abs_phi_longlist, abs_apar_longlist,
            abs_bpar_longlist, growth_rate_longlist, freq_longlist,
@@ -247,7 +247,77 @@ def examine_basic_gradient_scan():
 
     return
 
-    
+def compare_implicit_explicit_gradients3():
+    """ """
+    sims_prefix = "sims/initial_test_sims/em_explicit_gradients_"
+
+    outnc_longnames = [sims_prefix + "3" + ".out.nc",       # 0
+                       "sims/initial_test_sims/em_implicit_gradients_3.out.nc"        # 1
+                      ]
+    (gradient_longlist, z_longlist, abs_phi_longlist, abs_apar_longlist,
+           abs_bpar_longlist, growth_rate_longlist, freq_longlist,
+           time_longlist, gammaom_longlist, freqom_longlist) = postprocess_folder_stella(outnc_longnames, make_plot=True, sort=False)
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(221) # omega
+    ax2 = fig.add_subplot(223) # gamma
+    ax3 = fig.add_subplot(322) # phi
+    ax4 = fig.add_subplot(324) # apar
+    ax5 = fig.add_subplot(326) # bpar
+
+    my_linewidth = 3
+    ylabel_fontsize = 20
+    xlabel_fontsize = 20
+    legend_fontsize = 12
+
+    labels_list = [r"$a/L_{ni, ne, Ti, Te}=3, \beta=3\%$ (fully explicit)",
+                   r"$a/L_{ni, ne, Ti, Te}=3, \beta=3\%$ (streaming + mirror implicit)",
+                    ]
+    sim_idxs = [0, 1]
+
+    # theta goes -pi to pi
+    # each field period is 2/5 * pi
+    # so nfield_period = 10 means zeta spans 4pi i.e. goes -2pi to 2pi
+    # so nfield_period = 4 means zeta spans 8/5*pi i.e. goes -4/5*pi to 4/5*pi
+    # so we need to go from ()
+    explicit_zfactor = 4/(2*np.pi)
+    implicit_zfactor = 1.6/(2*np.pi)
+    conversion_factor = [explicit_zfactor, implicit_zfactor]
+    linestyles=["-", "--", "-.", ":", "-"]
+    my_linewidths=[5, 4, 4, 4, 2]
+    for counter, sim_idx in enumerate(sim_idxs):
+        z = z_longlist[sim_idx]
+        abs_phi = abs_phi_longlist[sim_idx]
+        abs_apar = abs_apar_longlist[sim_idx]
+        abs_bpar = abs_bpar_longlist[sim_idx]
+        time = time_longlist[sim_idx] ; time = time - time[-1]
+        gammaom = gammaom_longlist[sim_idx]
+        freqom = freqom_longlist[sim_idx]
+        sim_label=labels_list[counter]
+
+        ax1.plot(time, freqom, lw=my_linewidths[counter], label=sim_label, ls=linestyles[counter])
+        ax2.plot(time, gammaom, lw=my_linewidths[counter], label=sim_label, ls=linestyles[counter])
+        ax3.plot(z*conversion_factor[counter], abs_phi, lw=my_linewidths[counter], label=sim_label, ls=linestyles[counter])
+        ax4.plot(z*conversion_factor[counter], abs_apar, lw=my_linewidths[counter], label=sim_label, ls=linestyles[counter])
+        ax5.plot(z*conversion_factor[counter], abs_bpar, lw=my_linewidths[counter], label=sim_label, ls=linestyles[counter])
+
+    ax2.set_ylim((0.5,4))
+    ax1.set_ylim((-5, 5))
+    ax1.set_ylabel(r"$\omega$", fontsize=ylabel_fontsize)
+    ax2.set_ylabel(r"$\gamma$", fontsize=ylabel_fontsize)
+    ax2.set_xlabel(r"$t-t_{end}$", fontsize=xlabel_fontsize)
+    ax3.set_ylabel(r"$\vert \phi \vert$", fontsize=ylabel_fontsize)
+    ax4.set_ylabel(r"$\vert A_\parallel \vert$", fontsize=ylabel_fontsize)
+    ax5.set_ylabel(r"$\vert B_\parallel \vert$", fontsize=ylabel_fontsize)
+    ax5.set_xlabel(r"$\zeta$", fontsize=xlabel_fontsize)
+    ax2.legend(loc="best", fontsize=legend_fontsize)
+    plt.tight_layout()
+    plt.show()
+
+    return
+
+
 if __name__ == "__main__":
     print("Hello world")
-    examine_basic_gradient_scan()
+    # examine_basic_gradient_scan()
+    compare_implicit_explicit_gradients3()
