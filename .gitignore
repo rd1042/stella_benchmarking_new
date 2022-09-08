@@ -72,3 +72,5 @@ test_field_solve/sims/*/.*.in
 test_field_solve/sims/*/*.used_inputs.in
 !test_cbc_nonlinear_beta0/stella_nonlinear_2species_master/*.in
 !test_cbc_nonlinear_beta0/stella_nonlinear_2species_master/*.sh
+!test_cbc_nonlinear_beta0/stella_nonlinear_2species_nisl/*.in
+!test_cbc_nonlinear_beta0/stella_nonlinear_2species_nisl/*.sh
