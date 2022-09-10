@@ -33,22 +33,22 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
         logphi2_list = []
         if zonal:
             for i in range(0, len(kx)):
-                for j in range(1, len(ky)): # Adjusted ky limit
-                    kx_list.append(kx[i])
-                    ky_list.append(ky[j])
-                    logphi2_list.append(np.log(phi2_kxky[i,j]))
-
-            [kx_min, kx_max] = [min(kx), max(kx)]
-            [ky_min, ky_max] = [min(ky[1:]), max(ky[1:])]
-        else:
-            for i in range(0, len(kx)):
-                for j in range(0, len(ky)):
+                for j in range(0, len(ky)): # Adjusted ky limit
                     kx_list.append(kx[i])
                     ky_list.append(ky[j])
                     logphi2_list.append(np.log(phi2_kxky[i,j]))
 
             [kx_min, kx_max] = [min(kx), max(kx)]
             [ky_min, ky_max] = [min(ky), max(ky)]
+        else:
+            for i in range(0, len(kx)):
+                for j in range(1, len(ky)):  # Adjusted ky limit
+                    kx_list.append(kx[i])
+                    ky_list.append(ky[j])
+                    logphi2_list.append(np.log(phi2_kxky[i,j]))
+
+            [kx_min, kx_max] = [min(kx), max(kx)]
+            [ky_min, ky_max] = [min(ky[1:]), max(ky[1:])]
 
         new_kx = np.linspace(kx_min, kx_max, 100)
         new_ky = np.linspace(ky_min, ky_max, 100)
@@ -98,17 +98,17 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
 
     ### Make some plots
 
-    log_phi2_t = np.log(phi2)
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    ax1.plot(t, log_phi2_t, c="black", lw=2)
+    ax1.plot(t, phi2_t, c="black", lw=2)
+    ax1.set_yscale("log")
     ax1.set_xlabel("t")
-    ax1.set_ylabel("log(phi2)")
+    ax1.set_ylabel("phi2")
     ax1.grid(True)
     plt.savefig(sim_longname + "_phi2_t.eps")
     plt.close()
 
-    phi2_kxky = phi2_tkxky[-1,:,:] 
+    phi2_kxky = phi2_tkxky[-1,:,:]
     make_phi2_kxky_plot(zonal=True)
     make_phi2_kxky_plot(zonal=False)
 
