@@ -1,22 +1,22 @@
 &physics_flags
  nonlinear = .true.
  full_flux_surface = .false.
-/
+/ 
 &init_g_knobs
  chop_side = F
- phiinit = 0.001
-
+ phiinit = 0.001 ! 1.0
+ !restart_file = "restart.nc"
  restart_dir = "restart"
- ginit_option = "default"
+ ginit_option = "default" ! Changed from "many"
  width0 = 1.0
 /
 &millergeo_parameters
  nzed_local = 128
- rhoc = 0.5
- shat = 0.78
- qinp = 1.38
- rmaj = 2.72
- rgeo = 2.72
+ rhoc = 0.5  ! Bob: Changed from HThienpndt input
+ shat = 0.78 ! Changed from 0.796
+ qinp = 1.38 ! Changed from 1.4
+ rmaj = 2.72 ! Changed from 2.77778
+ rgeo = 2.72 ! Changed from 2.77778
  shift = 0.0
  kappa = 1.0
  kapprim = 0.0
@@ -44,8 +44,8 @@
  mass = 1.0
  dens = 1.0
  temp = 1.0
- tprim = 2.537
- fprim = 0.809
+ tprim = 2.537 ! Changed from HThienpndt input 
+ fprim = 0.809 ! Changed from HThienpndt input
 /
 &species_parameters_2
  z=     -1.0
@@ -56,6 +56,7 @@
  fprim=  0.8
  type='electron'
 /
+
 &kt_grids_box_parameters
  ny = 91
  nx = 91
@@ -77,18 +78,19 @@
  fphi = 1.0
  fapar = 0.0
  fbpar = 0.0
-
-
- delt = 0.05
+ !delt_option = "check_restart"   ! Bob: Want to change . . .	
+ !t_end = 1000   ! Bob: Want to change . . .
+ delt = 0.05  ! Bob: Added this
  nstep = 20000
  cfl_cushion = 0.50
  mat_read = .false.
  mat_gen = .false.
  LU_option = 'local'
+ nisl_nonlinear = .true.
 /
 &stella_diagnostics_knobs
- nwrite = 100
- nsave = 4000
+ nwrite = 100   
+ nsave = 4000   
  save_for_restart = .true.
  write_omega = .false.
  write_kspectra = .true.
@@ -96,8 +98,8 @@
  write_gvmus = .false.
  write_moments = .false.
  write_gzvs = .false.
-
-
+ !flux_norm = .false.
+ !write_fluxes_kxky = .true.
 /
 &layouts_knobs
  xyzs_layout = 'yxzs'
@@ -114,8 +116,8 @@
  nx = 5
 /
 &dissipation
- hyper_dissipation = .false.
-
+ hyper_dissipation = .false.   ! Bob: Want to change, maybe? . . .
+ ! D_hyper = 0.1
 /	
 &geo_knobs
  geo_option = 'miller'

@@ -90,7 +90,7 @@
 /
 &stella_diagnostics_knobs
  nwrite = 100
- nsave = 2000
+ nsave = 4000
  save_for_restart = .true.
  write_omega = .false.
  write_kspectra = .true.
