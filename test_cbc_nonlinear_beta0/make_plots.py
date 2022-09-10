@@ -37,7 +37,7 @@ def plot_phi2_t(pickle_longnames):
 
 def plot_phi2_t_all():
     """ """
-    pickle_longnames = glob.glob("sims/*/*.pickle")
+    pickle_longnames = glob.glob("sims/*/*.summary_pickle")
     plot_phi2_t(pickle_longnames)
 
     return
