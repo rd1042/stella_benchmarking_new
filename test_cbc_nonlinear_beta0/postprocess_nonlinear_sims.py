@@ -30,7 +30,7 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
 
         kx_list = []
         ky_list = []
-
+        logphi2_list = []
         if zonal:
             for i in range(0, len(kx)):
                 for j in range(1, len(ky)): # Adjusted ky limit
@@ -82,7 +82,7 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
 
 
     [t, kx, ky, phi2, phi2_tkxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
-                                    ["t", "kx", "ky", "phi2", "phi2_vs_kxky"])
+                                    "t", "kx", "ky", "phi2", "phi2_vs_kxky")
     t = np.array(t)
     kx = np.array(kx)
     ky = np.array(ky)
@@ -108,6 +108,9 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
     plt.savefig(sim_longname + "_phi2_t.eps")
     plt.close()
 
+    phi2_kxky = phi2_tkxky[-1,:,:] 
+    make_phi2_kxky_plot(zonal=True)
+    make_phi2_kxky_plot(zonal=False)
 
     return
 
