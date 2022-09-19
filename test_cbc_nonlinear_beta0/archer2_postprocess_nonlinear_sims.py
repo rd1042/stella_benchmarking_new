@@ -2,14 +2,12 @@
 and phi2(kx, ky, tfinal) and save to a .pickle file"""
 
 import sys
-sys.path.append("../postprocessing_tools")
-from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf_with_xarray
+import xarray as xr
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 import re
 from scipy.interpolate import griddata
-
 
 def postprocess_nonlinear_outnc_sim(outnc_longname):
     """ """
@@ -79,8 +77,6 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
 
         return
 
-
-
     [t, kx, ky, phi2, phi2_tkxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
                                     "t", "kx", "ky", "phi2", "phi2_vs_kxky")
     t = np.array(t)
@@ -121,7 +117,22 @@ def postprocess_folder(folder_longname):
 
     return
 
+def extract_data_from_ncdf_with_xarray(sim_name, *args):
+    """Extract data arrays from the NetCDF file for a simulation. Extracts all
+    data given in *args. TO IMPLEMENT:
+     - Tell you if the file doens't exist
+     - If args don't exist, view_ncdf variables"""
+
+    # Convert the input file to a python dictionary
+    data = xr.open_dataset(sim_name)
+    datalist = []
+
+    # Extract each array specified in args, and add it to the list
+    for arg in args:
+        datalist.append(data[arg])
+
+    return datalist
+
 if __name__ == "__main__":
     folder_name = "~/stella_benchmarking_new/test_cbc_nonlinear_beta0/sims/"
     postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2")
-

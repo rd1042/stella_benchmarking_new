@@ -53,7 +53,6 @@ def extract_data_from_ncdf_with_xarray(sim_name, *args):
      - Tell you if the file doens't exist
      - If args don't exist, view_ncdf variables"""
 
-
     # Convert the input file to a python dictionary
     data = xr.open_dataset(sim_name)
     datalist = []
@@ -432,7 +431,7 @@ def view_ncdf_variables_with_xarray(sim_name):
     data = xr.open_dataset(sim_name)
     print(list(data.keys()))
     return
-    
+
 if __name__ == "__main__":
     outnc_longname = LINEAR_SIMS + "lowq0_psinkx_scan_millerparams_1/run_psin_0.15_ky_0.15_kx_0.03/input.out.nc"
     view_ncdf_variables(outnc_longname)
