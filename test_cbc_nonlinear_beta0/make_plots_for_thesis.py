@@ -2,6 +2,7 @@
 
 import sys
 sys.path.append("../postprocessing_tools")
+import matplotlib.scale as scale
 import matplotlib.pyplot as plt
 import numpy as np
 import glob
@@ -11,8 +12,9 @@ from scipy.interpolate import griddata
 
 IMAGE_DIR = "./images/"
 
-leapfrog_pickle = "sims/stella_nonlinear_2species_leapfrog_nonlinear/input.summary_pickle"
 master_pickle = "sims/stella_nonlinear_2species_master_archer2/input.summary_pickle"
+leapfrog_pickle = "sims/stella_nonlinear_2species_leapfrog_nonlinear/input.summary_pickle"
+nisl_pickle = "sims/stella_nonlinear_2species_nisl_archer2/input.summary_pickle"
 
 
 def plot_phi2_t(pickle_longnames):
@@ -36,7 +38,7 @@ def plot_phi2_t(pickle_longnames):
 
     return
 
-def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
+def make_colorplot_old(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
     """ """
     kx_list = []
     ky_list = []
@@ -77,6 +79,20 @@ def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
 
     return
 
+def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
+    """ """
+    if zonal:
+        phi2 = (np.swapaxes(phi2_kxky, 0, 1))
+
+    else:
+        phi2 = (np.swapaxes(phi2_kxky[:,1:], 0, 1))
+
+    print("scale names:", scale.get_scale_names())
+    img = ax.imshow(np.log(phi2), aspect="auto", origin="lower")
+    fig.colorbar(img, cax=cbax)
+
+    return
+
 def plot_properties_master_sim():
     """ """
     pickle_longname = master_pickle
@@ -84,34 +100,101 @@ def plot_properties_master_sim():
     [t, kx, ky, phi2, phi2_kxky] = pickle.load(myfile)
     myfile.close()
 
+    ## Rearrange the phi2_tkxky and kx so it goes in increasing value of kx
+    sort_idxs = np.argsort(kx)
+    kx = kx[sort_idxs]
+    phi2_kxky = phi2_kxky[sort_idxs,:]
+
+    ## imshow makes the plot, but in index-space rather than (kx, ky)
+    # To have meaningful labels, we want to find indexes corresponding to the
+    # desired values of kx, ky
+    kx_label_vals = np.array([-2, -1, 0, 1, 2])
+    ky_label_vals = np.array([0, 1, 2])
+    # idx space goes [0, 1, 2, . . . , nkx(y)-1]
+    # kx(y) space goes [kx(y)_min,  . . . , kx(y)_max]
+    # so kx = ((kx_max - kx_min)/(nkx-1))*kxidx + kx_min
+    # so kxidx = (kx - kx_min) * ((nkx-1)/(kx_max - kx_min))
+    kx_min = np.min(kx) ; kx_max = np.max(kx)
+    ky_min = np.min(ky) ; ky_max = np.max(ky)
+
+    kx_extent = kx_max - kx_min
+    ky_extent = ky_max - ky_min
+    nkx = len(kx) ; nky = len(ky)
+    xlabel_idx_vals = (kx_label_vals - kx_min) * ((nkx-1)/kx_extent)
+    ylabel_idx_vals = (ky_label_vals - ky_min) * ((nky-1)/ky_extent)
+    # print("xlabel_idx_vals = ", xlabel_idx_vals)
+    # print("ylabel_idx_vals = ", ylabel_idx_vals)
+    # sys.exit()
+    marker_size = 5
+    linewidth=2
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    ax1.plot(t, phi2)
-    ax1.scatter(t, phi2, c="red")
+    ax1.plot(t, phi2, lw=linewidth, zorder=0, c="black")
+    ax1.scatter(t, phi2, c="red", s=marker_size, zorder=10)
     ax1.set_yscale("log")
     ax1.set_xlabel(r"$t$")
     ax1.set_ylabel(r"phi2")
-    plt.show()
-
+    plt.tight_layout()
+    plt.savefig("master_phi2_t.eps")
+    plt.close()
 
     fig = plt.figure(figsize=[12, 12])
 
-    col1_lhs = 0.1
-    row1_bottom = 0.1
-    plot_dim_x = 0.75
-    plot_dim_y = plot_dim_x
-    col1_cb_lhs = 0.9
-    cb_width = 0.05
+    left = 0.1
+    right = 0.95
+    top = 0.92
+    bottom = 0.1
 
-    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
-    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    # row1_bottom = 0.1
+    subplot_hspace = 0.1
+    subplot_vspace = 0.1
+    subplot_width = (right - left - subplot_hspace)/2
+    subplot_height = (top - bottom - subplot_vspace)/2
+    cb_width = 0.02
+    cb_hspace = 0.02
+    plot_width = subplot_width - cb_width - cb_hspace
+    plot_height = subplot_height
+    print("plot_width, plot_height = ", plot_width, plot_height)
+
+    ax_col1_lhs = left
+    ax_col2_lhs = left + subplot_width + subplot_hspace
+    cbax_col1_lhs = left + plot_width + cb_hspace
+    cbax_col2_lhs = left + subplot_width + subplot_hspace + plot_width + cb_hspace
+    row1_bottom = bottom + subplot_vspace + subplot_height
+
+    xticklabel_fontsize = 24
+    yticklabel_fontsize = 24
+    xlabel_fontsize = 30
+    ylabel_fontsize = 30
+    cbax_title_fontsize = 30
+    # plot_dim_x = 0.75
+    # plot_dim_y = plot_dim_x
+    # col1_cb_lhs = 0.9
+
+    ax1 = fig.add_axes([ax_col1_lhs, row1_bottom, plot_width, plot_height])
+    cbax1 = fig.add_axes([cbax_col1_lhs, row1_bottom, cb_width, plot_height])
+    ax2 = fig.add_axes([ax_col2_lhs, row1_bottom, plot_width, plot_height])
+    cbax2 = fig.add_axes([cbax_col2_lhs, row1_bottom, cb_width, plot_height])
+    ax3 = fig.add_axes([ax_col1_lhs, bottom, plot_width, plot_height])
+    cbax3 = fig.add_axes([cbax_col1_lhs, bottom, cb_width, plot_height])
+    ax4 = fig.add_axes([ax_col2_lhs, bottom, plot_width, plot_height])
+    cbax4 = fig.add_axes([cbax_col2_lhs, bottom, cb_width, plot_height])
 
     make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
 
-    ax1.set_xlabel(r"$k_x$")
-    ax1.set_ylabel(r"$k_y$")
-    plt.show()
+    for ax in [ax1, ax2, ax3, ax4]:
+        ax.set_xticks(xlabel_idx_vals)
+        ax.set_yticks(ylabel_idx_vals)
+        ax.set_xticklabels([r"$-2$", r"$-1$", r"$0$", r"$1$", r"$2$", ], fontsize=xticklabel_fontsize)
+        ax.set_yticklabels([r"$0$", r"$1$", r"$2$"], fontsize=yticklabel_fontsize)
+        ax.set_xlabel(r"$k_x$", fontsize=xlabel_fontsize)
+        ax.set_ylabel(r"$k_y$", fontsize=ylabel_fontsize)
 
+    for cbax in [cbax1, cbax2]:
+        cbax.set_title(r"$\vert \tilde{\phi}_k\vert^2$", fontsize=cbax_title_fontsize)
+
+    plt.savefig("phi2_map_master.eps")
+    plt.close()
 
     return
 
@@ -121,18 +204,21 @@ def plot_properties_leapfrog_sim():
     myfile = open(pickle_longname, "rb")
     [t, kx, ky, phi2, phi2_tkxky] = pickle.load(myfile)
     myfile.close()
-    print("t = ", t)
+    ## Rearrange the phi2_tkxky and kx so it goes in increasing value of kx
+    sort_idxs = np.argsort(kx)
+    kx = kx[sort_idxs]
+    phi2_tkxky = phi2_tkxky[:,sort_idxs,:]
+    print("kx = ", kx)
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     ax1.plot(t, phi2)
     ax1.scatter(t, phi2, c="red")
+    for idx in [0,15,25,-1]:
+        ax1.scatter(t[idx], phi2[idx], c="green")
     ax1.set_yscale("log")
     ax1.set_xlabel(r"$t$")
     ax1.set_ylabel(r"phi2")
     plt.show()
-
-
-    fig = plt.figure(figsize=[12, 12])
 
     col1_lhs = 0.1
     row1_bottom = 0.1
@@ -142,6 +228,7 @@ def plot_properties_leapfrog_sim():
     cb_width = 0.05
 
     phi2_kxky = phi2_tkxky[0,:,:]
+    fig = plt.figure(figsize=[12, 12])
     ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
     cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
     make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
@@ -149,7 +236,94 @@ def plot_properties_leapfrog_sim():
     ax1.set_ylabel(r"$k_y$")
     plt.show()
 
+    phi2_kxky = phi2_tkxky[15,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[25,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[-1,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+
+    return
+
+def plot_properties_nisl_sim():
+    """ """
+    pickle_longname = nisl_pickle
+    myfile = open(pickle_longname, "rb")
+    [t, kx, ky, phi2, phi2_tkxky] = pickle.load(myfile)
+    myfile.close()
+    ## Rearrange the phi2_tkxky and kx so it goes in increasing value of kx
+    sort_idxs = np.argsort(kx)
+    kx = kx[sort_idxs]
+    phi2_tkxky = phi2_tkxky[:,sort_idxs,:]
+    print("kx = ", kx)
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax1.plot(t, phi2)
+    ax1.scatter(t, phi2, c="red")
+    for idx in [0,15,35,-1]:
+        ax1.scatter(t[idx], phi2[idx], c="green")
+    ax1.set_yscale("log")
+    ax1.set_xlabel(r"$t$")
+    ax1.set_ylabel(r"phi2")
+    plt.show()
+
+    col1_lhs = 0.1
+    row1_bottom = 0.1
+    plot_dim_x = 0.75
+    plot_dim_y = plot_dim_x
+    col1_cb_lhs = 0.9
+    cb_width = 0.05
+
     phi2_kxky = phi2_tkxky[0,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[15,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[35,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[-1,:,:]
+    fig = plt.figure(figsize=[12, 12])
     ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
     cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
     make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
@@ -162,5 +336,6 @@ def plot_properties_leapfrog_sim():
 
 if __name__ == "__main__":
     print("Hello world")
-    #plot_properties_master_sim()
-    plot_properties_leapfrog_sim()
+    plot_properties_master_sim()
+    #plot_properties_leapfrog_sim()
+    #plot_properties_nisl_sim()
