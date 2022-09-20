@@ -9,9 +9,9 @@ from itertools import cycle
 import sys
 import pickle
 
-stella_nperiod5_longname = "sims/master_cmiller_es_2species_marconi/input5"
+stella_master_longname = "sims/stella_master_archer2/input"
 stella_nperiod5_leapfrog_drifts_longname = "sims/stella_cmiller_es_2species_leapfrog_drifts/input5"
-gs2_basecase_longname = "sims/gs2_electrostatic_new/_0.0000"
+gs2_basecase_longname = "sims/gs2_ky05/_0.0000"
 
 def plot_phi_z_for_sim(ax1, sim_longname, sim_label, sim_type="stella", plot_format=".eps",
                 linewidth=1.0, linestyleoveride=False, color=False):
@@ -90,8 +90,23 @@ def make_comparison_plots_leapfrog_for_thesis(sim_longnames, sim_labels, save_na
             print("Error! len(sim_longnames), len(sim_types) = ", len(sim_longnames), len(sim_types) )
             sys.exit()
         time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
-
-        #print("Omega = ", freqom_final, gammaom_final )
+        # print("time = ", np.array(time))
+        # print("freqom_final = ", np.array(freqom_final))
+        # print("gammaom_final = ", np.array(gammaom_final))
+        # print("freqom = ", np.array(freqom))
+        # print("gammaom = ", np.array(gammaom))
+        # print("gamma_stable) = ", np.array(gamma_stable))
+        gamma_llim = np.min(gammaom)
+        gamma_ulim = np.max(gammaom)
+        freq_llim = np.min(freqom)
+        freq_ulim = np.max(freqom)
+        print("Omega = ", np.float(freqom_final), np.float(gammaom_final))
+        time = np.array(time)
+        freqom = np.array(freqom)
+        gammaom = np.array(gammaom)
+        gamma_stable = np.array(gamma_stable)
+        ax11.plot(time, freqom)
+        ax12.plot(time, gammaom)
         plot_phi_z_for_sim(ax21, sim_longname, sim_label, sim_type=sim_type, linewidth=mylinewidths[sim_idx],
                     linestyleoveride=linestyleoverides[sim_idx], color=mycols[sim_idx])
 
@@ -145,28 +160,19 @@ def compare_stella_leapfrog_gs2_for_thesis():
     """ """
 
     make_comparison_plots_leapfrog_for_thesis([
-            stella_nperiod5_longname,
-            stella_nperiod5_leapfrog_drifts_longname,
-            #stella_nperiod3_leapfrog_drifts_longname,
-            #stella_dt0005_leapfrog_drifts_longname,
-            #stella_dt00025_leapfrog_drifts_longname,
+            stella_master_longname,
+            # stella_nperiod5_leapfrog_drifts_longname,
             gs2_basecase_longname,
                     ],
                     [
-                    r"stella;$\Omega$=$0.12$+$0.14$i",
-                    r"stella (Multipstep);$\Omega$=$0.12$+$0.14$i",
-                    #"stella (Leapfrog drifts, np=3)",
-                    #"stella (Leapfrog drifts, dt=5E-3)",
-                    #"stella (Leapfrog drifts, dt=2.5E-3)",
-                    r"GS2;$\Omega$=$0.11$+$0.14$i",
+                    r"stella;$\Omega$=$0.206$+$0.184$i",
+                    # r"stella (Multipstep);$\Omega$=$0.12$+$0.14$i",
+                    r"GS2;$\Omega$=$0.202$+$0.187$i",
                     ],
                     "./poster_leapfrog",
                     sim_types=[
                     "stella",
-                    "stella",
-                    #"stella",
-                    #"stella",
-                    #"stella",
+                    # "stella",
                     "gs2",
                     ],
                     )
