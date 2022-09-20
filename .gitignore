@@ -87,3 +87,6 @@ test_field_solve/sims/*/*.used_inputs.in
 !test_cbc_nonlinear_beta0/sims/*/*.eps
 !test_cbc_nonlinear_beta0/sims/*/*.summary_pickle
 !test_cbc_nonlinear_beta0/*.py
+
+!test_cbc_beta0_2species/*.py
+!test_cbc_beta0_2species/sims/*/*.in
