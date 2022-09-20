@@ -77,7 +77,6 @@ def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
 
     return
 
-
 def plot_properties_master_sim():
     """ """
     pickle_longname = master_pickle
@@ -116,6 +115,52 @@ def plot_properties_master_sim():
 
     return
 
+def plot_properties_leapfrog_sim():
+    """ """
+    pickle_longname = leapfrog_pickle
+    myfile = open(pickle_longname, "rb")
+    [t, kx, ky, phi2, phi2_tkxky] = pickle.load(myfile)
+    myfile.close()
+    print("t = ", t)
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax1.plot(t, phi2)
+    ax1.scatter(t, phi2, c="red")
+    ax1.set_yscale("log")
+    ax1.set_xlabel(r"$t$")
+    ax1.set_ylabel(r"phi2")
+    plt.show()
+
+
+    fig = plt.figure(figsize=[12, 12])
+
+    col1_lhs = 0.1
+    row1_bottom = 0.1
+    plot_dim_x = 0.75
+    plot_dim_y = plot_dim_x
+    col1_cb_lhs = 0.9
+    cb_width = 0.05
+
+    phi2_kxky = phi2_tkxky[0,:,:]
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[0,:,:]
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+
+    return
+
 if __name__ == "__main__":
     print("Hello world")
-    plot_properties_master_sim()
+    #plot_properties_master_sim()
+    plot_properties_leapfrog_sim()

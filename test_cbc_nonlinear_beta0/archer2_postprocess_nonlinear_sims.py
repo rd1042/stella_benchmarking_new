@@ -9,7 +9,7 @@ import pickle
 import re
 from scipy.interpolate import griddata
 
-def postprocess_nonlinear_outnc_sim(outnc_longname):
+def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False):
     """ """
 
     def make_phi2_kxky_plot(zonal=False):
@@ -89,7 +89,10 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
     pickle_longname = sim_longname + ".summary_pickle"
 
     myfile = open(pickle_longname, "wb")
-    pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:]], myfile)
+    if kspectra_t:
+        pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:]], myfile)
+    else:
+        pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:]], myfile)
     myfile.close()
 
     ### Make some plots
@@ -110,10 +113,10 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
 
     return
 
-def postprocess_folder(folder_longname):
+def postprocess_folder(folder_longname, kspectra_t=False):
     """ """
     outnc_longname = folder_longname + "/input.out.nc"
-    postprocess_nonlinear_outnc_sim(outnc_longname)
+    postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=kspectra_t)
 
     return
 
@@ -136,8 +139,8 @@ def extract_data_from_ncdf_with_xarray(sim_name, *args):
 if __name__ == "__main__":
     # folder_name = "/home/e607/e607/rd1042/stella_benchmarking_new/test_cbc_nonlinear_beta0/sims/"
     folder_name = "sims/"
-    # postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2")
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2", kspectra_t = True)
     # postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_delt_004")
-    # postprocess_folder(folder_name + "/stella_nonlinear_2species_leapfrog_nonlinear")
-    # postprocess_folder(folder_name + "/stella_nonlinear_2species_isl")
-    postprocess_folder(folder_name + "/stella_nonlinear_2species_master_archer2")
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_leapfrog_nonlinear", kspectra_t = True)
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_isl", kspectra_t = True)
+    # postprocess_folder(folder_name + "/stella_nonlinear_2species_master_archer2")
