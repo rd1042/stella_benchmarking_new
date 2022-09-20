@@ -80,21 +80,21 @@
  !delt_option = "check_restart"   ! Bob: Want to change . . .	
  !t_end = 1000   ! Bob: Want to change . . .
  delt = 0.05  ! Bob: Added this
- nstep = 20000
+ nstep = 30000
  cfl_cushion = 0.50
  mat_read = .false.
  mat_gen = .false.
  LU_option = 'local'
 /
 &stella_diagnostics_knobs
- nwrite = 100   
- nsave = 4000   
+ nwrite = 50   
+ nsave = 5000   
  save_for_restart = .true.
  write_omega = .false.
  write_kspectra = .true.
  write_phi_vs_time = .false.
  write_gvmus = .false.
- write_moments = .false.
+ write_moments = .true.
  write_gzvs = .false.
  ! flux_norm = .false.
  ! write_fluxes_kxky = .true. ! Not implemented in master
