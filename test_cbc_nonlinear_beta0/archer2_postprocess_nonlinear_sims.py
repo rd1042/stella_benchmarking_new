@@ -9,7 +9,7 @@ import pickle
 import re
 from scipy.interpolate import griddata
 
-def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False):
+def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False, fluxes=False):
     """ """
 
     def make_phi2_kxky_plot(zonal=False):
@@ -77,22 +77,39 @@ def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False):
 
         return
 
-    [t, kx, ky, phi2_t, phi2_tkxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
-                                    "t", "kx", "ky", "phi2", "phi2_vs_kxky")
+    if fluxes:
+        [t, kx, ky, phi2_t, phi2_tkxky, pflx_kxky, vflx_kxky, qflx_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
+                                        "t", "kx", "ky", "phi2", "phi2_vs_kxky",
+                                        "pflx_kxky", "vflx_kxky", "qflx_kxky")
+    else:
+        [t, kx, ky, phi2_t, phi2_tkxky, pflx_kxky, vflx_kxky, qflx_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
+                                        "t", "kx", "ky", "phi2", "phi2_vs_kxky",
+                                        "pflx_kxky", "vflx_kxky", "qflx_kxky")
     t = np.array(t)
     kx = np.array(kx)
     ky = np.array(ky)
     phi2_t = np.array(phi2_t)
     phi2_tkxky = np.array(phi2_tkxky)
+    if fluxes:
+        pflx_kxky = np.array(pflx_kxky)
+        vflx_kxky = np.array(vflx_kxky)
+        qflx_kxky = np.array(qflx_kxky)
 
     sim_longname = re.split(".out.nc", outnc_longname)[0]
     pickle_longname = sim_longname + ".summary_pickle"
 
     myfile = open(pickle_longname, "wb")
-    if kspectra_t:
-        pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:]], myfile)
+    if fluxes:
+        if kspectra_t:
+            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:], pflx_kxky, vflx_kxky, qflx_kxky], myfile)
+        else:
+            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:], pflx_kxky, vflx_kxky, qflx_kxky], myfile)
     else:
-        pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:]], myfile)
+        if kspectra_t:
+            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:]], myfile)
+        else:
+            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:]], myfile)
+            
     myfile.close()
 
     ### Make some plots
@@ -113,10 +130,10 @@ def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False):
 
     return
 
-def postprocess_folder(folder_longname, kspectra_t=False):
+def postprocess_folder(folder_longname, kspectra_t=False, fluxes=True):
     """ """
     outnc_longname = folder_longname + "/input.out.nc"
-    postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=kspectra_t)
+    postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=kspectra_t, fluxes=fluxes)
 
     return
 
@@ -139,8 +156,8 @@ def extract_data_from_ncdf_with_xarray(sim_name, *args):
 if __name__ == "__main__":
     # folder_name = "/home/e607/e607/rd1042/stella_benchmarking_new/test_cbc_nonlinear_beta0/sims/"
     folder_name = "sims/"
-    postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2", kspectra_t = True)
+    # postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2", kspectra_t = True)
     # postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_delt_004")
-    postprocess_folder(folder_name + "/stella_nonlinear_2species_leapfrog_nonlinear", kspectra_t = True)
-    postprocess_folder(folder_name + "/stella_nonlinear_2species_isl", kspectra_t = True)
-    # postprocess_folder(folder_name + "/stella_nonlinear_2species_master_archer2")
+    # postprocess_folder(folder_name + "/stella_nonlinear_2species_leapfrog_nonlinear", kspectra_t = True)
+    # postprocess_folder(folder_name + "/stella_nonlinear_2species_isl", kspectra_t = True)
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_master_archer2", kspecta=True, fluxes=True)

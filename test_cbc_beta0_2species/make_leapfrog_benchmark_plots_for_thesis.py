@@ -10,7 +10,7 @@ import sys
 import pickle
 
 stella_master_longname = "sims/stella_master_archer2/input"
-stella_nperiod5_leapfrog_drifts_longname = "sims/stella_cmiller_es_2species_leapfrog_drifts/input5"
+stella_leapfrog_drifts_longname = "sims/stella_leapfrog_archer2/input"
 gs2_basecase_longname = "sims/gs2_ky05/_0.0000"
 
 def plot_phi_z_for_sim(ax1, sim_longname, sim_label, sim_type="stella", plot_format=".eps",
@@ -100,13 +100,13 @@ def make_comparison_plots_leapfrog_for_thesis(sim_longnames, sim_labels, save_na
         gamma_ulim = np.max(gammaom)
         freq_llim = np.min(freqom)
         freq_ulim = np.max(freqom)
-        print("Omega = ", np.float(freqom_final), np.float(gammaom_final))
+        print("Omega = ", np.float(freqom_final), np.float(gamma_stable[-1]))
         time = np.array(time)
         freqom = np.array(freqom)
         gammaom = np.array(gammaom)
         gamma_stable = np.array(gamma_stable)
         ax11.plot(time, freqom)
-        ax12.plot(time, gammaom)
+        ax12.plot(time, gamma_stable)
         plot_phi_z_for_sim(ax21, sim_longname, sim_label, sim_type=sim_type, linewidth=mylinewidths[sim_idx],
                     linestyleoveride=linestyleoverides[sim_idx], color=mycols[sim_idx])
 
@@ -126,8 +126,10 @@ def make_comparison_plots_leapfrog_for_thesis(sim_longnames, sim_labels, save_na
     gamma_ulim = np.max(np.array(gamma_ulims))*1.1
     freq_llim = np.min(np.array(freq_llims))/1.1
     freq_ulim = np.max(np.array(freq_ulims))*1.1
-    ax11.set_ylim(freq_llim, freq_ulim)
-    ax12.set_ylim(gamma_llim, gamma_ulim)
+    # ax11.set_ylim(freq_llim, freq_ulim)
+    # ax12.set_ylim(gamma_llim, gamma_ulim)
+    ax11.set_ylim(0.15, 0.3)
+    ax12.set_ylim(0.1, 0.25)
     ax21.set_ylim(-0.05, 1.19)
     ax21.set_xlim(-6, 6)
     ax12.set_xlabel(r"$t$", fontsize=myaxlabelsize)
@@ -161,18 +163,18 @@ def compare_stella_leapfrog_gs2_for_thesis():
 
     make_comparison_plots_leapfrog_for_thesis([
             stella_master_longname,
-            # stella_nperiod5_leapfrog_drifts_longname,
+            stella_leapfrog_drifts_longname,
             gs2_basecase_longname,
                     ],
                     [
                     r"stella;$\Omega$=$0.206$+$0.184$i",
-                    # r"stella (Multipstep);$\Omega$=$0.12$+$0.14$i",
+                    r"stella (Multipstep);$\Omega$=$0.12$+$0.14$i",
                     r"GS2;$\Omega$=$0.202$+$0.187$i",
                     ],
                     "./poster_leapfrog",
                     sim_types=[
                     "stella",
-                    # "stella",
+                    "stella",
                     "gs2",
                     ],
                     )
