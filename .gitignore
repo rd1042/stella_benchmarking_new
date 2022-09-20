@@ -80,7 +80,7 @@ test_field_solve/sims/*/*.in
 test_field_solve/sims/*/.*.in
 test_field_solve/sims/*/*.used_inputs.in
 
-!test_cbc_nonlinear_beta0/sims/README.md
+!test_cbc_nonlinear_beta0/README.md
 !test_cbc_nonlinear_beta0/sims/*/*.in
 !test_cbc_nonlinear_beta0/sims/*/*.sh
 !test_cbc_nonlinear_beta0/sims/*/*.png
