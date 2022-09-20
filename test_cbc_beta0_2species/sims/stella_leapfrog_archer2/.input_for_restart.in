@@ -68,7 +68,7 @@
  phiinit=   0.01
  restart_dir = "restart"
  restart_file = "nc/example.nc"
- ginit_option= "default"
+ ginit_option= "many"
  width0 = 1.0
 /
 
@@ -79,8 +79,9 @@
  zed_upwind = 0.02
  time_upwind = 0.02
  vpa_upwind = 0.02
- delt = 0.03
- nstep = 4000
+
+ delt_option = "check_restart"
+ nstep = 4100
  leapfrog_drifts = .true.
 /
 &species_knobs
@@ -108,7 +109,7 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 200
+ nwrite = 1
  nsave = 4000
  save_for_restart = .true.
  write_omega = .true.
