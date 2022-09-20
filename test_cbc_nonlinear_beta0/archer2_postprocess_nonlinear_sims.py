@@ -77,19 +77,19 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
 
         return
 
-    [t, kx, ky, phi2, phi2_tkxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
+    [t, kx, ky, phi2_t, phi2_tkxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
                                     "t", "kx", "ky", "phi2", "phi2_vs_kxky")
     t = np.array(t)
     kx = np.array(kx)
     ky = np.array(ky)
-    phi2 = np.array(phi2)
+    phi2_t = np.array(phi2_t)
     phi2_tkxky = np.array(phi2_tkxky)
 
     sim_longname = re.split(".out.nc", outnc_longname)[0]
     pickle_longname = sim_longname + ".summary_pickle"
 
     myfile = open(pickle_longname, "wb")
-    pickle.dump([t, kx, ky, phi2, phi2_tkxky[-1,:,:]], myfile)
+    pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:]], myfile)
     myfile.close()
 
     ### Make some plots
@@ -134,5 +134,6 @@ def extract_data_from_ncdf_with_xarray(sim_name, *args):
     return datalist
 
 if __name__ == "__main__":
-    folder_name = "~/stella_benchmarking_new/test_cbc_nonlinear_beta0/sims/"
+    # folder_name = "/home/e607/e607/rd1042/stella_benchmarking_new/test_cbc_nonlinear_beta0/sims/"
+    folder_name = "sims/"
     postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2")
