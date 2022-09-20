@@ -97,7 +97,7 @@
  write_moments = .true.
  write_gzvs = .false.
  ! flux_norm = .false.
- ! write_fluxes_kxky = .true. ! Not implemented in master
+ write_fluxes_kxkyz = .true. ! Not implemented in master
 /
 &layouts_knobs
  xyzs_layout = 'yxzs'

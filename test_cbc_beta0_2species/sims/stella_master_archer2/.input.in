@@ -80,7 +80,6 @@
  vpa_upwind = 0.02
  delt = 0.03
  nstep = 10000
- leapfrog_drifts = .true.
 /
 &species_knobs
  nspec= 2

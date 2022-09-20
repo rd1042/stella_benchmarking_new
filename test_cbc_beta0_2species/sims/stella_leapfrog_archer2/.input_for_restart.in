@@ -66,6 +66,7 @@
 &init_g_knobs
  chop_side = F
  phiinit=   0.01
+ restart_dir = "restart"
  restart_file = "nc/example.nc"
  ginit_option= "default"
  width0 = 1.0
@@ -79,7 +80,7 @@
  time_upwind = 0.02
  vpa_upwind = 0.02
  delt = 0.03
- nstep = 10000
+ nstep = 4000
  leapfrog_drifts = .true.
 /
 &species_knobs
@@ -107,11 +108,11 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 20
- nsave = 5000
- save_for_restart = .false.
+ nwrite = 200
+ nsave = 4000
+ save_for_restart = .true.
  write_omega = .true.
- write_phi_vs_time = .false.
+ write_phi_vs_time = .true.
  write_gvmus = .false.
  write_gzvs = .false.
 /

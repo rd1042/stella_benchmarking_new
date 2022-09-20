@@ -97,7 +97,7 @@
  write_moments = .true.
  write_gzvs = .false.
 
-
+ write_fluxes_kxkyz = .true.
 /
 &layouts_knobs
  xyzs_layout = 'yxzs'
