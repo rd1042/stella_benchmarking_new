@@ -78,19 +78,19 @@ def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False, fluxes=Fal
         return
 
     if fluxes:
-        [t, kx, ky, phi2_t, phi2_tkxky, pflx_kxky, vflx_kxky, qflx_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
-                                        "t", "kx", "ky", "phi2", "phi2_vs_kxky",
+        [t, kx, ky, z, phi2_t, phi2_tkxky, pflx_kxky, vflx_kxky, qflx_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
+                                        "t", "kx", "ky", "zed", "phi2", "phi2_vs_kxky",
                                         "pflx_kxky", "vflx_kxky", "qflx_kxky")
     else:
-        [t, kx, ky, phi2_t, phi2_tkxky, pflx_kxky, vflx_kxky, qflx_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
-                                        "t", "kx", "ky", "phi2", "phi2_vs_kxky",
-                                        "pflx_kxky", "vflx_kxky", "qflx_kxky")
+        [t, kx, ky, phi2_t, phi2_tkxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
+                                        "t", "kx", "ky", "phi2", "phi2_vs_kxky")
     t = np.array(t)
     kx = np.array(kx)
     ky = np.array(ky)
     phi2_t = np.array(phi2_t)
     phi2_tkxky = np.array(phi2_tkxky)
     if fluxes:
+        z = np.array(z)
         pflx_kxky = np.array(pflx_kxky)
         vflx_kxky = np.array(vflx_kxky)
         qflx_kxky = np.array(qflx_kxky)
@@ -100,16 +100,21 @@ def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False, fluxes=Fal
     myfile = open(pickle_longname, "wb")
     if fluxes:
         t_idxs = [0, int(0.25*len(t)), int(0.5*len(t)), int(0.75*len(t)), -1]
+        z_idx = int(len(z)/2)
+        parsed_pflx = pflx_kxky[t_idxs,:,0,z_idx,:,:]
+        parsed_vflx = vflx_kxkyi[t_idxs,:,0,z_idx,:,:]
+        parsed_qflx = qflx_kxky[t_idxs,:,0,z_idx,:,:]
+        print("parsed_qflx.shape = ", parsed_qflx.shape)
         if kspectra_t:
-            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:], pflx_kxky[t_idxs,:,:,:,:,:], vflx_kxkyi[t_idxs,:,:,:,:,:], qflx_kxky[t_idxs,:,:,:,:,:]], myfile)
+            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:], parsed_pflx, parsed_vflx, parsed_qflx], myfile)
         else:
-            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:], pflx_kxky[t_idxs,:,:,:,:,:], vflx_kxky[t_idxs,:,:,:,:,:], qflx_kxky[t_idxs,:,:,:,:,:]], myfile)
+            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:], parsed_pflx, parsed_vflx, parsed_qflx], myfile)
     else:
         if kspectra_t:
             pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:]], myfile)
         else:
             pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:]], myfile)
-            
+
     myfile.close()
 
     ### Make some plots
