@@ -71,7 +71,9 @@ test_slab_em/sims/*/*.used_inputs.in
 !w7x_em/sims/w003_*/template*
 !w7x_em/sims/w003_*/submit_jobs.sh
 !w7x_em/equilibria/*
-
+!w7x_em/sims/wout_DKH*/template*
+!w7x_em/sims/wout_DKH*/submit_jobs.sh
+!w7x_em/sims/wout_DKH*/*.pickle
 
 !test_field_solve/*.py
 test_field_solve/sims/*/*.in
@@ -92,3 +94,5 @@ test_field_solve/sims/*/*.used_inputs.in
 !test_cbc_beta0_2species/sims/*/*.in
 test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/
 test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/*
+
+

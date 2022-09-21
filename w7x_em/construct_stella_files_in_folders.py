@@ -106,6 +106,35 @@ def make_fprim_tprim_ky_scan(parent_folder_name, fprim_vals, tprim_vals, ky_vals
 
     return
 
+def make_beta_scan(parent_folder_name, beta_vals):
+    """ """
+    ## Look for a template_input_file and a template_runscript
+    template = parent_folder_name + "/template_input_file"
+    template_runscript = parent_folder_name + "/template_runscript"
+    if not os.path.exists(template):
+        print("template doesn't exist! Exitting")
+        sys.exit()
+    if not os.path.exists(template_runscript):
+        print("template_runscript doesn't exist! Exitting")
+        sys.exit()
+
+    ## for each ky val, make an appropriately named folder and add the input file
+    ## and runscript
+    for beta_val in beta_vals:
+        folder_shortname = "beta_{:.4f}".format(ky_val)
+        folder_longname = parent_folder_name + "/" + folder_shortname
+        os.mkdir(folder_longname)
+        runscript_longname = folder_longname + "/run_stella.sh"
+        make_input_file(template, folder_longname, ["beta"], [beta_val])
+
+        shutil.copy(template_runscript, runscript_longname)
+
+    template_runscript
+
+    shutil.copy('../templates_and_scripts/submit_jobs.sh', parent_folder_name); os.chmod((parent_folder_name + '/submit_jobs.sh'), 0o777)
+
+    return
+
 # if __name__ == "__main__":
 #     print("Hello world")
 #     fprim_vals = np.arange(0, 8.5, 0.5)
