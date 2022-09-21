@@ -96,10 +96,10 @@
  write_kspectra = .true.
  write_phi_vs_time = .false.
  write_gvmus = .false.
- write_moments = .false.
+ write_moments = .true.
  write_gzvs = .false.
 
-
+ write_fluxes_kxkyz = .true.
 /
 &layouts_knobs
  xyzs_layout = 'yxzs'

@@ -2,7 +2,7 @@
 
 # Slurm job options (job-name, compute nodes, job time)
 #SBATCH --job-name=Example_MPI_Job
-#SBATCH --time=12:00:0
+#SBATCH --time=18:00:0
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=128
 #SBATCH --cpus-per-task=1
