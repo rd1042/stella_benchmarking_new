@@ -1,10 +1,11 @@
 #!/bin/bash
 
-for runscript in `ls run*.sh`
+for subfolder in `ls beta_*/ -d`
 do
   echo $subfolder
+  cd $subfolder
   #script=$subfolder + "/run_gs2.sh"
-  echo $runscript
-  sbatch $runscript
+  sbatch run_stella.sh
+  cd ../
   sleep 0.1
 done

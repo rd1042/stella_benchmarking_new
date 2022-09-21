@@ -37,7 +37,7 @@
 
 &parameters
  zeff = 1.0
- beta = 0.03
+ beta=0.03
  rhostar = 0.0
  vnew_ref = 0.0
  nine=1.0
@@ -64,8 +64,8 @@
 /
 &kt_grids_range_parameters ! Bob: We want to scan a range
  naky=1
- aky_min=0.025
- aky_max=0.025
+ aky_min=0.5 ! 0.025
+ aky_max=0.5 ! 0.025
  nakx=1
  akx_min=0.0
  akx_max=0.0
@@ -121,7 +121,7 @@
  type='electron'
 /
 &stella_diagnostics_knobs
- nwrite = 200
+ nwrite = 100
  nsave = 20000
  save_for_restart = .false.
  write_omega = .true.

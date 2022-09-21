@@ -11,10 +11,9 @@ import re
 import math
 from construct_stella_files_in_folders import make_beta_scan
 
-folder_name_dkh_explicit = "sims/wout_DKH_0_norm_beta_scan_explicit"
+folder_name_dkh_explicit_betalr = "sims/wout_DKH_0_norm_betalr_scan_explicit"
 
 if __name__ == "__main__":
     print("Hello world")
-    beta_vals = np.linspace(0,0.03, 10)
-    # ky_vals = [0.05, 0.5, 1, 1.5, 3, 4.5, 6]
-    make_beta_scan(folder_name_dkh_explicit, fprim_vals, tprim_vals, ky_vals)
+    beta_vals = np.linspace(0,0.2, 11)
+    make_beta_scan(folder_name_dkh_explicit_betalr, beta_vals)

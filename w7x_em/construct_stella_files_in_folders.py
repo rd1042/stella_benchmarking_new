@@ -121,15 +121,13 @@ def make_beta_scan(parent_folder_name, beta_vals):
     ## for each ky val, make an appropriately named folder and add the input file
     ## and runscript
     for beta_val in beta_vals:
-        folder_shortname = "beta_{:.4f}".format(ky_val)
+        folder_shortname = "beta_{:.4f}".format(beta_val)
         folder_longname = parent_folder_name + "/" + folder_shortname
         os.mkdir(folder_longname)
         runscript_longname = folder_longname + "/run_stella.sh"
         make_input_file(template, folder_longname, ["beta"], [beta_val])
 
         shutil.copy(template_runscript, runscript_longname)
-
-    template_runscript
 
     shutil.copy('../templates_and_scripts/submit_jobs.sh', parent_folder_name); os.chmod((parent_folder_name + '/submit_jobs.sh'), 0o777)
 
