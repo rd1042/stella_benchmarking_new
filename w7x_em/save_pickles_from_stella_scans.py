@@ -51,6 +51,14 @@ def get_fprim_tprim_ky(outnc_longname):
     # sys.exit()
     return float(fprim[0]), float(tprim[0]), float(ky)
 
+def get_beta_from_outnc_longname(outnc_longname):
+    """ """
+    beta = extract_data_from_ncdf_with_xarray(outnc_longname, "beta")
+    print("beta = ", beta)
+    sys.exit()
+    return beta
+    # return float(fprim[0]), float(tprim[0]), float(ky)
+
 def construct_longlists_for_stella_fprim_tprim_ky_scan(folder_name, has_subfolders=True):
     """For a STEP folder, extract psin, ky or n, and some other variable
     (currently intended to be either kx or theta0). Put this data
@@ -114,6 +122,62 @@ def construct_longlists_for_stella_fprim_tprim_ky_scan(folder_name, has_subfolde
             omega_file_growth_rate_longlist, safe_growth_rate_longlist,
             freq_longlist)
 
+def construct_longlists_for_stella_beta_scan(folder_name, has_subfolders=True):
+    """Also create plots:
+    (1) Converence plots
+    (2) field plots
+
+    If with_epar=True, also calculate epar, and include epar data in the field plots."""
+
+    # Find all the simulation files - look for everything with a .in
+    # infile_longnames = glob.glob(folder_name + "/*/*.in")
+    # Alas, gs2's master now has a "<name>.used_inputs.in", so the above is a
+    # bad idea. Instead, look for .out.nc files.
+    if has_subfolders:
+        subfolder_longnames = glob.glob(folder_name + "/*/")
+    else:
+        outnc_longnames = glob.glob(folder_name + "/*.out.nc")
+
+    beta_longlist = []
+
+    omega_file_growth_rate_longlist = []
+    safe_growth_rate_longlist = []
+    freq_longlist = []
+    bad_sims_list = []  # Records sims which somehow failed
+    unconverged_sim_list = []
+    if has_subfolders:
+        for subfolder_longame in subfolder_longnames:
+            # Find the .out.nc files
+            outnc_longnames = glob.glob(subfolder_longame+ "*.out.nc")
+            if len(outnc_longnames) > 1:
+                # Get the latest sim - this will be input_X , where X=len(outnc_longnames)-1
+                outnc_longname = subfolder_longame + "input_" + str(len(outnc_longnames)-1) + ".out.nc"
+            else:
+                outnc_longname = outnc_longnames[0]
+
+            # If has_subfolders, Find the "latest" outnc_longname in the folder
+            # Get the param vals and append to their lists
+            beta_val = get_beta_from_outnc_longname(outnc_longname)
+
+            beta_longlist.append(beta_val)
+
+            freqom_final, gammaom_final, gamma_safe, sim_converged = get_omega_from_subfolder_and_make_plot(outnc_longname)
+            if not sim_converged:
+                unconverged_sim_list.append(outnc_longname)
+            omega_file_growth_rate_longlist.append(gammaom_final)
+            safe_growth_rate_longlist.append(gamma_safe)
+            freq_longlist.append(freqom_final)
+    else:
+        print("Not has_subfolders not supported, quitting")
+        sys.exit()
+
+    print("len(unconverged_sim_list) = ", len(unconverged_sim_list))
+    print("unconverged_sim_list = ", unconverged_sim_list)
+
+    return (beta_longlist,
+            omega_file_growth_rate_longlist, safe_growth_rate_longlist,
+            freq_longlist)
+
 def make_omega_arrays_from_longlists(fprim_longlist, tprim_longlist, ky_longlist,
                     omega_file_growth_rate_longlist, safe_growth_rate_longlist,
                     freq_longlist):
@@ -161,12 +225,6 @@ def postprocess_fprim_tprim_ky_scan(folder_name, pickle_string=None):
      omega_file_growth_rate_longlist, safe_growth_rate_longlist,
             freq_longlist) = construct_longlists_for_stella_fprim_tprim_ky_scan(folder_name,
                                                 has_subfolders=True)
-    # print("param1_longlist = ",  param1_longlist )
-    # print("param2_longlist = ", param2_longlist)
-    # print("param3_longlist = ", param3_longlist)
-    # print("growth_rate_longlist = ", growth_rate_longlist)
-    # print("freq_longlist = ", freq_longlist)
-    # print("epar_longlist = ", epar_longlist)
     (unique_fprim, unique_tprim, unique_ky, omega_file_gamma_fprim_tprim_ky_array,
      safe_gamma_fprim_tprim_ky_array,
      omega_fprim_tprim_ky_array) = make_omega_arrays_from_longlists(fprim_longlist, tprim_longlist, ky_longlist,
@@ -185,6 +243,34 @@ def postprocess_fprim_tprim_ky_scan(folder_name, pickle_string=None):
         pickle_string = folder_name
     pickle_file = open(pickle_longname, "wb")
     pickle.dump([pickle_string, unique_fprim, unique_tprim, unique_ky,
+        omega_file_gamma_fprim_tprim_ky_array, safe_gamma_fprim_tprim_ky_array,
+        omega_fprim_tprim_ky_array], pickle_file)
+    pickle_file.close()
+
+    return
+
+def postprocess_beta_scan(folder_name, pickle_string=None):
+    """ """
+
+    (beta_longlist,
+     omega_file_growth_rate_longlist, safe_growth_rate_longlist,
+            freq_longlist) = construct_longlists_for_stella_beta_scan(folder_name,
+                                                has_subfolders=True)
+    beta_array = np.array(beta_longlist)
+    omega_file_gamma_fprim_tprim_ky_array = np.array(omega_file_gamma_beta_array)
+    safe_gamma_fprim_tprim_ky_array = np.array(safe_gamma_beta_array)
+    omega_fprim_tprim_ky_array = np.array(omega_beta_array)
+    print("beta_array = ", beta_array)
+    print("omega_file_gamma_fprim_tprim_ky_array = ", omega_file_gamma_beta_array)
+    print("safe_gamma_fprim_tprim_ky_array = ", safe_gamma_beta_array)
+    print("omega_fprim_tprim_ky_array = ", omega_beta_array)
+    # Write to pickle
+    pickle_shortname = "omega_beta_array.pickle"
+    pickle_longname = folder_name + "/" + pickle_shortname
+    if pickle_string is None:
+        pickle_string = folder_name
+    pickle_file = open(pickle_longname, "wb")
+    pickle.dump([pickle_string, beta_array,
         omega_file_gamma_fprim_tprim_ky_array, safe_gamma_fprim_tprim_ky_array,
         omega_fprim_tprim_ky_array], pickle_file)
     pickle_file.close()
