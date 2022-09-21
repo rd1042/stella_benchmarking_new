@@ -54,7 +54,6 @@ def get_fprim_tprim_ky(outnc_longname):
 def get_beta_from_outnc_longname(outnc_longname):
     """ """
     beta = extract_data_from_ncdf_with_xarray(outnc_longname, "beta")
-    print("beta = ", beta)
     return float(beta[0])
     # return float(fprim[0]), float(tprim[0]), float(ky)
 
@@ -256,9 +255,9 @@ def postprocess_beta_scan(folder_name, pickle_string=None):
             freq_longlist) = construct_longlists_for_stella_beta_scan(folder_name,
                                                 has_subfolders=True)
     beta_array = np.array(beta_longlist)
-    omega_file_gamma_fprim_tprim_ky_array = np.array(omega_file_gamma_beta_array)
-    safe_gamma_fprim_tprim_ky_array = np.array(safe_gamma_beta_array)
-    omega_fprim_tprim_ky_array = np.array(omega_beta_array)
+    omega_file_gamma_beta_array = np.array(omega_file_growth_rate_longlist)
+    safe_gamma_beta_array = np.array(safe_growth_rate_longlist)
+    omega_beta_array = np.array(freq_longlist)
     print("beta_array = ", beta_array)
     print("omega_file_gamma_fprim_tprim_ky_array = ", omega_file_gamma_beta_array)
     print("safe_gamma_fprim_tprim_ky_array = ", safe_gamma_beta_array)
