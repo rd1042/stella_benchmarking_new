@@ -107,8 +107,8 @@
  mass=1.0
  dens=1.0
  temp=1.0
- tprim=3.0
- fprim=3.0
+ tprim=1.6
+ fprim=0.0
  type='ion'
 /
 &species_parameters_2
@@ -116,8 +116,8 @@
  mass=0.00028! deuterium plasma
  dens=1.0
  temp=1.0
- tprim=3.0
- fprim=3.0
+ tprim=0.0
+ fprim=0.0
  type='electron'
 /
 &stella_diagnostics_knobs
