@@ -15,6 +15,7 @@ IMAGE_DIR = "./images/"
 master_pickle = "sims/stella_nonlinear_2species_master_archer2/input.summary_pickle"
 leapfrog_pickle = "sims/stella_nonlinear_2species_leapfrog_nonlinear/input.summary_pickle"
 nisl_pickle = "sims/stella_nonlinear_2species_nisl_archer2/input.summary_pickle"
+isl_pickle = "sims/stella_nonlinear_2species_isl/input.summary_pickle"
 
 
 def plot_phi2_t(pickle_longnames):
@@ -79,7 +80,7 @@ def make_colorplot_old(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
 
     return
 
-def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
+def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True, log=True):
     """ """
     if zonal:
         phi2 = (np.swapaxes(phi2_kxky, 0, 1))
@@ -88,7 +89,10 @@ def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
         phi2 = (np.swapaxes(phi2_kxky[:,1:], 0, 1))
 
     print("scale names:", scale.get_scale_names())
-    img = ax.imshow(np.log(phi2), aspect="auto", origin="lower")
+    if log:
+        img = ax.imshow(np.log(phi2), aspect="auto", origin="lower")
+    else:
+        img = ax.imshow(phi2, aspect="auto", origin="lower")
     fig.colorbar(img, cax=cbax)
 
     return
@@ -97,13 +101,22 @@ def plot_properties_master_sim():
     """ """
     pickle_longname = master_pickle
     myfile = open(pickle_longname, "rb")
-    [t, kx, ky, phi2, phi2_kxky] = pickle.load(myfile)
+    [t, kx, ky, phi2, phi2_tkxky, parsed_pflx, parsed_vflx, parsed_qflx] = pickle.load(myfile)
     myfile.close()
+
+    ## Dimensions of phi2_tkxky are [t, kx, ky]
+    ## Dimensions of parsed_pflx are [t_idxs, spec, kx, ky]
 
     ## Rearrange the phi2_tkxky and kx so it goes in increasing value of kx
     sort_idxs = np.argsort(kx)
     kx = kx[sort_idxs]
-    phi2_kxky = phi2_kxky[sort_idxs,:]
+    phi2_tkxky = phi2_tkxky[:,sort_idxs,:]
+    parsed_pflx = parsed_pflx[:,:,sort_idxs,:]
+    parsed_vflx = parsed_vflx[:,:,sort_idxs,:]
+    parsed_qflx = parsed_qflx[:,:,sort_idxs,:]
+
+
+    t_idxs_sample = [0, 11, 100, -1]
 
     ## imshow makes the plot, but in index-space rather than (kx, ky)
     # To have meaningful labels, we want to find indexes corresponding to the
@@ -131,6 +144,9 @@ def plot_properties_master_sim():
     ax1 = fig.add_subplot(111)
     ax1.plot(t, phi2, lw=linewidth, zorder=0, c="black")
     ax1.scatter(t, phi2, c="red", s=marker_size, zorder=10)
+    for t_idx in t_idxs_sample:
+        ax1.scatter(t[t_idx], phi2[t_idx], c="blue", s=marker_size, zorder=10)
+
     ax1.set_yscale("log")
     ax1.set_xlabel(r"$t$")
     ax1.set_ylabel(r"phi2")
@@ -180,7 +196,12 @@ def plot_properties_master_sim():
     ax4 = fig.add_axes([ax_col2_lhs, bottom, plot_width, plot_height])
     cbax4 = fig.add_axes([cbax_col2_lhs, bottom, cb_width, plot_height])
 
-    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    axes = [ax1, ax2, ax3, ax4]
+    cbaxes = [cbax1, cbax2, cbax3, cbax4]
+    for counter, t_idx in enumerate(t_idxs_sample):
+        phi2_kxky = phi2_tkxky[t_idx,:,:]
+        ax = axes[counter]  ; cbax = cbaxes[counter]
+        make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True)
 
     for ax in [ax1, ax2, ax3, ax4]:
         ax.set_xticks(xlabel_idx_vals)
@@ -194,6 +215,38 @@ def plot_properties_master_sim():
         cbax.set_title(r"$\vert \tilde{\phi}_k\vert^2$", fontsize=cbax_title_fontsize)
 
     plt.savefig("phi2_map_master.eps")
+    plt.close()
+
+
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([ax_col1_lhs, row1_bottom, plot_width, plot_height])
+    cbax1 = fig.add_axes([cbax_col1_lhs, row1_bottom, cb_width, plot_height])
+    ax2 = fig.add_axes([ax_col2_lhs, row1_bottom, plot_width, plot_height])
+    cbax2 = fig.add_axes([cbax_col2_lhs, row1_bottom, cb_width, plot_height])
+    ax3 = fig.add_axes([ax_col1_lhs, bottom, plot_width, plot_height])
+    cbax3 = fig.add_axes([cbax_col1_lhs, bottom, cb_width, plot_height])
+    ax4 = fig.add_axes([ax_col2_lhs, bottom, plot_width, plot_height])
+    cbax4 = fig.add_axes([cbax_col2_lhs, bottom, cb_width, plot_height])
+
+    axes = [ax1, ax2, ax3, ax4]
+    cbaxes = [cbax1, cbax2, cbax3, cbax4]
+    make_colorplot(fig, ax1, cbax1, kx, ky, parsed_qflx[-1,0,:,:], zonal=True, log=False)
+    make_colorplot(fig, ax2, cbax2, kx, ky, parsed_qflx[-1,1,:,:], zonal=True, log=False)
+    make_colorplot(fig, ax3, cbax3, kx, ky, parsed_pflx[-1,0,:,:], zonal=True, log=False)
+    make_colorplot(fig, ax4, cbax4, kx, ky, parsed_pflx[-1,1,:,:], zonal=True, log=False)
+
+    for ax in [ax1, ax2, ax3, ax4]:
+        ax.set_xticks(xlabel_idx_vals)
+        ax.set_yticks(ylabel_idx_vals)
+        ax.set_xticklabels([r"$-2$", r"$-1$", r"$0$", r"$1$", r"$2$", ], fontsize=xticklabel_fontsize)
+        ax.set_yticklabels([r"$0$", r"$1$", r"$2$"], fontsize=yticklabel_fontsize)
+        ax.set_xlabel(r"$k_x$", fontsize=xlabel_fontsize)
+        ax.set_ylabel(r"$k_y$", fontsize=ylabel_fontsize)
+
+    for cbax in [cbax1, cbax2]:
+        cbax.set_title(r"$\vert \tilde{\phi}_k\vert^2$", fontsize=cbax_title_fontsize)
+
+    plt.savefig("fluxes_master.eps")
     plt.close()
 
     return
@@ -334,8 +387,137 @@ def plot_properties_nisl_sim():
 
     return
 
+def plot_properties_isl_sim():
+    """ """
+    pickle_longname = isl_pickle
+    myfile = open(pickle_longname, "rb")
+    [t, kx, ky, phi2, phi2_tkxky] = pickle.load(myfile)
+    myfile.close()
+    ## Rearrange the phi2_tkxky and kx so it goes in increasing value of kx
+    sort_idxs = np.argsort(kx)
+    kx = kx[sort_idxs]
+    phi2_tkxky = phi2_tkxky[:,sort_idxs,:]
+    print("kx = ", kx)
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax1.plot(t, phi2)
+    ax1.scatter(t, phi2, c="red")
+    for idx in [0,15,35,-1]:
+        ax1.scatter(t[idx], phi2[idx], c="green")
+    ax1.set_yscale("log")
+    ax1.set_xlabel(r"$t$")
+    ax1.set_ylabel(r"phi2")
+    plt.show()
+
+    col1_lhs = 0.1
+    row1_bottom = 0.1
+    plot_dim_x = 0.75
+    plot_dim_y = plot_dim_x
+    col1_cb_lhs = 0.9
+    cb_width = 0.05
+
+    phi2_kxky = phi2_tkxky[0,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[15,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[35,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    phi2_kxky = phi2_tkxky[-1,:,:]
+    fig = plt.figure(figsize=[12, 12])
+    ax1 = fig.add_axes([col1_lhs, row1_bottom, plot_dim_x, plot_dim_y])
+    cbax1 = fig.add_axes([col1_cb_lhs, row1_bottom, cb_width, plot_dim_y])
+    make_colorplot(fig, ax1, cbax1, kx, ky, phi2_kxky, zonal=True)
+    ax1.set_xlabel(r"$k_x$")
+    ax1.set_ylabel(r"$k_y$")
+    plt.show()
+
+    return
+
+def get_data_from_pickle(pickle_longname, fluxes=False):
+    """ """
+
+    myfile = open(pickle_longname, "rb")
+    if fluxes:
+        [t, kx, ky, phi2, phi2_tkxky, parsed_pflx, parsed_vflx, parsed_qflx] = pickle.load(myfile)
+    else:
+        [t, kx, ky, phi2, phi2_tkxky] = pickle.load(myfile)
+
+    myfile.close()
+
+    sort_idxs = np.argsort(kx)
+    kx = kx[sort_idxs]
+    phi2_tkxky = phi2_tkxky[:,sort_idxs,:]
+
+    if fluxes:
+        parsed_pflx = parsed_pflx[:,:,sort_idxs,:]
+        parsed_vflx = parsed_vflx[:,:,sort_idxs,:]
+        parsed_qflx = parsed_qflx[:,:,sort_idxs,:]
+        return [t, kx, ky, phi2, phi2_tkxky, parsed_pflx, parsed_vflx, parsed_qflx]
+    else:
+        return [t, kx, ky, phi2, phi2_tkxky]
+
+
+def make_master_leapfrog_nisl_isl_comparison():
+    """ """
+
+    [t_isl, kx, ky, phi2_isl, phi2_tkxky_isl] = get_data_from_pickle(isl_pickle, fluxes=False)
+    [t_nisl, kx, ky, phi2_nisl, phi2_tkxky_nisl] = get_data_from_pickle(nisl_pickle, fluxes=False)
+    [t_leapfrog, kx, ky, phi2_leapfrog, phi2_tkxky_leapfrog] = get_data_from_pickle(leapfrog_pickle, fluxes=False)
+    [t_master, kx, ky, phi2_master, phi2_tkxky_master, parsed_pflx_master,
+     parsed_vflx_master, parsed_qflx_master] = get_data_from_pickle(master_pickle, fluxes=True)
+
+    marker_size = 5
+    linewidth=2
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    linewidths = [2, 2, 2, 1]
+    linestyles = ["-", "--", "-.", (0,(3,1,2,1))]
+
+    t_list = [t_master, t_leapfrog, t_nisl, t_isl]
+    phi2_list = [phi2_master, phi2_leapfrog, phi2_nisl, phi2_isl]
+    labels=[r"default", r"leapfrog $E\times B$", r"NISL (leapfrog splitting)", r"ISL (leapfrog splitting)"]
+    for counter in [0, 1, 2, 3]:
+        ax1.plot(t_list[counter], phi2_list[counter], lw=linewidths[counter], label=labels[counter], ls=linestyles[counter])
+
+    ax1.legend(loc="best")
+    #ax1.scatter(t, phi2, c="red", s=marker_size, zorder=10)
+    # for t_idx in t_idxs_sample:
+    #     ax1.scatter(t[t_idx], phi2[t_idx], c="blue", s=marker_size, zorder=10)
+
+    ax1.set_yscale("log")
+    ax1.set_xlabel(r"$t$")
+    ax1.set_ylabel(r"phi2")
+    plt.tight_layout()
+    plt.savefig("nonlinear_sim_comparisons_phi2_t.eps")
+    plt.close()
+
+    return
+
 if __name__ == "__main__":
     print("Hello world")
     plot_properties_master_sim()
-    #plot_properties_leapfrog_sim()
-    #plot_properties_nisl_sim()
+    # plot_properties_leapfrog_sim()
+    # plot_properties_nisl_sim()
+    # plot_properties_isl_sim()
+    make_master_leapfrog_nisl_isl_comparison()
