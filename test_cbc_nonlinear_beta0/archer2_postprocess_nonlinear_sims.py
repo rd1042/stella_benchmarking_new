@@ -97,13 +97,13 @@ def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False, fluxes=Fal
 
     sim_longname = re.split(".out.nc", outnc_longname)[0]
     pickle_longname = sim_longname + ".summary_pickle"
-
     myfile = open(pickle_longname, "wb")
     if fluxes:
+        t_idxs = [0, int(0.25*len(t)), int(0.5*len(t)), int(0.75*len(t)), -1]
         if kspectra_t:
-            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:], pflx_kxky, vflx_kxky, qflx_kxky], myfile)
+            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:], pflx_kxky[t_idxs,:,:,:,:,:], vflx_kxkyi[t_idxs,:,:,:,:,:], qflx_kxky[t_idxs,:,:,:,:,:]], myfile)
         else:
-            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:], pflx_kxky, vflx_kxky, qflx_kxky], myfile)
+            pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[-1,:,:], pflx_kxky[t_idxs,:,:,:,:,:], vflx_kxky[t_idxs,:,:,:,:,:], qflx_kxky[t_idxs,:,:,:,:,:]], myfile)
     else:
         if kspectra_t:
             pickle.dump([t, kx, ky, phi2_t, phi2_tkxky[:,:,:]], myfile)
@@ -160,4 +160,4 @@ if __name__ == "__main__":
     # postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_delt_004")
     # postprocess_folder(folder_name + "/stella_nonlinear_2species_leapfrog_nonlinear", kspectra_t = True)
     # postprocess_folder(folder_name + "/stella_nonlinear_2species_isl", kspectra_t = True)
-    postprocess_folder(folder_name + "/stella_nonlinear_2species_master_archer2", kspecta=True, fluxes=True)
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_master_archer2", kspectra_t=True, fluxes=True)
