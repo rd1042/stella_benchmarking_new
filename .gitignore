@@ -90,3 +90,5 @@ test_field_solve/sims/*/*.used_inputs.in
 
 !test_cbc_beta0_2species/*.py
 !test_cbc_beta0_2species/sims/*/*.in
+test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/
+test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/*
