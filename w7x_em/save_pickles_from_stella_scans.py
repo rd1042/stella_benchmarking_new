@@ -55,7 +55,7 @@ def get_beta_from_outnc_longname(outnc_longname):
     """ """
     beta = extract_data_from_ncdf_with_xarray(outnc_longname, "beta")
     print("beta = ", beta)
-    return float(beta)
+    return float(beta[0])
     # return float(fprim[0]), float(tprim[0]), float(ky)
 
 def construct_longlists_for_stella_fprim_tprim_ky_scan(folder_name, has_subfolders=True):
