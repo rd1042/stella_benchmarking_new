@@ -12,10 +12,12 @@ import math
 from construct_stella_files_in_folders import make_beta_scan
 
 folder_name_dkh_explicit_betalr = "sims/wout_DKH_0_norm_betalr_scan_explicit"
+folder_name_dkh_implicit_betalr = "sims/wout_DKH_0_norm_betalr_scan_implicit"
 folder_name_dkh_explicit_betalr_fbpar0 = "sims/wout_DKH_0_norm_betalr_scan_fbpar0_explicit"
 
 if __name__ == "__main__":
     print("Hello world")
     beta_vals = np.linspace(0,0.2, 11)
     # make_beta_scan(folder_name_dkh_explicit_betalr, beta_vals)
-    make_beta_scan(folder_name_dkh_explicit_betalr_fbpar0, beta_vals)
+    # make_beta_scan(folder_name_dkh_explicit_betalr_fbpar0, beta_vals)
+    make_beta_scan(folder_name_dkh_implicit_betalr, beta_vals)
