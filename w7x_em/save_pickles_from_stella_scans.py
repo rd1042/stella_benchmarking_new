@@ -258,6 +258,11 @@ def postprocess_beta_scan(folder_name, pickle_string=None):
     omega_file_gamma_beta_array = np.array(omega_file_growth_rate_longlist)
     safe_gamma_beta_array = np.array(safe_growth_rate_longlist)
     omega_beta_array = np.array(freq_longlist)
+    sort_idxs = np.argsort(beta_array)
+    beta_array = beta_array[sort_idxs]
+    omega_file_gamma_beta_array = omega_file_gamma_beta_array[sort_idxs]
+    safe_gamma_beta_array = safe_gamma_beta_array[sort_idxs]
+    omega_beta_array = omega_beta_array[sort_idxs]
     print("beta_array = ", beta_array)
     print("omega_file_gamma_fprim_tprim_ky_array = ", omega_file_gamma_beta_array)
     print("safe_gamma_fprim_tprim_ky_array = ", safe_gamma_beta_array)
@@ -269,8 +274,8 @@ def postprocess_beta_scan(folder_name, pickle_string=None):
         pickle_string = folder_name
     pickle_file = open(pickle_longname, "wb")
     pickle.dump([pickle_string, beta_array,
-        omega_file_gamma_fprim_tprim_ky_array, safe_gamma_fprim_tprim_ky_array,
-        omega_fprim_tprim_ky_array], pickle_file)
+        omega_file_gamma_beta_array, safe_gamma_beta_array,
+        omega_beta_array], pickle_file)
     pickle_file.close()
 
     return
