@@ -196,7 +196,6 @@ def for_thesis_make_fprim_tprim_ky_scan_w003():
 
     return
 
-
 def for_thesis_make_fprim_tprim_ky_scan_w015_027():
     """For fancy plotting """
 
@@ -382,7 +381,6 @@ def for_thesis_make_fprim_tprim_ky_scan_w015_027():
     finish_plots(freq_ticklabels_list, gamma_ticklabels_list)
 
     return
-
 
 def make_fprim_tprim_ky_scan(folder_longname):
     """For looking at the data, not fancy plotting """
