@@ -102,7 +102,7 @@ def postprocess_nonlinear_outnc_sim(outnc_longname, kspectra_t=False, fluxes=Fal
         t_idxs = [0, int(0.25*len(t)), int(0.5*len(t)), int(0.75*len(t)), -1]
         z_idx = int(len(z)/2)
         parsed_pflx = pflx_kxky[t_idxs,:,0,z_idx,:,:]
-        parsed_vflx = vflx_kxkyi[t_idxs,:,0,z_idx,:,:]
+        parsed_vflx = vflx_kxky[t_idxs,:,0,z_idx,:,:]
         parsed_qflx = qflx_kxky[t_idxs,:,0,z_idx,:,:]
         print("parsed_qflx.shape = ", parsed_qflx.shape)
         if kspectra_t:
