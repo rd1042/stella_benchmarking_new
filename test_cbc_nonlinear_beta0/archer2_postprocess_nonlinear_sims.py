@@ -161,8 +161,9 @@ def extract_data_from_ncdf_with_xarray(sim_name, *args):
 if __name__ == "__main__":
     # folder_name = "/home/e607/e607/rd1042/stella_benchmarking_new/test_cbc_nonlinear_beta0/sims/"
     folder_name = "sims/"
-    # postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2", kspectra_t = True)
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2", kspectra_t = True, fluxes=True)
     # postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_delt_004")
-    # postprocess_folder(folder_name + "/stella_nonlinear_2species_leapfrog_nonlinear", kspectra_t = True)
-    # postprocess_folder(folder_name + "/stella_nonlinear_2species_isl", kspectra_t = True)
-    postprocess_folder(folder_name + "/stella_nonlinear_2species_master_archer2", kspectra_t=True, fluxes=True)
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_leapfrog_nonlinear", kspectra_t = True, fluxes=True)
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_isl", kspectra_t = True, fluxes=True)
+    postprocess_folder(folder_name + "/stella_nonlinear_2species_master_cflcushion025", kspectra_t = True, fluxes=True)
+    #postprocess_folder(folder_name + "/stella_nonlinear_2species_master_archer2", kspectra_t=True, fluxes=True)
