@@ -98,9 +98,14 @@ def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True, log=True):
 
     return
 
-def plot_properties_master_sim():
+def plot_properties_master_sim(cfl_cushion="0.5"):
     """ """
-    [t, kx, ky, phi2, phi2_tkxky, parsed_pflx, parsed_vflx, parsed_qflx] = get_data_from_pickle(master_pickle, fluxes=True)
+    if cfl_cushion == "0.5":
+        pickle = master_pickle
+    else:
+        pickle = master_cfl025_pickle
+
+    [t, kx, ky, phi2, phi2_tkxky, parsed_pflx, parsed_vflx, parsed_qflx] = get_data_from_pickle(pickle, fluxes=True)
 
     ## Dimensions of phi2_tkxky are [t, kx, ky]
     ## Dimensions of parsed_pflx are [t_idxs, spec, kx, ky]
@@ -140,7 +145,10 @@ def plot_properties_master_sim():
     ax1.set_xlabel(r"$t$")
     ax1.set_ylabel(r"phi2")
     plt.tight_layout()
-    plt.savefig("master_phi2_t.eps")
+    if cfl_cushion == "0.5":
+        plt.savefig("master_phi2_t.eps")
+    else:
+        plt.savefig("master_phi2_t_cushion025.eps")
     plt.close()
 
     fig = plt.figure(figsize=[12, 12])
@@ -203,7 +211,10 @@ def plot_properties_master_sim():
     for cbax in [cbax1, cbax2]:
         cbax.set_title(r"$\vert \tilde{\phi}_k\vert^2$", fontsize=cbax_title_fontsize)
 
-    plt.savefig("phi2_map_master.eps")
+    if cfl_cushion == "0.5":
+        plt.savefig("phi2_map_master.eps")
+    else:
+        plt.savefig("phi2_map_master_cushion025.eps")
     plt.close()
 
 
@@ -235,7 +246,10 @@ def plot_properties_master_sim():
     for cbax in [cbax1, cbax2]:
         cbax.set_title(r"$\vert \tilde{\phi}_k\vert^2$", fontsize=cbax_title_fontsize)
 
-    plt.savefig("fluxes_master.eps")
+    if cfl_cushion == "0.5":
+        plt.savefig("fluxes_master.eps")
+    else:
+        plt.savefig("fluxes_master_cushion025.eps")
     plt.close()
 
     return
@@ -733,9 +747,9 @@ def make_master_leapfrog_nisl_isl_comparison():
 
 if __name__ == "__main__":
     print("Hello world")
-    # plot_properties_master_sim()
+    plot_properties_master_sim(cfl_cushion="0.25")
     # plot_properties_leapfrog_sim()
     # plot_properties_nisl_sim()
     # plot_properties_isl_sim()
     # make_master_cushion_comparison()
-    make_master_leapfrog_nisl_isl_comparison()
+    #make_master_leapfrog_nisl_isl_comparison()
