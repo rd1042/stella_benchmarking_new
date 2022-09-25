@@ -1,0 +1,131 @@
+&physics_flags
+ nonlinear = .true.
+ full_flux_surface = .false.
+/ 
+&init_g_knobs
+ chop_side = F
+ phiinit = 0.001 ! 1.0
+ !restart_file = "restart.nc"
+ restart_dir = "restart"
+ ginit_option = "many" ! Bob: Changed from "many"
+ width0 = 1.0
+/
+&millergeo_parameters
+ nzed_local = 128
+ rhoc = 0.5  ! Bob: Changed from HThienpndt input
+ shat = 0.78 ! Changed from 0.796
+ qinp = 1.38 ! Changed from 1.4
+ rmaj = 2.72 ! Changed from 2.77778
+ rgeo = 2.72 ! Changed from 2.77778
+ shift = 0.0
+ kappa = 1.0
+ kapprim = 0.0
+ tri = 0.0
+ triprim = 0.0
+ betaprim = 0.0
+ d2qdr2 = 0.0
+ d2psidr2 = 0.0
+ betadbprim = 0.0
+/
+&parameters
+ zeff = 1.0
+ beta = 0.0
+ rhostar = 0.0
+ vnew_ref = 0.0
+ nine = 1.0
+ tite = 1.0
+/
+&species_knobs
+ nspec = 1
+ species_option = 'stella'
+/
+&species_parameters_1
+ z = 1.0
+ mass = 1.0
+ dens = 1.0
+ temp = 1.0
+ tprim = 2.537 ! Changed from HThienpndt input 
+ fprim = 0.809 ! Changed from HThienpndt input
+/
+
+&kt_grids_box_parameters
+ ny = 14
+ nx = 10
+ y0 = 3
+/
+&zgrid_parameters
+ nzed = 4
+ nperiod = 1
+ boundary_option = 'linked'
+ zed_equal_arc = T
+/
+&vpamu_grids_parameters
+ nvgrid = 3 ! 24
+ nmu = 3
+ vpa_max = 2.0 ! 3.0
+ vperp_max = 2.0 ! 3.0
+/
+&knobs
+ fphi = 1.0
+ fapar = 0.0
+ fbpar = 0.0
+ !delt_option = "check_restart"   ! Bob: Want to change . . .	
+ !t_end = 1000   ! Bob: Want to change . . .
+ delt = 0.5  ! Bob: Added this
+ nstep = 10005
+ cfl_cushion = 0.50
+ mat_read = .false.
+ mat_gen = .false.
+ LU_option = 'local'
+ nisl_nonlinear = .true.
+/
+&stella_diagnostics_knobs
+ nwrite = 200   
+ nsave = 5000   
+ save_for_restart = .false.
+ write_omega = .true.
+ write_kspectra = .true.
+ write_phi_vs_time = .true.
+ write_gvmus = .true.
+ write_moments = .true.
+ write_gzvs = .true.
+ ! flux_norm = .false.
+ ! write_fluxes_kxky = .true. ! Not implemented in master
+/
+&layouts_knobs
+ xyzs_layout = 'yxzs'
+ vms_layout = 'vms'
+/
+&neoclassical_input
+ include_neoclassical_terms = .false.
+ neo_option = 'sfincs'
+ nradii = 3
+/
+&sfincs_input
+ nproc_sfincs = 2
+ nxi = 16
+ nx = 5
+/
+&dissipation
+ hyper_dissipation = .true.   ! Bob: Want to change, maybe? . . .
+ D_hyper = 0.1
+/	
+&geo_knobs
+ geo_option = 'miller'
+/
+&reinit_knobs
+ delt_adj = 2.0
+ delt_minimum = 1.e-4
+/
+&dist_fn_knobs
+ adiabatic_option = "iphi00=2"
+/
+&time_advance_knobs
+ explicit_option = "rk2"
+/
+&kt_grids_knobs
+ grid_option = 'box'
+/
+&kt_grids_range_parameters
+ nalpha = 1
+/

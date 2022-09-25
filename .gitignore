@@ -108,5 +108,9 @@ test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/
 test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/*
 
 !nonlinear_nisl_sims/*.py
+!nonlinear_nisl_sims/sims/*/*.in
+
+!test_nonlinear_only_sims/*.py
+!test_nonlinear_only_sims/sims/*/*.in
 
 
