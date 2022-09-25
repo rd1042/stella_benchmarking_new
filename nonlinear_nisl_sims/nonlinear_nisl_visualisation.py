@@ -389,7 +389,9 @@ def nisl_step_finding_departure_point(golderyx_array, dgold_dy_array, dgold_dx_a
     dgold_dx_array_upsampled = create_upsampled_grid(dgold_dx_array)
     vchiold_x_array_upsampled = create_upsampled_grid(vchiold_x_array)
     vchiold_y_array_upsampled = create_upsampled_grid(vchiold_y_array)
-
+#################
+# [Plots in here I think
+####################
     def get_approx_departure_point(yidx, xidx):
         """Find the approximate departure point which takes us from an (in general,
         off-grid) point at t^{n-1} to the gridpoint labelled by (xidx, yidx) at
@@ -610,14 +612,14 @@ def nisl_step_finding_departure_point(golderyx_array, dgold_dy_array, dgold_dx_a
                 ax1.plot([xhistory[hist_idx], xhistory[hist_idx+1]], [yhistory[hist_idx], yhistory[hist_idx+1]])
             ax1.set_xlabel(r"$x$")
             ax1.set_ylabel(r"$y$")
-            ax1.grid(True)
+            #ax1.grid(True)
             #ax1.set_xlim([-1, 23])
             ax1.legend(loc="upper right")
             plt.show()
 
             return
 
-        #diagnostic_plot_trajectories()
+        diagnostic_plot_trajectories()
         ########################################################################
 
         return y_nonperiodic, x_nonperiodic
@@ -1657,9 +1659,9 @@ def test_nisl_step_ritchie():
 if __name__ == "__main__":
 
     # benchmark_rk2_vs_nisl_different_velocity_fields_time_constant_spatilly_varying()
-    benchmark_isl()
+    #benchmark_isl()
     # benchmark_rk2_vs_nisl_different_velocity_fields_spatially_constant_temporally_varying()
     # benchmark_nisl_different_vmag()
-    # test_nisl_step_ritchie()
-    #nisl_step_finding_departure_point(golderyx_array, dgold_dy_array, dgold_dx_array,
-    #             vchiold_y_array, vchiold_x_array)
+    test_nisl_step_ritchie()
+    # nisl_step_finding_departure_point(golderyx_array, dgold_dy_array, dgold_dx_array,
+    #              vchiold_y_array, vchiold_x_array)
