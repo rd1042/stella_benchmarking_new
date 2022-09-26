@@ -26,7 +26,7 @@
  full_flux_surface = .false.
  nonlinear = .true.
  include_parallel_streaming = .false.
- !include_drifts = .false. 
+
  include_mirror = .false.
  override_vexb = .true.
  vexb_x = 1
@@ -54,17 +54,17 @@
 /
 
 &vpamu_grids_parameters
- nvgrid = 3 ! 24
+ nvgrid = 3
  nmu = 3
- vpa_max = 2.0 ! 3.0
- vperp_max = 2.0 ! 3.0
+ vpa_max = 2.0
+ vperp_max = 2.0
 /
 &dist_fn_knobs
  adiabatic_option="field-line-average-term"
 /
 
 &time_advance_knobs
- explicit_option="rk2"
+ explicit_option="rk4"
  ydriftknob = 0.
  xdriftknob = 0.
  wstarknob = 0.
@@ -120,7 +120,7 @@
 
 &stella_diagnostics_knobs
  nwrite = 250
- nsave = 1000000 
+ nsave = 1000000
  save_for_restart = .false.
  write_omega = .true.
  write_phi_vs_time = .true.

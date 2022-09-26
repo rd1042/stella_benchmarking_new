@@ -90,12 +90,12 @@
  time_upwind = 0.02
  vpa_upwind = 0.02
  delt = 0.02
- nstep = 1000000
+ nstep = 25000
  nisl_nonlinear = .false.
  leapfrog_nonlinear = .false.
 /
 &species_knobs
- nspec= 1
+ nspec= 2
  species_option = 'stella'
 /
 &species_parameters_1
@@ -119,7 +119,7 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 2000
+ nwrite = 250
  nsave = 1000000
  save_for_restart = .false.
  write_omega = .true.

@@ -92,7 +92,7 @@
  delt = 0.02
  nstep = 25000
  nisl_nonlinear = .false.
- leapfrog_nonlinear = .false.
+ leapfrog_nonlinear = .true.
 /
 &species_knobs
  nspec= 2

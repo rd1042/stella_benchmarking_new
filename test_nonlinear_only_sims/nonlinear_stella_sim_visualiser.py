@@ -4,17 +4,24 @@ import sys
 sys.path.append("../postprocessing_tools")
 from plotting_helper import make_comparison_plots, plot_gmvus, plot_gzvs
 from plotting_helper import make_comparison_plots_leapfrog_poster
-from helper_ncdf import view_ncdf_variables, extract_data_from_ncdf
+from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf_with_xarray
 from extract_sim_data import get_omega_data
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy import fft
 import glob
 
+rk2_outnc_longname = "sims/rk2/rk2_vexb1_dt0.02.out.nc"
+rk3_outnc_longname = "sims/rk3/rk3_vexb1_dt0.02.out.nc"
+rk4_outnc_longname = "sims/rk4/rk4_vexb1_dt0.02.out.nc"
+nisl_outnc_longname = "sims/nisl/nisl_vexb1_dt0.02.out.nc"
+isl_outnc_longname = "sims/isl/isl_vexb1_dt0.02.out.nc"
+leapfrog_outnc_longname = "sims/leapfrog/leapfrog_vexb1_dt0.02.out.nc"
+
 def make_phi_kxky_modes_pics(outnc_longname, log=False):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
     # print("t = ", t)
@@ -56,7 +63,7 @@ def make_phi_kxky_modes_pics(outnc_longname, log=False):
 def make_phi2_kxky_modes_pics_single_mode(outnc_longname):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
     # print("kx = ", kx)
@@ -105,7 +112,7 @@ def make_phi2_kxky_modes_pics_single_mode_multiple_sims(outnc_longnames, sim_lab
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
         print("outnc_longname = ", outnc_longname)
         # Get phi(kx, ky, z, t)
-        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
         # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
         # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
         # print("kx = ", kx)
@@ -154,7 +161,7 @@ def make_phi_kxky_modes_pics_multiple_sims(outnc_longnames, sim_labels, linestyl
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
         print("outnc_longname = ", outnc_longname)
         # Get phi(kx, ky, z, t)
-        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
         t_list.append(t)
         kx_list.append(kx)
         ky_list.append(ky)
@@ -220,7 +227,7 @@ def make_phi_kxky_modes_pics_multiple_sims_all_z(outnc_longnames, sim_labels, co
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
         print("outnc_longname = ", outnc_longname)
         # Get phi(kx, ky, z, t)
-        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
         t_list.append(t)
         kx_list.append(kx)
         ky_list.append(ky)
@@ -284,7 +291,7 @@ def make_phi2_kxky_modes_pics_multiple_sims(outnc_longnames, sim_labels, linesty
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
         print("outnc_longname = ", outnc_longname)
         # Get phi(kx, ky, z, t)
-        [t, kx, ky, z, phi2_kxky] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
+        [t, kx, ky, z, phi2_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
         t_list.append(t)
         kx_list.append(kx)
         ky_list.append(ky)
@@ -342,7 +349,7 @@ def plot_phiz_for_zonal_mode(outnc_longname):
 
     # view_ncdf_variables(outnc_longname)
     # sys.exit()
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     #print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
 
     print("max(abs(phi_vs_t[-1,0,-1,:,0] - phi_vs_t[-1,0,0,:,0])) = ", np.max(abs(phi_vs_t[-1,0,-1,:,0] - phi_vs_t[-1,0,0,:,0])))
@@ -376,7 +383,7 @@ def make_phi_ky_modes_pics_multiple_sims(outnc_longnames, sim_labels, sim_cols,
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
         print("outnc_longname = ", outnc_longname)
         # Get phi(kx, ky, z, t)
-        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
         nz_per_mode = len(z)
         z_idx = int(nz_per_mode/2)  # The z idx of z=0
         t_list.append(t)
@@ -453,7 +460,7 @@ def make_phi2_ky_modes_pics_multiple_sims(outnc_longnames, sim_labels, sim_cols)
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
         print("outnc_longname = ", outnc_longname)
         # Get phi(kx, ky, z, t)
-        [t, kx, ky, z, phi2_kxky] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
+        [t, kx, ky, z, phi2_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
         t_list.append(t)
         kx_list.append(kx)
         ky_list.append(ky)
@@ -529,7 +536,7 @@ def make_phi2_ky_modes_pics_multiple_sims_for_talk(outnc_longnames, sim_labels, 
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
         print("outnc_longname = ", outnc_longname)
         # Get phi(kx, ky, z, t)
-        [t, kx, ky, z, phi2_kxky] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
+        [t, kx, ky, z, phi2_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
         t_list.append(t)
         kx_list.append(kx)
         ky_list.append(ky)
@@ -606,7 +613,7 @@ def make_phi2_ky_modes_pics_multiple_sims_for_talk(outnc_longnames, sim_labels, 
 def make_phi2_kxky_modes_pics_for_each_z(outnc_longname):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
     nz_per_mode = len(z)
@@ -641,9 +648,9 @@ def examine_initialisation():
     outnc_nisl_nz2 = "looking_at_initial_conditions/nisl_nonlinear_only_nz2.out.nc"
 
     # Get phi(kx, ky, z, t)
-    [t_nisl, kx_nisl, ky_nisl, z_nisl, phi_vs_t_nisl] = extract_data_from_ncdf(outnc_nisl_nz4, "t", 'kx', 'ky', "zed", "phi_vs_t")
-    [t_rk3, kx_rk3, ky_rk3, z_rk3, phi_vs_t_rk3] = extract_data_from_ncdf(outnc_rk3_nz4, "t", 'kx', 'ky', "zed", "phi_vs_t")
-    [t_nz2, kx_nz2, ky_nz2, z_nz2, phi_vs_t_nz2] = extract_data_from_ncdf(outnc_nisl_nz2, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t_nisl, kx_nisl, ky_nisl, z_nisl, phi_vs_t_nisl] = extract_data_from_ncdf_with_xarray(outnc_nisl_nz4, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t_rk3, kx_rk3, ky_rk3, z_rk3, phi_vs_t_rk3] = extract_data_from_ncdf_with_xarray(outnc_rk3_nz4, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t_nz2, kx_nz2, ky_nz2, z_nz2, phi_vs_t_nz2] = extract_data_from_ncdf_with_xarray(outnc_nisl_nz2, "t", 'kx', 'ky', "zed", "phi_vs_t")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     phi_nisl = phi_vs_t_nisl[0,0,:,:,:]
     phi_rk3 = phi_vs_t_rk3[0,0,:,:,:]
@@ -784,7 +791,7 @@ def ifft_phi(kx, ky, phi_kxky, extra_upsample_fac=1):
 def make_phi2_t_movie(outnc_longname):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi2_kxky] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
+    [t, kx, ky, z, phi2_kxky] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
 
@@ -856,7 +863,7 @@ def make_phi2_t_movie(outnc_longname):
 def make_phi_t_movie(outnc_longname, extra_upsample_fac=1):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
 
@@ -929,7 +936,7 @@ def make_phi_t_movie(outnc_longname, extra_upsample_fac=1):
 def make_phi_z_t_movie(outnc_longname, extra_upsample_fac=1, t_idxs=None):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
 
@@ -990,7 +997,7 @@ def make_phi_z_t_movie(outnc_longname, extra_upsample_fac=1, t_idxs=None):
 def make_phi_z_movie(outnc_longname, extra_upsample_fac=1):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
 
@@ -1063,7 +1070,7 @@ def make_phi_z_movie(outnc_longname, extra_upsample_fac=1):
 def make_phi_xyz_plots(outnc_longname):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
 
@@ -1116,7 +1123,7 @@ def show_final_phi2_pic(outnc_longname):
     """ """
     # Get phi(kx, ky, z, t)
     # view_ncdf_variables(outnc_longname)
-    [t, kx, ky, z, phi2] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
+    [t, kx, ky, z, phi2] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2_vs_kxky")
     # print("phi2.shape = ", phi2.shape)  # time, tube (?), z, kx, ky
     # print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
 
@@ -1162,7 +1169,7 @@ def show_final_phi2_pic(outnc_longname):
 def show_final_phi_pic(outnc_longname):
     """ """
     # Get phi(kx, ky, z, t)
-    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
     print("phi2.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
     print("len(kx, ky, t, z) = ", len(kx), len(ky), len(t), len(z))
 
@@ -1226,12 +1233,12 @@ def compare_sims_with_different_nwrite():
     nwrite1 = "example_nisl_nonlinear_only_vexb10_for_visualisation_nwrite1.out.nc"
     nwrite1_smallerdt = "example_nisl_nonlinear_only_vexb10_for_visualisation_nwrite1_delt0.015.out.nc"
 
-    [t_nwrite100, kx_nwrite100, ky_nwrite100, z_nwrite100, phi_vs_t_nwrite100] = extract_data_from_ncdf(nwrite100, "t", 'kx', 'ky', "zed", "phi_vs_t")
-    [t_nwrite51, kx_nwrite51, ky_nwrite51, z_nwrite51, phi_vs_t_nwrite51] = extract_data_from_ncdf(nwrite51, "t", 'kx', 'ky', "zed", "phi_vs_t")
-    [t_nwrite25, kx_nwrite25, ky_nwrite25, z_nwrite25, phi_vs_t_nwrite25] = extract_data_from_ncdf(nwrite25, "t", 'kx', 'ky', "zed", "phi_vs_t")
-    [t_nwrite1, kx_nwrite1, ky_nwrite1, z_nwrite1, phi_vs_t_nwrite1] = extract_data_from_ncdf(nwrite1, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t_nwrite100, kx_nwrite100, ky_nwrite100, z_nwrite100, phi_vs_t_nwrite100] = extract_data_from_ncdf_with_xarray(nwrite100, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t_nwrite51, kx_nwrite51, ky_nwrite51, z_nwrite51, phi_vs_t_nwrite51] = extract_data_from_ncdf_with_xarray(nwrite51, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t_nwrite25, kx_nwrite25, ky_nwrite25, z_nwrite25, phi_vs_t_nwrite25] = extract_data_from_ncdf_with_xarray(nwrite25, "t", 'kx', 'ky', "zed", "phi_vs_t")
+    [t_nwrite1, kx_nwrite1, ky_nwrite1, z_nwrite1, phi_vs_t_nwrite1] = extract_data_from_ncdf_with_xarray(nwrite1, "t", 'kx', 'ky', "zed", "phi_vs_t")
     [t_nwrite1_smallerdt, kx_nwrite1_smallerdt, ky_nwrite1_smallerdt,
-        z_nwrite1_smallerdt, phi_vs_t_nwrite1_smallerdt] = extract_data_from_ncdf(nwrite1_smallerdt, "t", 'kx', 'ky', "zed", "phi_vs_t")
+        z_nwrite1_smallerdt, phi_vs_t_nwrite1_smallerdt] = extract_data_from_ncdf_with_xarray(nwrite1_smallerdt, "t", 'kx', 'ky', "zed", "phi_vs_t")
 
     # Plot |phi(t)| for each z, kx, ky
     nz_per_mode = len(z_nwrite51)
@@ -1285,7 +1292,7 @@ def plot_phi2t_for_folder(folder_name, nwrite):
     amp_factor_vals3 = []
     amp_factor_vals4 = []
     for outnc_longname in filenames:
-        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
         # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
         # print("kx = ", kx)  #   kx =  [ 0.         0.3334277  0.6668554  1.0002831 -1.0002831 -0.6668554
         #                     #           -0.3334277]
@@ -1342,6 +1349,61 @@ def plot_phi2t_for_folder(folder_name, nwrite):
 
     return
 
+def plot_phi2t_for_sims_vexb1():
+    """For a folder of sims, plot phi2(t)
+    Could also try to plot something like |G| (kxmax*U*delt) """
+
+    outnc_longnames = [rk2_outnc_longname, rk3_outnc_longname,
+                        rk4_outnc_longname,
+                        leapfrog_outnc_longname,
+                        nisl_outnc_longname,
+                        #isl_outnc_longname,
+                        ]
+    labels = ["RK2", "RK3", "RK4", "Leapfrog", "NISL",
+               #"ISL"
+              ]
+    fig = plt.figure(figsize=(12,6))
+    left = 0.1
+    right = 0.9
+    bottom = 0.1
+    top = 0.9
+    width = right - left
+    height = top - bottom
+    ax1 = fig.add_axes((left, bottom, width, height))
+    linewidths = [5, 5, 6, 4, 2, 1]
+    legend_fontsize = 14
+    xlabel_fontsize = 30
+    ylabel_fontsize = 30
+    xticklabel_fontsize = 16
+    yticklabel_fontsize = 16
+
+    linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "-"]
+    for sim_idx, outnc_longname in enumerate(outnc_longnames):
+        [t, kx, ky, z, phi2] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2")
+        phi2_frac_change = 100*(phi2 - phi2[0])/phi2[0]
+        # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
+        # print("kx = ", kx)  #   kx =  [ 0.         0.3334277  0.6668554  1.0002831 -1.0002831 -0.6668554
+        #                     #           -0.3334277]
+        # print("ky = ", ky)  #   ky =  [0.         0.33333333 0.66666667 1.         1.33333333]
+        ax1.plot(t, phi2_frac_change, label=labels[sim_idx], ls=linestyles[sim_idx], lw=linewidths[sim_idx])
+
+    ax1.grid(True)
+    ax1.legend(loc="best", fontsize=legend_fontsize)
+    #ax1.set_yscale("log")
+    #ax1.set_xscale("log")
+    ax1.set_xlabel(r"$t$", fontsize=xlabel_fontsize)
+    ax1.set_ylabel(r"$\Delta (\vert \tilde{\phi}_k(t) \vert^2) (\%)$", fontsize=ylabel_fontsize)
+    ax1.set_xlim([0, 500])
+    ax1.set_ylim([-0.015, 0.03])
+    ax1.set_xticks([0, 250, 500])
+    ax1.set_xticklabels([r"$0$", r"$250$", r"$500$"])
+    ax1.set_yticks([-0.01, 0, 0.01, 0.02, 0.03])
+    ax1.set_yticklabels([r"$-0.01$", r"$0$", r"$0.01$", r"$0.02$", r"$0.03$"])
+    plt.savefig("vexb_1.eps")
+    plt.close()
+
+    return
+
 def plot_phi2t_for_rk3_folder(folder_name, nwrite):
     """For a folder of sims, plot phi2(t)
     Could also try to plot something like |G| (kxmax*U*delt) """
@@ -1352,7 +1414,7 @@ def plot_phi2t_for_rk3_folder(folder_name, nwrite):
     delt_vals = []
     amp_factor_vals = []
     for outnc_longname in filenames:
-        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
+        [t, kx, ky, z, phi_vs_t] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi_vs_t")
         # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, k
         # print("kx = ", kx)  #   kx =  [ 0.         0.3334277  0.6668554  1.0002831 -1.0002831 -0.6668554
         #                     #           -0.3334277]

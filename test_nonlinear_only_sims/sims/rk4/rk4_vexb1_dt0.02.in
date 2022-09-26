@@ -64,7 +64,7 @@
 /
 
 &time_advance_knobs
- explicit_option="rk2"
+ explicit_option="rk4"
  ydriftknob = 0.
  xdriftknob = 0.
  wstarknob = 0.

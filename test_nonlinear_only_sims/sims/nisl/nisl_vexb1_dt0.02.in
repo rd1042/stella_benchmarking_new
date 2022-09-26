@@ -91,8 +91,10 @@
  vpa_upwind = 0.02
  delt = 0.02
  nstep = 25000
- nisl_nonlinear = .false.
+ nisl_nonlinear = .true.
  leapfrog_nonlinear = .false.
+ add_nl_source_in_real_space = .true.
+ no_extra_padding = .false.
 /
 &species_knobs
  nspec= 2
@@ -123,7 +125,7 @@
  nsave = 1000000 
  save_for_restart = .false.
  write_omega = .true.
- write_phi_vs_time = .true.
+ write_phi_vs_time = .false.
  write_gvmus = .false.
  write_gzvs = .false.
 /
