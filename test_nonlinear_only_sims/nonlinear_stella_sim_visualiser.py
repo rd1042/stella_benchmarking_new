@@ -11,12 +11,35 @@ import numpy as np
 from numpy import fft
 import glob
 
-rk2_outnc_longname = "sims/rk2/rk2_vexb1_dt0.02.out.nc"
-rk3_outnc_longname = "sims/rk3/rk3_vexb1_dt0.02.out.nc"
-rk4_outnc_longname = "sims/rk4/rk4_vexb1_dt0.02.out.nc"
-nisl_outnc_longname = "sims/nisl/nisl_vexb1_dt0.02.out.nc"
-isl_outnc_longname = "sims/isl/isl_vexb1_dt0.02.out.nc"
+rk2_no_overrride_outnc_longname = "sims/rk2/rk2_dt0.2.out.nc"
+rk3_no_overrride_outnc_longname = "sims/rk3/rk3_dt0.2.out.nc"
+rk4_no_overrride_outnc_longname = "sims/rk4/rk4_dt0.2.out.nc"
+rk2_no_overrride_dt002_outnc_longname = "sims/rk2/rk2_dt0.02.out.nc"
+rk3_no_overrride_dt002_outnc_longname = "sims/rk3/rk3_dt0.02.out.nc"
+rk4_no_overrride_dt002_outnc_longname = "sims/rk4/rk4_dt0.02.out.nc"
+rk2_vexb1_outnc_longname = "sims/rk2/rk2_vexb1_dt0.02.out.nc"
+rk3_vexb1_outnc_longname = "sims/rk3/rk3_vexb1_dt0.02.out.nc"
+rk4_vexb1_outnc_longname = "sims/rk4/rk4_vexb1_dt0.02.out.nc"
+rk4_vexb10_outnc_longname = "sims/rk4/rk4_vexb10_dt0.2.out.nc"
+
+
+nisl_no_override_outnc_longname = "sims/nisl/nisl_dt0.2.out.nc"
+nisl_no_override_dt002_outnc_longname = "sims/nisl/nisl_dt0.02.out.nc"
+nisl_vexb1_outnc_longname = "sims/nisl/nisl_vexb1_dt0.02.out.nc"
+nisl_vexb10_outnc_longname = "sims/nisl/nisl_vexb10_dt0.2.out.nc"
+nisl_vexb10_exact_first_step_outnc_longname = "sims/nisl/nisl_vexb10_dt0.2_exact_first_step.out.nc"
+
+
+isl_vexb1_outnc_longname = "sims/isl/isl_vexb1_dt0.02.out.nc"
+isl_vexb10_outnc_longname = "sims/isl/isl_vexb10_dt0.2.out.nc"
+isl_no_override_outnc_longname = "sims/isl/isl_dt0.2.out.nc"
+isl_no_override_dt002_outnc_longname = "sims/isl/isl_dt0.02.out.nc"
+
 leapfrog_outnc_longname = "sims/leapfrog/leapfrog_vexb1_dt0.02.out.nc"
+leapfrog_no_override_outnc_longname = "sims/leapfrog/leapfrog_dt0.2.out.nc"
+leapfrog_no_override_dt002_outnc_longname = "sims/leapfrog/leapfrog_dt0.02.out.nc"
+
+default_cmap = plt.get_cmap("tab10")
 
 def make_phi_kxky_modes_pics(outnc_longname, log=False):
     """ """
@@ -1349,33 +1372,96 @@ def plot_phi2t_for_folder(folder_name, nwrite):
 
     return
 
+def plot_phi2t_for_sims_no_override():
+    """For a folder of sims, plot phi2(t)
+    Could also try to plot something like |G| (kxmax*U*delt) """
+
+    outnc_longnames = [rk2_no_overrride_dt002_outnc_longname,
+                    rk3_no_overrride_dt002_outnc_longname,
+                    rk4_no_overrride_dt002_outnc_longname,
+                    leapfrog_no_override_dt002_outnc_longname,
+                    nisl_no_override_dt002_outnc_longname,
+                    isl_no_override_dt002_outnc_longname
+                        ]
+    labels = ["RK2",
+            "RK3", "RK4",
+            "Leapfrog",
+            "NISL",
+            "SL (bilinear interpolation)"
+              ]
+    fig = plt.figure(figsize=(12,6))
+    left = 0.14
+    right = 0.95
+    bottom = 0.14
+    top = 0.95
+    width = right - left
+    height = top - bottom
+    ax1 = fig.add_axes((left, bottom, width, height))
+    linewidths = [5, 5, 6, 5, 2, 3]
+    legend_fontsize = 16
+    xlabel_fontsize = 30
+    ylabel_fontsize = 30
+    xticklabel_fontsize = 18
+    yticklabel_fontsize = 18
+
+    linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "-"]
+    linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "--", "-."]
+    col_counters = [0, 1, 2, 3, 4, 6]
+    for sim_idx, outnc_longname in enumerate(outnc_longnames):
+        [t, kx, ky, z, phi2] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2")
+        #phi2_frac_change = 100*(phi2 - phi2[0])/phi2[0]
+        # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
+        # print("kx = ", kx)  #   kx =  [ 0.         0.3334277  0.6668554  1.0002831 -1.0002831 -0.6668554
+        #                     #           -0.3334277]
+        # print("ky = ", ky)  #   ky =  [0.         0.33333333 0.66666667 1.         1.33333333]
+        col_counter = col_counters[sim_idx]
+        ax1.plot(t, phi2, label=labels[sim_idx], ls=linestyles[col_counter], lw=linewidths[sim_idx],
+                 c=default_cmap(col_counter))
+
+    ax1.grid(True)
+    ax1.legend(loc="best", fontsize=legend_fontsize)
+    ax1.set_yscale("log")
+    #ax1.set_xscale("log")
+    ax1.set_xlabel(r"$t$", fontsize=xlabel_fontsize)
+    ax1.set_ylabel(r"$\vert \tilde{\phi}_k(t) \vert^2$", fontsize=ylabel_fontsize)
+    ax1.set_xlim([0, 500])
+    # ax1.set_ylim([-0.015, 0.03])
+    ax1.set_xticks([0, 250, 500])
+    ax1.set_xticklabels([r"$0$", r"$250$", r"$500$"], fontsize=xticklabel_fontsize)
+    # ax1.set_yticks([-0.01, 0, 0.01, 0.02, 0.03])
+    # ax1.set_yticklabels([r"$-0.01$", r"$0$", r"$0.01$", r"$0.02$", r"$0.03$"], fontsize=yticklabel_fontsize)
+    plt.savefig("no_vexb_override.eps")
+    plt.close()
+
+    return
+
 def plot_phi2t_for_sims_vexb1():
     """For a folder of sims, plot phi2(t)
     Could also try to plot something like |G| (kxmax*U*delt) """
 
-    outnc_longnames = [rk2_outnc_longname, rk3_outnc_longname,
-                        rk4_outnc_longname,
+    outnc_longnames = [rk2_vexb1_outnc_longname, rk3_vexb1_outnc_longname,
+                        rk4_vexb1_outnc_longname,
                         leapfrog_outnc_longname,
-                        nisl_outnc_longname,
-                        #isl_outnc_longname,
+                        nisl_vexb1_outnc_longname,
+                        #isl_vexb1_outnc_longname,
                         ]
     labels = ["RK2", "RK3", "RK4", "Leapfrog", "NISL",
                #"ISL"
               ]
     fig = plt.figure(figsize=(12,6))
-    left = 0.1
-    right = 0.9
-    bottom = 0.1
-    top = 0.9
+    left = 0.14
+    right = 0.95
+    bottom = 0.14
+    top = 0.95
     width = right - left
     height = top - bottom
     ax1 = fig.add_axes((left, bottom, width, height))
     linewidths = [5, 5, 6, 4, 2, 1]
-    legend_fontsize = 14
+    legend_fontsize = 20
     xlabel_fontsize = 30
     ylabel_fontsize = 30
-    xticklabel_fontsize = 16
-    yticklabel_fontsize = 16
+    xticklabel_fontsize = 18
+    yticklabel_fontsize = 18
 
     linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "-"]
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
@@ -1396,10 +1482,73 @@ def plot_phi2t_for_sims_vexb1():
     ax1.set_xlim([0, 500])
     ax1.set_ylim([-0.015, 0.03])
     ax1.set_xticks([0, 250, 500])
-    ax1.set_xticklabels([r"$0$", r"$250$", r"$500$"])
+    ax1.set_xticklabels([r"$0$", r"$250$", r"$500$"], fontsize=xticklabel_fontsize)
     ax1.set_yticks([-0.01, 0, 0.01, 0.02, 0.03])
-    ax1.set_yticklabels([r"$-0.01$", r"$0$", r"$0.01$", r"$0.02$", r"$0.03$"])
+    ax1.set_yticklabels([r"$-0.01$", r"$0$", r"$0.01$", r"$0.02$", r"$0.03$"], fontsize=yticklabel_fontsize)
     plt.savefig("vexb_1.eps")
+    plt.close()
+
+    return
+
+def plot_phi2t_for_sims_vexb10():
+    """For a folder of sims, plot phi2(t)
+    Could also try to plot something like |G| (kxmax*U*delt) """
+
+    outnc_longnames = [#rk2_vexb1_outnc_longname, rk3_vexb1_outnc_longname,
+                        rk4_vexb10_outnc_longname,
+                        #leapfrog_outnc_longname,
+                        nisl_vexb10_outnc_longname,
+                        nisl_vexb10_exact_first_step_outnc_longname,
+                        isl_vexb10_outnc_longname,
+                        ]
+    labels = [#"RK2", "RK3",
+                "RK4",
+                #"Leapfrog",
+                "NISL",
+                "NISL (exact first step)",
+                "SL (bilinear interpolation)"
+              ]
+    fig = plt.figure(figsize=(12,6))
+    left = 0.14
+    right = 0.95
+    bottom = 0.14
+    top = 0.95
+    width = right - left
+    height = top - bottom
+    ax1 = fig.add_axes((left, bottom, width, height))
+    linewidths = [5, 5, 6, 4, 2, 3, 4]
+    legend_fontsize = 20
+    xlabel_fontsize = 30
+    ylabel_fontsize = 30
+    xticklabel_fontsize = 18
+    yticklabel_fontsize = 18
+
+    linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "--", "-."]
+    counters = [2, 4, 5, 6]
+    for sim_idx, outnc_longname in enumerate(outnc_longnames):
+        counter = counters[sim_idx]
+        [t, kx, ky, z, phi2] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2")
+        phi2_frac_change = 100*(phi2 - phi2[0])/phi2[0]
+        # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
+        # print("kx = ", kx)  #   kx =  [ 0.         0.3334277  0.6668554  1.0002831 -1.0002831 -0.6668554
+        #                     #           -0.3334277]
+        # print("ky = ", ky)  #   ky =  [0.         0.33333333 0.66666667 1.         1.33333333]
+        ax1.plot(t, phi2_frac_change, label=labels[sim_idx], ls=linestyles[counter], lw=linewidths[counter],
+                 c=default_cmap(counter))
+
+    ax1.grid(True)
+    ax1.legend(loc="best", fontsize=legend_fontsize)
+    #ax1.set_yscale("log")
+    #ax1.set_xscale("log")
+    ax1.set_xlabel(r"$t$", fontsize=xlabel_fontsize)
+    ax1.set_ylabel(r"$\Delta (\vert \tilde{\phi}_k(t) \vert^2) (\%)$", fontsize=ylabel_fontsize)
+    ax1.set_xlim([0, 500])
+    # ax1.set_ylim([-0.015, 0.03])
+    ax1.set_xticks([0, 250, 500])
+    ax1.set_xticklabels([r"$0$", r"$250$", r"$500$"], fontsize=xticklabel_fontsize)
+    ax1.set_yticks([-80, -60, -40, -20, 0])
+    ax1.set_yticklabels([r"$-80$", r"$-60$", r"$-40$", r"$-20$", r"$0$"], fontsize=yticklabel_fontsize)
+    plt.savefig("vexb_10.eps")
     plt.close()
 
     return
