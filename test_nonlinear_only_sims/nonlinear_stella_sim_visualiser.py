@@ -1404,6 +1404,51 @@ def plot_phi2t_for_sims_no_override():
     xticklabel_fontsize = 18
     yticklabel_fontsize = 18
 
+    linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "--", "-."]
+    col_counters = [0, 1, 2, 3, 4, 6]
+    for sim_idx, outnc_longname in enumerate(outnc_longnames):
+        [t, kx, ky, z, phi2] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2")
+        #phi2_frac_change = 100*(phi2 - phi2[0])/phi2[0]
+        # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
+        # print("kx = ", kx)  #   kx =  [ 0.         0.3334277  0.6668554  1.0002831 -1.0002831 -0.6668554
+        #                     #           -0.3334277]
+        # print("ky = ", ky)  #   ky =  [0.         0.33333333 0.66666667 1.         1.33333333]
+        col_counter = col_counters[sim_idx]
+        ax1.plot(t, phi2, label=labels[sim_idx], ls=linestyles[col_counter], lw=linewidths[sim_idx],
+                 c=default_cmap(col_counter))
+
+    ax1.grid(True)
+    ax1.legend(loc="best", fontsize=legend_fontsize)
+    ax1.set_yscale("log")
+    #ax1.set_xscale("log")
+    ax1.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
+    ax1.set_ylabel(r"$ \sum_{\tilde{k}_x, \tilde{k}_y} \vert \tilde{\phi}_k(t) \vert^2$", fontsize=ylabel_fontsize)
+    ax1.set_xlim([0, 500])
+    ax1.set_ylim([0.5, 3E5])
+    ax1.set_xticks([0, 250, 500])
+    ax1.set_xticklabels([r"$0$", r"$250$", r"$500$"], fontsize=xticklabel_fontsize)
+    ax1.set_yticks([1, 10, 1E2, 1E3, 1E4, 1E5])
+    ax1.set_yticklabels([r"$1$", r"$10$", r"$10^2$", r"$10^3$", r"$10^4$", r"$10^5$"], fontsize=yticklabel_fontsize)
+    plt.savefig("no_vexb_override.eps")
+    plt.close()
+
+    ######################################################
+    ######################################################
+    fig = plt.figure(figsize=(12,6))
+    left = 0.18
+    right = 0.95
+    bottom = 0.14
+    top = 0.95
+    width = right - left
+    height = top - bottom
+    ax1 = fig.add_axes((left, bottom, width, height))
+    linewidths = [5, 5, 6, 5, 2, 3]
+    legend_fontsize = 16
+    xlabel_fontsize = 30
+    ylabel_fontsize = 30
+    xticklabel_fontsize = 18
+    yticklabel_fontsize = 18
+
     linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "-"]
     linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "--", "-."]
     col_counters = [0, 1, 2, 3, 4, 6]
@@ -1424,14 +1469,15 @@ def plot_phi2t_for_sims_no_override():
     #ax1.set_xscale("log")
     ax1.set_xlabel(r"$t$", fontsize=xlabel_fontsize)
     ax1.set_ylabel(r"$\vert \tilde{\phi}_k(t) \vert^2$", fontsize=ylabel_fontsize)
-    ax1.set_xlim([0, 500])
-    # ax1.set_ylim([-0.015, 0.03])
-    ax1.set_xticks([0, 250, 500])
-    ax1.set_xticklabels([r"$0$", r"$250$", r"$500$"], fontsize=xticklabel_fontsize)
+    # ax1.set_xlim([0, 500])
+    # ax1.set_ylim([0.5, 3E5])
+    # ax1.set_xticks([0, 250, 500])
+    # ax1.set_xticklabels([r"$0$", r"$250$", r"$500$"], fontsize=xticklabel_fontsize)
     # ax1.set_yticks([-0.01, 0, 0.01, 0.02, 0.03])
     # ax1.set_yticklabels([r"$-0.01$", r"$0$", r"$0.01$", r"$0.02$", r"$0.03$"], fontsize=yticklabel_fontsize)
-    plt.savefig("no_vexb_override.eps")
+    plt.show()
     plt.close()
+
 
     return
 
@@ -1449,7 +1495,7 @@ def plot_phi2t_for_sims_vexb1():
                #"ISL"
               ]
     fig = plt.figure(figsize=(12,6))
-    left = 0.14
+    left = 0.18
     right = 0.95
     bottom = 0.14
     top = 0.95
@@ -1463,10 +1509,14 @@ def plot_phi2t_for_sims_vexb1():
     xticklabel_fontsize = 18
     yticklabel_fontsize = 18
 
+    [t_leap, kx, ky, z, phi2_leap] = extract_data_from_ncdf_with_xarray(leapfrog_outnc_longname, "t", 'kx', 'ky', "zed", "phi2")
+    [t_nisl, kx, ky, z, phi2_nisl] = extract_data_from_ncdf_with_xarray(nisl_vexb1_outnc_longname, "t", 'kx', 'ky', "zed", "phi2")
+    print("max(abs(phi2_nisl - phi2_leap)) = ", np.max(abs(phi2_nisl - phi2_leap)))
     linestyles = ["-", "--", "-.", (0,(3,1,2,1)), "-", "-"]
     for sim_idx, outnc_longname in enumerate(outnc_longnames):
         [t, kx, ky, z, phi2] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2")
         phi2_frac_change = 100*(phi2 - phi2[0])/phi2[0]
+        print("scheme = ", labels[sim_idx], "max(abs(phi2_frac_change)) = ", np.max(abs(phi2_frac_change)))
         # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
         # print("kx = ", kx)  #   kx =  [ 0.         0.3334277  0.6668554  1.0002831 -1.0002831 -0.6668554
         #                     #           -0.3334277]
@@ -1477,8 +1527,8 @@ def plot_phi2t_for_sims_vexb1():
     ax1.legend(loc="best", fontsize=legend_fontsize)
     #ax1.set_yscale("log")
     #ax1.set_xscale("log")
-    ax1.set_xlabel(r"$t$", fontsize=xlabel_fontsize)
-    ax1.set_ylabel(r"$\Delta (\vert \tilde{\phi}_k(t) \vert^2) (\%)$", fontsize=ylabel_fontsize)
+    ax1.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
+    ax1.set_ylabel(r"$\Delta  \sum_{\tilde{k}_x, \tilde{k}_y} \vert\tilde{\phi}_k(t) \vert^2 (\%)$", fontsize=ylabel_fontsize)
     ax1.set_xlim([0, 500])
     ax1.set_ylim([-0.015, 0.03])
     ax1.set_xticks([0, 250, 500])
@@ -1493,7 +1543,7 @@ def plot_phi2t_for_sims_vexb1():
 def plot_phi2t_for_sims_vexb10():
     """For a folder of sims, plot phi2(t)
     Could also try to plot something like |G| (kxmax*U*delt) """
-
+    print("vexb_x = 10")
     outnc_longnames = [#rk2_vexb1_outnc_longname, rk3_vexb1_outnc_longname,
                         rk4_vexb10_outnc_longname,
                         #leapfrog_outnc_longname,
@@ -1509,7 +1559,7 @@ def plot_phi2t_for_sims_vexb10():
                 "SL (bilinear interpolation)"
               ]
     fig = plt.figure(figsize=(12,6))
-    left = 0.14
+    left = 0.18
     right = 0.95
     bottom = 0.14
     top = 0.95
@@ -1529,6 +1579,7 @@ def plot_phi2t_for_sims_vexb10():
         counter = counters[sim_idx]
         [t, kx, ky, z, phi2] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'kx', 'ky', "zed", "phi2")
         phi2_frac_change = 100*(phi2 - phi2[0])/phi2[0]
+        print("scheme = ", labels[sim_idx], "max(abs(phi2_frac_change)) = ", np.max(abs(phi2_frac_change)))
         # print("phi_vs_t.shape = ", phi_vs_t.shape)  # time, tube (?), z, kx, ky
         # print("kx = ", kx)  #   kx =  [ 0.         0.3334277  0.6668554  1.0002831 -1.0002831 -0.6668554
         #                     #           -0.3334277]
@@ -1540,8 +1591,8 @@ def plot_phi2t_for_sims_vexb10():
     ax1.legend(loc="best", fontsize=legend_fontsize)
     #ax1.set_yscale("log")
     #ax1.set_xscale("log")
-    ax1.set_xlabel(r"$t$", fontsize=xlabel_fontsize)
-    ax1.set_ylabel(r"$\Delta (\vert \tilde{\phi}_k(t) \vert^2) (\%)$", fontsize=ylabel_fontsize)
+    ax1.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
+    ax1.set_ylabel(r"$\Delta \sum_{\tilde{k}_x, \tilde{k}_y} \vert \tilde{\phi}_k(t) \vert^2 (\%)$", fontsize=ylabel_fontsize)
     ax1.set_xlim([0, 500])
     # ax1.set_ylim([-0.015, 0.03])
     ax1.set_xticks([0, 250, 500])
