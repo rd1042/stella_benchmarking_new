@@ -97,16 +97,17 @@
 
 &knobs
  fphi =   1.0
- fapar = 1.0
- fbpar = 1.0
- zed_upwind = 0.0 ! 0.02
- time_upwind = 0.0 ! 0.02
+ fapar =  1.0
+ fbpar = 0.0
+ zed_upwind = 0.02
+ time_upwind = 0.02
  vpa_upwind = 0.02
- stream_implicit = .true.
+ zed_upwind_explicit = 0.1
+ stream_implicit = .false.
  mirror_implicit = .false.
  !mirror_semi_lagrange = .false.
- delt = 0.04
- nstep = 1000
+ delt = 0.0004
+ nstep = 100000
 /
 &species_knobs
  nspec= 2
@@ -133,13 +134,11 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 10
- nsave = 1000 
+ nwrite = 250
+ nsave = 10000 
  save_for_restart = .false.
  write_omega = .false.
  write_phi_vs_time = .true.
- write_apar_vs_time = .true.
- write_bpar_vs_time = .true.
  write_gvmus = .false.
  write_gzvs = .false.
 /

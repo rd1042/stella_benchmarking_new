@@ -226,6 +226,7 @@
  save_for_restart = .false. ! Write restart files.
  write_phi_over_time = .true. ! Write entire Phi field to NetCDF file every nwrite.
  write_apar_over_time  = .true.
+ write_bpar_over_time  = .true.
 /
 
 !==============================

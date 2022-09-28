@@ -89,7 +89,6 @@
  chop_side = F
  phiinit=   1
  restart_file = "nc/example.nc"
- restart_dir = "restart"
  ginit_option= "kpar"
  width0 = -1.0
  den0 = 0
@@ -136,7 +135,7 @@
 &stella_diagnostics_knobs
  nwrite = 250 ! 200
  nsave = 10000 
- save_for_restart = .true.
+ save_for_restart = .false.
  write_omega = .false.
  write_phi_vs_time = .true.
  write_gvmus = .false.

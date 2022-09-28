@@ -128,40 +128,64 @@ def compare_sims_for_thesis(field_name, outnc_longnames, sim_types, labels, save
 
     t_list = []
     z_list = []
-    phi_vs_t_list = []
+    field_vs_t_list = []
 
     for idx, outnc_longname in enumerate(outnc_longnames):
         if sim_types[idx] == "stella":
-            t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'zed', 'phi_vs_t', 'beta')
-            phi_vs_t = np.array(phi_vs_t[:,0,:,0,0,:])
+            if field_name == "phi":
+                field_key = "phi_vs_t"
+            elif field_name == "apar":
+                field_key = "apar_vs_t"
+            elif field_name == "bpar":
+                field_key = "bpar_vs_t"
+            print("stella")
+            view_ncdf_variables_with_xarray(outnc_longname)
+            t, z, field_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'zed', field_key, 'beta')
+            if field_name == "apar":
+                field_vs_t = np.array(field_vs_t[:,0,:,0,0,:])
+            else:
+                field_vs_t = np.array(field_vs_t[:,0,:,0,0,:])
             # shape is now (time, zed, ri)
         elif sim_types[idx] == "gs2":
-            t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'theta', 'phi_t', 'beta')
-            phi_vs_t = np.array(phi_vs_t[:,0,0,:,:])
+            if field_name == "phi":
+                field_key = "phi_t"
+            elif field_name == "apar":
+                field_key = "apar_t"
+            elif field_name == "bpar":
+                field_key = "bpar_t"
+            print("gs2")
+            view_ncdf_variables_with_xarray(outnc_longname)
+            t, z, field_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'theta', field_key, 'beta')
+            field_vs_t = np.array(field_vs_t[:,0,0,:,:])
+            if field_name == "apar":
+                field_vs_t = field_vs_t/2
             # shape is now (time, zed, ri)
         else:
             print("sim type not recognised! Aborting")
             sys.exit()
-        t_list.append(t); z_list.append(z); phi_vs_t_list.append(phi_vs_t);
+        t_list.append(t); z_list.append(z); field_vs_t_list.append(field_vs_t);
     for idx, outnc_longname in enumerate(outnc_longnames):
-        t = t_list[idx]; z = z_list[idx]; phi_vs_t = phi_vs_t_list[idx];
+        t = t_list[idx]; z = z_list[idx]; field_vs_t = field_vs_t_list[idx];
         zval= float(z[int(len(z)*0.5)])
         if abs(zval) > 1E-5:
             print("Error! zval!=0 . zval = ", zval)
             sys.exit()
-        phi_t = phi_vs_t[:,int(len(z)*0.5),0]
+        if field_name == "apar":
+            field_t = field_vs_t[:,int(len(z)*0.25),0]
+        else:
+            field_t = field_vs_t[:,int(len(z)*0.5),0]
         if idx == 0:
-            phi_t_orig = phi_t
+            field_t_orig = field_t
             z_orig = zval
             t_orig = t
-            phi_t_normalising_factor = np.max(abs(phi_t_orig))
-        ax1.plot(t, phi_t, label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
+            field_t_normalising_factor = np.max(abs(field_t_orig))
+        ax1.plot(t, field_t, label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
 
 
         if len(t_orig) == len(t):
             if np.max(abs(t - t_orig)) < 1E-5:
                 if idx != 0:    # Don't plot the first, as this is what we're comparing to
-                    ax2.plot(t, (abs((phi_t - phi_t_orig)/phi_t_normalising_factor)*100),
+                    ax2.plot(t, (abs((field_t - field_t_orig)/field_t_normalising_factor)*100),
                                         c=default_cols(idx), ls=linestyles[idx], lw=my_linewidth)
             else:
                 print("t vals don't match")
@@ -389,29 +413,31 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1():
     gs2_implicit_dt4Em2_nz72 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz72_dt4E-2.out.nc"
     # stella_implicit_dt5Em2 = "sims/for_thesis_stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_nz36_dt5E-2.out.nc"
     stella_explicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_explicit_src_h.out.nc"
+    stella_explicit_src_h_dt4Em4_zupwexpl01 = "sims/stella_comparing_implex_gbar_h_src/input_explicit_src_h_zupwexpl0.1.out.nc"
     stella_implicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h.out.nc"
     stella_implicit_src_h_dt4Em2 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_dt4E-2.out.nc"
     stella_implicit_src_h_exp = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_experimental.out.nc"
     stella_implicit_src_h_dt4Em2_tupw002 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_dt4E-2_tupw002.out.nc"
     stella_implicit_src_h_dt4Em2_zupw002 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_dt4E-2_zupw002.out.nc"
 
-    sim_types = [
-                "gs2", "gs2", "gs2", "gs2", "gs2",
-                "stella", "stella", "stella", "stella",
-                ]
-    for idx, outnc_longname in enumerate([gs2_implicit_dt4Em2,
-                gs2_implicit_dt4Em3,
-                gs2_implicit_dt4Em2_bd0,
-                gs2_implicit_dt4Em2_bd0_fe05,
-                gs2_implicit_dt4Em2_nz72,
-                stella_explicit_src_h_dt4Em4,
-                stella_implicit_src_h_dt4Em4,
-                stella_implicit_src_h_dt4Em2,
-                stella_implicit_src_h_dt4Em2_zupw002]):
-        #######################
-        ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
-               [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname, sim_types[idx], make_plot=False)
-        print("outnc_longname, gamma_opt = ", outnc_longname, gamma_opt)
+    # sim_types = [
+    #             "gs2", "gs2", "gs2", "gs2", "gs2",
+    #             "stella", "stella", "stella", #"stella",
+    #             ]
+    # for idx, outnc_longname in enumerate([gs2_implicit_dt4Em2,
+    #             gs2_implicit_dt4Em3,
+    #             gs2_implicit_dt4Em2_bd0,
+    #             gs2_implicit_dt4Em2_bd0_fe05,
+    #             gs2_implicit_dt4Em2_nz72,
+    #             stella_explicit_src_h_dt4Em4,
+    #             stella_implicit_src_h_dt4Em4,
+    #             stella_implicit_src_h_dt4Em2,
+    #             #stella_implicit_src_h_dt4Em2_zupw002
+    #             ]):
+    #     #######################
+    #     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+    #            [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname, sim_types[idx], make_plot=False)
+    #     print("outnc_longname, gamma_opt = ", outnc_longname, gamma_opt)
 
     compare_sims_for_thesis("phi",
             [# gs2_implicit_dt25Em5,
@@ -421,15 +447,16 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1():
              # gs2_implicit_dt4Em2_bd0_fe05,
              # gs2_implicit_dt4Em2_nz72,
              stella_explicit_src_h_dt4Em4,
+             stella_explicit_src_h_dt4Em4_zupwexpl01,
              stella_implicit_src_h_dt4Em2,
              #stella_implicit_src_h_exp,
-             stella_implicit_src_h_dt4Em2_zupw002
+             stella_implicit_src_h_dt4Em2_tupw002
              #stella_implicit_dt25Em5
              ],
             ["gs2",
              # "gs2",
              # "gs2",
-             "stella", "stella", "stella", #"stella"
+             "stella", "stella", "stella", "stella"
              ],
             [
             # "gs2(dt=2.5E-4)",
@@ -439,28 +466,60 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1():
             # "gs2(dt=4E-2) (bakdif=0, fexpr=0.5)",
             #"gs2(dt=4E-2), nz=72",
             "stella (explicit, src. h)",
+            "stella (explicit, src. h, zupwexpl=0.1)",
             "stella (impl, src. h, dt=4E-2, zupw=tupw=0)",#, "stella (explicit, centered dg/dz)",
             #"stella (exp.)",
-            "stella (impl, src. h, dt=4E-2, zupw=0.02)"#, "stella (explicit, centered dg/dz)",
+            "stella (impl, src. h, dt=4E-2, tupw=0.02)"#, "stella (explicit, centered dg/dz)",
             # "stella (dt=2.5E-4)",
             ],
              save_name="for_thesis_phi_t_fapar1_fbpar1_src_h.eps")
 
-def benchamrk_stella_src_h_stella_vs_gs2_fapar1_fbpar0():
+    compare_sims_for_thesis("bpar",
+            [
+             gs2_implicit_dt4Em2,
+             stella_implicit_src_h_dt4Em2,
+             ],
+            ["gs2",
+             "stella",
+             ],
+            [
+            "gs2(dt=4E-2)",
+            "stella (impl, src. h, dt=4E-2, zupw=tupw=0)",#, "stella (explicit, centered dg/dz)",
+            ],
+             save_name="for_thesis_phi_t_fapar1_fbpar1_src_h_bpar.eps")
+    compare_sims_for_thesis("apar",
+            [# gs2_implicit_dt25Em5,
+             gs2_implicit_dt4Em2,
+             stella_implicit_src_h_dt4Em2,
+             ],
+            ["gs2",
+             "stella"
+             ],
+            [
+            "gs2(dt=4E-2)",
+            "stella (impl, src. h, dt=4E-2, zupw=tupw=0)",#, "stella (explicit, centered dg/dz)",
+            ],
+             save_name="for_thesis_phi_t_fapar1_fbpar1_src_h_apar.eps")
+
+def benchamark_stella_src_h_stella_vs_gs2_fapar1_fbpar0():
     """ """
     gs2_implicit_dt5Em2 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar0/input_nz36_dt5E-2.out.nc"
-    stella_implicit_dt5Em2 = "sims/for_thesis_stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_nz36_dt5E-2.out.nc"
+    #stella_implicit_dt5Em2 = "sims/for_thesis_stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_nz36_dt5E-2.out.nc"
     stella_explicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_explicit_src_h_fapar1_fbpar0.out.nc"
+    stella_explicit_src_h_dt4Em4_ = "sims/stella_comparing_implex_gbar_h_src/input_explicit_src_h_fapar1_fbpar0.out.nc"
+    stella_explicit_src_h_dt4Em4_zupwexpl01 = "sims/stella_comparing_implex_gbar_h_src/input_explicit_src_h_fapar1_fbpar0_zupwexpl_0.1.out.nc"
     # stella_implicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h.out.nc"
     stella_implicit_src_h_dt4Em2 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_fapar1_fbpar0_dt4E-2.out.nc"
 
 
     compare_sims_for_thesis("phi",
             [# gs2_implicit_dt25Em5,
-             gs2_implicit_dt5Em2, stella_implicit_dt5Em2,
+             gs2_implicit_dt5Em2,
+             # stella_implicit_dt5Em2,
              stella_explicit_src_h_dt4Em4,
              #stella_implicit_src_h_dt4Em4,
-             stella_implicit_src_h_dt4Em2
+             stella_implicit_src_h_dt4Em2,
+             stella_explicit_src_h_dt4Em4_zupwexpl01
              #stella_implicit_dt25Em5
              ],
             ["gs2",
@@ -469,10 +528,12 @@ def benchamrk_stella_src_h_stella_vs_gs2_fapar1_fbpar0():
             [
             # "gs2(dt=2.5E-4)",
             "gs2(dt=5E-4)",
-            "stella (implicit, dt=4E-2)",
+            # "stella (implicit, dt=4E-2)",
             "stella (explicit, src. h)",
+            "stella (explicit, src. h, zupwexpl=0.1)",
             #"stella (impl, src. h, dt=4E-4)",
             "stella (impl, src. h, dt=4E-2)"#, "stella (explicit, centered dg/dz)",
+
             # "stella (dt=2.5E-4)",
             ],
              save_name="for_thesis_phi_t_fapar1_fbpar0_src_h.eps")
@@ -485,4 +546,4 @@ if __name__ == "__main__":
     # benchmark_stella_vs_gs2_fapar0_fbpar0_for_thesis()
     # benchmark_stella_vs_gs2_fapar1_fbpar0_for_thesis()
     benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1()
-    # benchamrk_stella_src_h_stella_vs_gs2_fapar1_fbpar0()
+    benchamark_stella_src_h_stella_vs_gs2_fapar1_fbpar0()

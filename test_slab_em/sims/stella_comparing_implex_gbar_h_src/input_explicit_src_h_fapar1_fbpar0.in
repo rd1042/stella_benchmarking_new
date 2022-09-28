@@ -90,7 +90,9 @@
  phiinit=   1
  restart_file = "nc/example.nc"
  ginit_option= "kpar"
- width0 = 1.0
+ width0 = -1.0
+ den0 = 0
+ den1 = 1
 /
 
 &knobs
@@ -104,7 +106,7 @@
  mirror_implicit = .false.
  !mirror_semi_lagrange = .false.
  delt = 0.0004
- nstep = 10000
+ nstep = 100000
 /
 &species_knobs
  nspec= 2
@@ -131,7 +133,7 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 100
+ nwrite = 250
  nsave = 10000 
  save_for_restart = .false.
  write_omega = .false.
