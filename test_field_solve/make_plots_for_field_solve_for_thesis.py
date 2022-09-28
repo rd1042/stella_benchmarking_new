@@ -190,8 +190,8 @@ def calculate_fields_zjzeroexp(kperp, beta, dist, m_ion=1, m_electron=2.8E-4, B=
     gamone_electron = np.exp(-b_electron)*(iv(0,b_electron) - iv(1,b_electron) )
     antot1 = (gamzero_ion + gamzero_electron)
     antot3 = (-0.5*beta/B) * (gamone_ion - gamone_electron )
-    print("gamzero_ion = ", gamzero_ion)
-    print("gamzero_electron = ", gamzero_electron)
+    # print("gamzero_ion = ", gamzero_ion)
+    # print("gamzero_electron = ", gamzero_electron)
     if dist == "h":
         gamtot_h = 2
         phi = antot1/gamtot_h
@@ -281,31 +281,37 @@ def vspace_res_test_field_solve_for_thesis():
     For each of these, plot the result for field solve in h and field solve in h.
     """
 
-    def make_plot(which):
+    marker_size = 120
+    legend_fontsize = 13
+    marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
+    lw_list = [4, 3, 3, 2]
+    ls_list = ["-", "--", "-.", (0, (4,1,2,1))]
+
+    my_xticklength = 7
+    my_xtickwidth = 2
+    my_xminorticklength = 4
+    my_xminortickwidth = 1
+    my_yticklength = 7
+    my_ytickwidth = 2
+    my_yminorticklength = 4
+    my_yminortickwidth = 1
+
+    xticklabel_fontsize = 20
+    yticklabel_fontsize = 20
+    ylabel_fontsize = 36
+    xlabel_fontsize = 36
+    bracket_fontsize = 60
+
+    top = 0.98
+    left = 0.14
+    right = 0.98
+    bottom = 0.13
+    vspace = 0.02
+    hspace = 0.08
+
+    def init_plot():
         """ """
-        marker_size = 120
-        legend_fontsize = 20
-        marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
-        lw_list = [4, 3, 3, 2]
-        ls_list = ["-", "--", "-.", (0, (4,1,2,1))]
 
-        my_xticklength = 7
-        my_xtickwidth = 2
-        my_xticklength_minor = 4
-        my_xtickwidth_minor = 1
-
-        xticklabel_fontsize = 30
-        yticklabel_fontsize = 30
-        ylabel_fontsize = 40
-        xlabel_fontsize = 40
-        bracket_fontsize = 70
-
-        top = 0.98
-        left = 0.14
-        right = 0.98
-        bottom = 0.13
-        vspace = 0.02
-        hspace = 0.04
         height = (top - bottom - 2*vspace)/3
         row3_bottom = bottom
         row2_bottom = bottom + height + vspace
@@ -314,7 +320,7 @@ def vspace_res_test_field_solve_for_thesis():
         col1_left = left
         col2_left = left + width + hspace
 
-        fig = plt.figure(figsize=(12,16))
+        fig = plt.figure(figsize=(12,12))
         ax1 = fig.add_axes((col1_left, row1_bottom, width, height))
         ax2 = fig.add_axes((col2_left, row1_bottom, width, height))
         ax3 = fig.add_axes((col1_left, row2_bottom, width, height))
@@ -322,6 +328,10 @@ def vspace_res_test_field_solve_for_thesis():
         ax5 = fig.add_axes((col1_left, row3_bottom, width, height))
         ax6 = fig.add_axes((col2_left, row3_bottom, width, height))
 
+        return fig, ax1, ax2, ax3, ax4, ax5, ax6
+
+    def make_plot(fig, ax1, ax2, ax3, ax4, ax5, ax6, which):
+        """ """
         if which=="vpa":
             unique_vpamax = sorted(set(vpamax_vals_h))
             vpamax_array = np.array(vpamax_vals_h)
@@ -387,56 +397,147 @@ def vspace_res_test_field_solve_for_thesis():
                             s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
                 ax6.scatter(nmu_array[idxs], bpar_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
 
+        return
+
+    def finish_plot(fig, ax1, ax2, ax3, ax4, ax5, ax6, which):
+        """ """
+        ########## Beginning stuff
         for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
             #ax.set_xlim((0, 150))
             ax.set_xscale("log")
             ax.set_yscale("log")
+        ax1.set_ylabel(r"$\vert\Delta \tilde{\phi}_k\vert (\%)$ ", fontsize=ylabel_fontsize)
+        ax3.set_ylabel(r"$\vert\Delta \tilde{A}_{\parallel k}\vert$ ", fontsize=ylabel_fontsize)
+        ax5.set_ylabel(r"$\vert\Delta \tilde{B}_{\parallel k}\vert (\%)$ ", fontsize=ylabel_fontsize)
+        ax3.legend(loc="lower right", fontsize=legend_fontsize, ncol=2)
+
+        for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+            ax.set_xticks([10, 100])
+            ax.tick_params("x", which="major", length=my_xticklength, width=my_xtickwidth, direction="in")
+            ax.tick_params("x", which="minor", length=my_xminorticklength, width=my_xminortickwidth, direction="in")
+            ax.tick_params("y", which="major", length=my_yticklength, width=my_ytickwidth, direction="in")
+            ax.tick_params("y", which="minor", length=my_yminorticklength, width=my_yminortickwidth, direction="in")
+        for ax in [ax1, ax2, ax3, ax4]:
+            ax.set_xticklabels([])
+        for ax in [ax5, ax6]:
+            ax.set_xticklabels([r"$10^1$", r"$10^2$"], fontsize=xticklabel_fontsize)
+        ########## plot-specific stuff
+
         if which=="vpa":
             for ax in [ax5, ax6]:
                 ax.set_xlabel(r"nvpa", fontsize=xlabel_fontsize)
-                
+
+            ax1.set_ylim([2e-13, 1e-11])
+            ax1.set_yticks([1e-12, 1e-11])
+            ax1.set_yticklabels([r"$10^{-12}$",
+                r"$10^{-11}$"], fontsize=yticklabel_fontsize)
+            # ax1.set_yticks([1e-10,1e-6, 1e-2, 100], minor=True)
+            # ax1.set_yticklabels([], minor=True)
+
+            ax2.set_yticks([1e-8, 1e-4, 1])
+            ax2.set_yticklabels([r"$10^{-8}$",
+                r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+            ax2.set_yticks([1e-10,1e-6, 1e-2,], minor=True)
+            ax2.set_yticklabels([], minor=True)
+
+            ax3.set_ylim([1E-19, 1.4E-15])
+            ax3.set_yticks([1e-19, 1e-18, 1e-17, 1e-16, 1e-15])
+            ax3.set_yticklabels([
+                r"$10^{-19}$", r"$10^{-18}$", r"$10^{-17}$", r"$10^{-16}$", r"$10^{-15}$"],
+                fontsize=yticklabel_fontsize)
+            # ax3.set_yticks([1e-10,1e-6, 1e-2, 100], minor=True)
+            # ax3.set_yticklabels([], minor=True)
+
+            ax4.set_ylim([1E-21, 1E-18])
+            ax4.set_yticks([1e-21, 1e-20, 1e-19, 1e-18])
+            ax4.set_yticklabels([r"$10^{-21}$",
+                r"$10^{-20}$", r"$10^{-19}$", r"$10^{-18}$"],
+                fontsize=yticklabel_fontsize)
+            # ax4.set_yticks([1e-10,1e-6, 1e-2, 100], minor=True)
+            # ax4.set_yticklabels([], minor=True)
+
+            ax5.set_ylim([4E-10, 160])
+            ax5.set_yticks([1e-8, 1e-4, 1])
+            ax5.set_yticklabels([r"$10^{-8}$",
+                r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+            ax5.set_yticks([1e-10, 1e-6, 1e-2, 100], minor=True)
+            ax5.set_yticklabels([], minor=True)
+
+            ax6.set_ylim([4E-10, 160])
+            ax6.set_yticks([1e-8, 1e-4, 1])
+            ax6.set_yticklabels([r"$10^{-8}$",
+                r"$10^{-4}$", r"$1$", ], fontsize=yticklabel_fontsize)
+            ax6.set_yticks([1e-6,1e-2, 100], minor=True)
+            ax6.set_yticklabels([], minor=True)
+
             plt.savefig("vpa_res_field_solve.eps")
+
         if which=="vperp":
             for ax in [ax5, ax6]:
                 ax.set_xlabel(r"nmu", fontsize=xlabel_fontsize)
 
-            for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
-                ax.set_xticks([10, 100])
-            for ax in [ax1, ax2, ax3, ax4]:
-                ax.set_xticklabels([])
-            for ax in [ax5, ax6]:
-                ax.set_xticklabels([r"$10^1$", r"$10^2$"], fontsize=xticklabel_fontsize)
-            for ax in [ax5, ax6]:
-                ax.set_xticklabels([r"$10^1$", r"$10^2$"], fontsize=xticklabel_fontsize)
-
             ax1.set_yticks([1e-12,1e-8, 1e-4, 1])
             ax1.set_yticklabels([r"$10^{-12}$",r"$10^{-8}$",
-                r"$10^{-4}$", r"$10^{0}$"], fontsize=yticklabel_fontsize)
+                r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+            ax1.set_yticks([1e-10,1e-6, 1e-2, 100], minor=True)
+            ax1.set_yticklabels([], minor=True)
 
-            ax1.set_ylabel(r"$\vert\Delta \tilde{\phi}_k\vert (\%)$ ", fontsize=ylabel_fontsize)
-            ax3.set_ylabel(r"$\vert\Delta \tilde{A}_{\parallel k}\vert$ ", fontsize=ylabel_fontsize)
-            ax5.set_ylabel(r"$\vert\Delta \tilde{B}_{\parallel k}\vert (\%)$ ", fontsize=ylabel_fontsize)
-            ax3.legend(loc="lower right", fontsize=legend_fontsize, ncol=2)
+            ax2.set_yticks([1e-8, 1e-4, 1])
+            ax2.set_yticklabels([r"$10^{-8}$",
+                r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+            ax2.set_yticks([1e-10,1e-6, 1e-2, 100], minor=True)
+            ax2.set_yticklabels([], minor=True)
 
-            for ax in [ax1, ax3, ax5]:
-                ax.set_xscale("log")
+            ax3.set_ylim([1E-19, 3E-15])
+            ax3.set_yticks([1e-19, 1e-18, 1e-17, 1e-16, 1e-15])
+            ax3.set_yticklabels([r"$10^{-19}$",
+                r"$10^{-18}$", r"$10^{-17}$", r"$10^{-16}$", r"$10^{-15}$"],
+                fontsize=yticklabel_fontsize)
+            # ax3.set_yticks([1e-10,1e-6, 1e-2, 100], minor=True)
+            # ax3.set_yticklabels([], minor=True)
+
+            ax4.set_ylim([1E-21, 1E-18])
+            ax4.set_yticks([1e-21, 1e-20, 1e-19, 1e-18])
+            ax4.set_yticklabels([r"$10^{-21}$",
+                r"$10^{-20}$", r"$10^{-19}$", r"$10^{-18}$"],
+                fontsize=yticklabel_fontsize)
+            # ax4.set_yticks([1e-10,1e-6, 1e-2, 100], minor=True)
+            # ax4.set_yticklabels([], minor=True)
+
+            ax5.set_yticks([1e-8, 1e-4, 1])
+            ax5.set_yticklabels([r"$10^{-8}$",
+                r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+            ax5.set_yticks([1e-10, 1e-6, 1e-2, 100], minor=True)
+            ax5.set_yticklabels([], minor=True)
+
+            ax6.set_yticks([1e-8, 1e-4, 1])
+            ax6.set_yticklabels([r"$10^{-8}$",
+                r"$10^{-4}$", r"$1$", ], fontsize=yticklabel_fontsize)
+            ax6.set_yticks([1e-10, 1e-6,1e-2, 100], minor=True)
+            ax6.set_yticklabels([], minor=True)
+
             plt.savefig("vperp_res_field_solve.eps")
+
         plt.close()
 
         return
 
     analytic_phi_h, analytic_apar_h, analytic_bpar_h = calculate_fields_zjzeroexp(1, 1, "h")
     analytic_phi_gbar, analytic_apar_gbar, analytic_bpar_gbar = calculate_fields_zjzeroexp(1, 1, "gbar")
-    print("solution with h. phi, bpar = ", analytic_phi_h, analytic_bpar_h)
-    print("solution with gbar. phi, bpar = ", analytic_phi_gbar, analytic_bpar_gbar)
 
+    ### vpa parameter tests
     vpamax_vals_h, nvpa_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_fields_from_outnc_files(make_sims.phi_bpar_h_vpa_scan_folder)
     vpamax_vals_gbar, nvpa_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_fields_from_outnc_files(make_sims.phi_bpar_gbar_vpa_scan_folder)
-    make_plot("vpa")
+    fig, ax1, ax2, ax3, ax4, ax5, ax6 = init_plot()
+    make_plot(fig, ax1, ax2, ax3, ax4, ax5, ax6, "vpa")
+    finish_plot(fig, ax1, ax2, ax3, ax4, ax5, ax6, "vpa")
 
+    ### vperp parameter tests
     vperpmax_vals_h, nmu_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_fields_from_outnc_files(make_sims.phi_bpar_h_vperp_scan_folder)
     vperpmax_vals_gbar, nmu_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_fields_from_outnc_files(make_sims.phi_bpar_gbar_vperp_scan_folder)
-    make_plot("vperp")
+    fig, ax1, ax2, ax3, ax4, ax5, ax6 = init_plot()
+    make_plot(fig, ax1, ax2, ax3, ax4, ax5, ax6, "vperp")
+    finish_plot(fig, ax1, ax2, ax3, ax4, ax5, ax6, "vperp")
 
     return
 
@@ -447,10 +548,11 @@ def test_field_solve_apar_for_thesis():
     For each of these, plot the result for field solve in h and field solve in h.
     (3) Fixed vspace-res, varying ky
     """
+
     def make_analytic_apar_plot():
         """ """
-        top = 0.98
-        left = 0.14
+        top = 0.97
+        left = 0.17
         right = 0.98
         bottom = 0.15
         vspace = 0.05
@@ -460,21 +562,44 @@ def test_field_solve_apar_for_thesis():
         col1_left = left
         col2_left = left + width + hspace
 
-        label_fontsize = 40
-        legend_fontsize = 20
+        my_xticklength = 7
+        my_xtickwidth = 2
+        my_xminorticklength = 4
+        my_xminortickwidth = 1
+        my_yticklength = 7
+        my_ytickwidth = 2
+        my_yminorticklength = 4
+        my_yminortickwidth = 1
 
-        fig = plt.figure(figsize=(14,8))
+        label_fontsize = 40
+        legend_fontsize = 50
+        marker_size = 30
+        xticklabel_fontsize = 30
+        yticklabel_fontsize = 30
+
+        fig = plt.figure(figsize=(12,8))
         ax1 = fig.add_axes((col1_left, bottom, width, height)) # vpa-res, h
         #ax2 = fig.add_axes((col2_left, bottom, width, height)) # vpa-res, gbar
 
-        ax1.plot(kperp_vals, analytic_apar_h_kperp, lw=3, marker="o", mfc="none", markersize=10, label=r"$\tilde{h}_k$")
-        ax1.plot(kperp_vals, analytic_apar_gbar_kperp, lw=3, marker="o", mfc="none", markersize=10, label=r"$\tilde{\bar{g}}_k$")
+        ax1.plot(kperp_vals, analytic_apar_h_kperp, lw=3, marker="o", mfc="none", markersize=marker_size, label=r"$\tilde{h}_k$")
+        ax1.plot(kperp_vals, analytic_apar_gbar_kperp, lw=3, marker="o", mfc="none", markersize=marker_size, label=r"$\tilde{\bar{g}}_k$")
         ax1.set_xscale("log")
         ax1.legend(loc="best", fontsize=legend_fontsize)
         #ax2.set_xscale("log")
         ax1.set_yscale("log")
         ax1.set_xlabel(r"$\tilde{k}_\perp$", fontsize=label_fontsize)
-        ax1.set_ylabel(r"analytic $\tilde{A}_{\parallel k}$", fontsize=label_fontsize)
+        ax1.set_ylabel(r"$\tilde{A}_{\parallel k}$ (analytic)", fontsize=label_fontsize)
+
+        ax1.tick_params("x", which="major", length=my_xticklength, width=my_xtickwidth, direction="in")
+        ax1.tick_params("x", which="minor", length=my_xminorticklength, width=my_xminortickwidth, direction="in")
+        ax1.tick_params("y", which="major", length=my_yticklength, width=my_ytickwidth, direction="in")
+        ax1.tick_params("y", which="minor", length=my_yminorticklength, width=my_yminortickwidth, direction="in")
+        ax1.set_xticks([1e-4, 1e-3, 1e-2, 1e-1, 1, 10])
+        ax1.set_xticklabels([r"$10^{-4}$", r"$10^{-3}$", r"$10^{-2}$", r"$10^{-1}$", r"$1$", r"$10$"], fontsize=xticklabel_fontsize)
+        ax1.set_yticks([1e-2, 1, 1e2, 1e4, 1e6, 1e8, 1e10])
+        ax1.set_yticklabels([r"$10^{-2}$", r"$1$", r"$10^{2}$", r"$10^{4}$", r"$10^6$", r"$10^8$", r"$10^{10}$"], fontsize=yticklabel_fontsize)
+        ax1.set_yticks([1e-1, 10, 1e3, 1e5, 1e7, 1e9], minor=True)
+        ax1.set_yticklabels([], minor=True)
         #ax2.set_ylabel(r"analytic $\tilde{A}_{\parallel k}$")
         plt.savefig("analytic_apar_for_test.eps")
         plt.close()
@@ -482,30 +607,35 @@ def test_field_solve_apar_for_thesis():
 
     def make_plot():
         """ """
-        marker_size = 12
-        label_fontsize = 40
-        legend_fontsize = 14
+        marker_size = 120
+
+        legend_fontsize = 13
+
+        my_xticklength = 7
+        my_xtickwidth = 2
+        my_xminorticklength = 4
+        my_xminortickwidth = 1
+        my_yticklength = 7
+        my_ytickwidth = 2
+        my_yminorticklength = 4
+        my_yminortickwidth = 1
+
+        xticklabel_fontsize = 20
+        yticklabel_fontsize = 20
+        ylabel_fontsize = 36
+        xlabel_fontsize = 36
+        bracket_fontsize = 60
+
         marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
         lw_list = [4, 3, 3, 2]
         ls_list = ["-", "--", "-.", (0, (4,1,2,1))]
 
-        my_xticklength = 7
-        my_xtickwidth = 2
-        my_xticklength_minor = 4
-        my_xtickwidth_minor = 1
-
-        xticklabel_fontsize = 20
-        yticklabel_fontsize = 20
-        ylabel_fontsize = 30
-        xlabel_fontsize = 30
-        bracket_fontsize = 70
-
         top = 0.98
-        left = 0.14
+        left = 0.12
         right = 0.98
         bottom = 0.13
         vspace = 0.05
-        hspace = 0.04
+        hspace = 0.06
         height = (top - bottom - vspace)/2
         row2_bottom = bottom
         row1_bottom = row2_bottom + height + vspace
@@ -556,14 +686,14 @@ def test_field_solve_apar_for_thesis():
         ## Plot vperp-res test
         for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax_h):
             idxs = np.argwhere(np.abs(vperpmax_array_h-unique_vperpmax_val)<1E-4)
-            ax3.scatter(nmu_array_h[idxs], apar_array_h_vperp[idxs], marker=marker_list[vpamax_idx], s=marker_size)
+            ax3.scatter(nmu_array_h[idxs], apar_array_h_vperp[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
         for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax_gbar):
             idxs = np.argwhere(np.abs(vperpmax_array_gbar-unique_vperpmax_val)<1E-4)
             # print("unique_vperpmax_val = ", unique_vperpmax_val)
             # # print("vperpmax_idx = ", vperpmax_idx)
             # print("nmu_array_gbar[idxs] = ", nmu_array_gbar[idxs])
             # print("apar_array_gbar_vperp[idxs] = ", apar_array_gbar_vperp[idxs])
-            ax4.scatter(nmu_array_gbar[idxs], apar_array_gbar_vperp[idxs], marker=marker_list[vpamax_idx],
+            ax4.scatter(nmu_array_gbar[idxs], apar_array_gbar_vperp[idxs], marker=marker_list[vperpmax_idx],
                         s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
 
         ## And now kperp
@@ -573,15 +703,72 @@ def test_field_solve_apar_for_thesis():
         apar_array_gbar_kperp = np.abs(100*(apar_vals_gbar_kperp - analytic_apar_gbar_kperp)/analytic_apar_gbar_kperp)
         ax5.scatter(kperp_vals_h, apar_array_h_kperp, marker="s", s=marker_size)
         ax6.scatter(kperp_vals_gbar, apar_array_gbar_kperp, marker="s", s=marker_size)
-        # ax5.set_ylim((1E-2, 1E2))
-        #plt.show()
-        ax2.set_ylim((1E-8, 40))
-        ax4.set_ylim((1E-9, 3))
-        for ax in [ax2, ax4]:
-            ax.legend(loc="best", ncol=2)
+
         for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
             ax.set_xscale("log")
             ax.set_yscale("log")
+            ax.tick_params("x", which="major", length=my_xticklength, width=my_xtickwidth, direction="in")
+            ax.tick_params("x", which="minor", length=my_xminorticklength, width=my_xminortickwidth, direction="in")
+            ax.tick_params("y", which="major", length=my_yticklength, width=my_ytickwidth, direction="in")
+            ax.tick_params("y", which="minor", length=my_yminorticklength, width=my_yminortickwidth, direction="in")
+
+        for ax in [ax1, ax2, ax3, ax4]:
+            ax.set_xticks([10, 100])
+        for ax in [ax1, ax3]:
+            ax.set_xticklabels([])
+        for ax in [ax2, ax4]:
+            ax.set_xticklabels([r"$10^1$", r"$10^2$"], fontsize=xticklabel_fontsize)
+
+        for ax in [ax5, ax6]:
+            ax.set_xticks([1e-4, 1e-2, 1, 100])
+            ax.set_xticks([1e-3, 1e-1, 10], minor=True)
+            ax.set_xticklabels([], minor=True)
+
+        ax5.set_xticklabels([])
+        ax6.set_xticklabels([r"$10^{-4}$", r"$10^{-2}$", r"$1$", r"$10^{2}$"], fontsize=xticklabel_fontsize)
+
+        ax2.set_ylim((1E-18, 3))
+        ax4.set_ylim((1E-19, 2))
+
+        ax1.set_yticks([1e-8, 1e-4, 1])
+        ax1.set_yticklabels([r"$10^{-8}$",
+            r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+        ax1.set_yticks([1e-6, 1e-2, 100], minor=True)
+        ax1.set_yticklabels([], minor=True)
+
+        ax2.set_yticks([1e-16, 1e-12, 1e-8, 1e-4, 1])
+        ax2.set_yticklabels([r"$10^{-16}$", r"$10^{-12}$", r"$10^{-8}$",
+            r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+        ax2.set_yticks([1e-14, 1e-10, 1e-6, 1e-2], minor=True)
+        ax2.set_yticklabels([], minor=True)
+
+        ax3.set_yticks([1e-8, 1e-4, 1])
+        ax3.set_yticklabels([r"$10^{-8}$",
+            r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+        ax3.set_yticks([1e-6, 1e-2, 100], minor=True)
+        ax3.set_yticklabels([], minor=True)
+
+        ax4.set_yticks([1e-16, 1e-12, 1e-8, 1e-4, 1])
+        ax4.set_yticklabels([r"$10^{-16}$", r"$10^{-12}$", r"$10^{-8}$",
+            r"$10^{-4}$", r"$1$"], fontsize=yticklabel_fontsize)
+        ax4.set_yticks([1e-18, 1e-14, 1e-10, 1e-6, 1e-2], minor=True)
+        ax4.set_yticklabels([], minor=True)
+
+        ax5.set_yticks([1e-8, 1e-6, 1e-4])
+        ax5.set_yticklabels([r"$10^{-8}$", r"$10^{-6}$",
+            r"$10^{-4}$"], fontsize=yticklabel_fontsize)
+        # ax5.set_yticks([1e-9, 1e-7, 1e-5, 1e-3], minor=True)
+        # ax5.set_yticklabels([], minor=True)
+
+        ax6.set_yticks([1e-12, 1e-11, 1e-10, 1e-9])
+        ax6.set_yticklabels([r"$10^{-12}$", r"$10^{-11}$", r"$10^{-10}$",
+            r"$10^{-9}$"], fontsize=yticklabel_fontsize)
+        # ax6.set_yticks([1e-18, 1e-14, 1e-10, 1e-6, 1e-2], minor=True)
+        # ax6.set_yticklabels([], minor=True)
+
+        for ax in [ax2, ax4]:
+            ax.legend(loc="best", ncol=2)
+
         for ax in [ax2]:
             ax.set_xlabel(r"nvpa", fontsize=xlabel_fontsize)
         for ax in [ax4]:
@@ -651,5 +838,5 @@ def test_field_solve_apar_for_thesis():
 
 if __name__ == "__main__":
     print("Hello world")
-    vspace_res_test_field_solve_for_thesis()
+    # vspace_res_test_field_solve_for_thesis()
     test_field_solve_apar_for_thesis()
