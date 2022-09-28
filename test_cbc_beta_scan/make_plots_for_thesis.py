@@ -156,7 +156,8 @@ def make_beta_plots_from_pickles_for_thesis(pickle_longnames, labels, marker_siz
     return
 
 def make_omega_beta_plots_fapar1_fbpar1_1():
-    """ """
+    """Plot CBC beta scan for thesis, showing omega and gamma,
+    rather than the difference between these """
 
     make_beta_plots_from_pickles_for_thesis(
                 [
@@ -178,7 +179,8 @@ def make_omega_beta_plots_fapar1_fbpar1_1():
     return
 
 def make_omega_beta_plots_fapar1_fbpar1_2():
-    """ """
+    """Plot CBC beta scan for thesis, showing delta omega and delta gamma,
+    compared to fiducial simulation"""
 
     make_beta_plots_from_pickles_for_thesis(
                 [
