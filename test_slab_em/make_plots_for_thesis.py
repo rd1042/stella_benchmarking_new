@@ -10,6 +10,8 @@ import numpy as np
 import glob
 import re
 import pickle
+from scipy.optimize import curve_fit
+
 # import ast
 
 IMAGE_DIR = "./images/"
@@ -27,6 +29,68 @@ IMAGE_DIR = "./images/"
 # mandell_beta1_kperp1_long_t = "stella_sims/input_slab_ky0.1_explicit_mandell2"
 # mandell_beta1_kperp1_long_t_marconi = "mandell_sims/input_slab_ky0.1_beta1"
 
+
+def damped_oscillation(tdata, amp0, phase, freq, gamma, offset):
+    return (offset + amp0*np.sin(freq*tdata+phase)*np.exp(gamma*tdata))
+
+def fit_ksaw(t, phi_t, make_plot=False):
+    """Fit a straight line to the natural logarithm of phi**2. If we assume that
+    phi**2 is described by phi**2 = A*exp(Bt), then log(phi**2) = ln(A) + Bt"""
+
+    guess_amp = 4.1
+    guess_phase = 1.5*np.pi
+    guess_freq = 1.1
+    guess_gamma = -0.03
+    guess_offset = 0
+    initial_guesses = np.array([guess_amp,
+                                guess_phase,
+                                guess_freq,
+                                guess_gamma,
+                                guess_offset])
+    if make_plot:
+        tmin = np.min(t) ; tmax = np.max(t)
+        upsampled_t = np.linspace(tmin, tmax, 1000)
+        fig = plt.figure()
+        ax1 = fig.add_subplot(111)
+        ax1.plot(upsampled_t, damped_oscillation(upsampled_t, guess_amp, guess_phase, guess_freq, guess_gamma, guess_offset), c="blue")
+        ax1.scatter(t, phi_t, c="black", marker="x", s=10)
+        plt.show()
+
+
+    popt, pcov = curve_fit(damped_oscillation, t, phi_t, p0=initial_guesses)
+    [amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt] = popt
+    amp0_err = (np.sqrt(pcov[0, 0]))
+    phase_err = (np.sqrt(pcov[1, 1]))
+    freq_err = (np.sqrt(pcov[2, 2]))
+    gamma_err = (np.sqrt(pcov[3, 3]))
+    offset_err = (np.sqrt(pcov[4, 4]))
+
+    if make_plot:
+        tmin = np.min(t) ; tmax = np.max(t)
+        upsampled_t = np.linspace(tmin, tmax, 1000)
+        fig = plt.figure()
+        ax1 = fig.add_subplot(111)
+        ax1.plot(upsampled_t, damped_oscillation(upsampled_t, amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt), c="black")
+        ax1.scatter(t, phi_t, c="red", marker="x", s=10)
+        plt.show()
+    return ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+           [amp0_err, phase_err, freq_err, gamma_err, offset_err])
+
+def fit_frequency_and_damping_rate(outnc_longname, sim_type, **kwargs):
+    """ """
+    if sim_type == "stella":
+        t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'zed', 'phi_vs_t', 'beta')
+        phi_vs_t = np.array(phi_vs_t[:,0,:,0,0,:])
+    elif sim_type == "gs2":
+        t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'theta', 'phi_t', 'beta')
+        phi_vs_t = np.array(phi_vs_t[:,0,0,:,:])
+    zval= float(z[int(len(z)*0.5)])
+    phi_t = phi_vs_t[:,int(len(z)*0.5),0]
+    ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+           [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_ksaw(t, phi_t, **kwargs)
+
+    return ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+           [amp0_err, phase_err, freq_err, gamma_err, offset_err])
 
 def compare_sims_for_thesis(field_name, outnc_longnames, sim_types, labels, save_name="a.eps",
             ax1_yticks=None, ax1_yticklabels=None, ax2_yticks=None, ax2_yticklabels=None):
@@ -318,32 +382,66 @@ def benchmark_stella_vs_gs2_fapar1_fbpar0_for_thesis():
 
 def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1():
     """ """
-    gs2_implicit_dt5Em2 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt5E-2.out.nc"
+    gs2_implicit_dt4Em2 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2.out.nc"
+    gs2_implicit_dt4Em3 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-3.out.nc"
+    gs2_implicit_dt4Em2_bd0 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2_bakdif0.out.nc"
+    gs2_implicit_dt4Em2_bd0_fe05 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2_bakdif0_fexpr0.5.out.nc"
+    gs2_implicit_dt4Em2_nz72 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz72_dt4E-2.out.nc"
     # stella_implicit_dt5Em2 = "sims/for_thesis_stella_ky1_beta1_zero_gradients_fapar1_fbpar0/input_implicit_nz36_dt5E-2.out.nc"
     stella_explicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_explicit_src_h.out.nc"
     stella_implicit_src_h_dt4Em4 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h.out.nc"
     stella_implicit_src_h_dt4Em2 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_dt4E-2.out.nc"
+    stella_implicit_src_h_exp = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_experimental.out.nc"
     stella_implicit_src_h_dt4Em2_tupw002 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_dt4E-2_tupw002.out.nc"
+    stella_implicit_src_h_dt4Em2_zupw002 = "sims/stella_comparing_implex_gbar_h_src/input_implicit_src_h_dt4E-2_zupw002.out.nc"
+
+    sim_types = [
+                "gs2", "gs2", "gs2", "gs2", "gs2",
+                "stella", "stella", "stella", "stella",
+                ]
+    for idx, outnc_longname in enumerate([gs2_implicit_dt4Em2,
+                gs2_implicit_dt4Em3,
+                gs2_implicit_dt4Em2_bd0,
+                gs2_implicit_dt4Em2_bd0_fe05,
+                gs2_implicit_dt4Em2_nz72,
+                stella_explicit_src_h_dt4Em4,
+                stella_implicit_src_h_dt4Em4,
+                stella_implicit_src_h_dt4Em2,
+                stella_implicit_src_h_dt4Em2_zupw002]):
+        #######################
+        ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+               [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname, sim_types[idx], make_plot=False)
+        print("outnc_longname, gamma_opt = ", outnc_longname, gamma_opt)
 
     compare_sims_for_thesis("phi",
             [# gs2_implicit_dt25Em5,
-             gs2_implicit_dt5Em2,
+             gs2_implicit_dt4Em2,
+             # gs2_implicit_dt4Em3,
+            # gs2_implicit_dt4Em2_bd0,
+             # gs2_implicit_dt4Em2_bd0_fe05,
+             # gs2_implicit_dt4Em2_nz72,
              stella_explicit_src_h_dt4Em4,
-             stella_implicit_src_h_dt4Em4,
              stella_implicit_src_h_dt4Em2,
-             #stella_implicit_src_h_dt4Em2_tupw002
+             #stella_implicit_src_h_exp,
+             stella_implicit_src_h_dt4Em2_zupw002
              #stella_implicit_dt25Em5
              ],
             ["gs2",
+             # "gs2",
+             # "gs2",
              "stella", "stella", "stella", #"stella"
              ],
             [
             # "gs2(dt=2.5E-4)",
-            "gs2(dt=5E-4)",
+            "gs2(dt=4E-2)",
+            # "gs2(dt=4E-3)",
+            #"gs2(dt=4E-2) (bakdif=0)",
+            # "gs2(dt=4E-2) (bakdif=0, fexpr=0.5)",
+            #"gs2(dt=4E-2), nz=72",
             "stella (explicit, src. h)",
-            "stella (impl, src. h, dt=4E-4, zupw=tupw=0)",
             "stella (impl, src. h, dt=4E-2, zupw=tupw=0)",#, "stella (explicit, centered dg/dz)",
-            #"stella (impl, src. h, dt=4E-2, tupw=0.02)"#, "stella (explicit, centered dg/dz)",
+            #"stella (exp.)",
+            "stella (impl, src. h, dt=4E-2, zupw=0.02)"#, "stella (explicit, centered dg/dz)",
             # "stella (dt=2.5E-4)",
             ],
              save_name="for_thesis_phi_t_fapar1_fbpar1_src_h.eps")
