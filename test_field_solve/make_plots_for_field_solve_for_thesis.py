@@ -48,8 +48,8 @@ def compare_field_for_thesis(field_name, outnc_longnames, sim_types, sim_labels,
                 (0, (3,2,2,3)), (0, (1,0)) )
     # linewidths = [6, 4, 3, 3, 3, 2]
 
-    y_ticklabelfontsize = 25
-    x_ticklabelfontsize = y_ticklabelfontsize
+    yticklabel_fontsize = 25
+    xticklabel_fontsize = yticklabel_fontsize
     my_xticklength = 5
     my_xtickwidth = 1
     my_yticklength = 5
@@ -145,17 +145,17 @@ def compare_field_for_thesis(field_name, outnc_longnames, sim_types, sim_labels,
     ax2.set_xlim((-1, 1))
     if ax1_yticks is not None:
         ax1.set_yticks(ax1_yticks)
-        ax1.set_yticklabels(ax1_yticklabels, fontsize=y_ticklabelfontsize)
+        ax1.set_yticklabels(ax1_yticklabels, fontsize=yticklabel_fontsize)
     if ax2_yticks is not None:
         ax2.set_yticks(ax2_yticks)
-        ax2.set_yticklabels(ax2_yticklabels, fontsize=y_ticklabelfontsize)
+        ax2.set_yticklabels(ax2_yticklabels, fontsize=yticklabel_fontsize)
     ax1.tick_params("x", length=my_xticklength, width=my_xtickwidth, direction="out")
     ax2.tick_params("x", length=my_xticklength, width=my_xtickwidth, direction="out")
     ax1.tick_params("y", length=my_yticklength, width=my_ytickwidth, direction="out")
     ax1.set_xticks([-1, 0, 1])
     ax1.set_xticklabels([])
     ax2.set_xticks([-1, 0, 1])
-    ax2.set_xticklabels(["-1", "0", "1"], fontsize=x_ticklabelfontsize)
+    ax2.set_xticklabels(["-1", "0", "1"], fontsize=xticklabel_fontsize)
     ax1.legend(loc="best", fontsize=legend_fontsize)
     ax1.set_ylabel(field_ylabel_ax1, fontsize=ylabel_fontsize)
     ax2.set_ylabel(field_ylabel_ax2, fontsize=ylabel_fontsize, labelpad=20)
@@ -283,9 +283,8 @@ def vspace_res_test_field_solve_for_thesis():
 
     def make_plot(which):
         """ """
-        marker_size = 60
-        label_fontsize = 40
-        legend_fontsize = 14
+        marker_size = 120
+        legend_fontsize = 20
         marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
         lw_list = [4, 3, 3, 2]
         ls_list = ["-", "--", "-.", (0, (4,1,2,1))]
@@ -295,12 +294,11 @@ def vspace_res_test_field_solve_for_thesis():
         my_xticklength_minor = 4
         my_xtickwidth_minor = 1
 
-        x_ticklabelfontsize = 20
-        y_ticklabelfontsize = 20
-        y_labelfontsize = 30
-        x_labelfontsize = 30
+        xticklabel_fontsize = 30
+        yticklabel_fontsize = 30
+        ylabel_fontsize = 40
+        xlabel_fontsize = 40
         bracket_fontsize = 70
-        itg_fontsize = 30
 
         top = 0.98
         left = 0.14
@@ -356,8 +354,6 @@ def vspace_res_test_field_solve_for_thesis():
                             s=marker_size, label="vpamax="+str(unique_vpamax_val))
                 ax6.scatter(nvpa_array[idxs], bpar_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
 
-            for ax in [ax5, ax6]:
-                ax.set_xlabel(r"nvpa", fontsize=x_labelfontsize)
         elif which=="vperp":
             unique_vperpmax = sorted(set(vperpmax_vals_h))
             vperpmax_array = np.array(vperpmax_vals_h)
@@ -390,20 +386,38 @@ def vspace_res_test_field_solve_for_thesis():
                 ax4.scatter(nmu_array[idxs], apar_array[idxs], marker=marker_list[vperpmax_idx],
                             s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
                 ax6.scatter(nmu_array[idxs], bpar_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
-            for ax in [ax5, ax6]:
-                ax.set_xlabel(r"nmu", fontsize=x_labelfontsize)
 
-        ax1.set_ylabel(r"$\vert\Delta \tilde{\phi}_k\vert (\%)$ ", fontsize=y_labelfontsize)
-        ax3.set_ylabel(r"$\vert\Delta \tilde{A}_{\parallel k}\vert$ ", fontsize=y_labelfontsize)
-        ax5.set_ylabel(r"$\vert\Delta \tilde{B}_{\parallel k}\vert (\%)$ ", fontsize=y_labelfontsize)
-        ax3.legend(loc="lower right", fontsize=legend_fontsize, ncol=2)
         for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
             #ax.set_xlim((0, 150))
             ax.set_xscale("log")
             ax.set_yscale("log")
         if which=="vpa":
+            for ax in [ax5, ax6]:
+                ax.set_xlabel(r"nvpa", fontsize=xlabel_fontsize)
+                
             plt.savefig("vpa_res_field_solve.eps")
         if which=="vperp":
+            for ax in [ax5, ax6]:
+                ax.set_xlabel(r"nmu", fontsize=xlabel_fontsize)
+
+            for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+                ax.set_xticks([10, 100])
+            for ax in [ax1, ax2, ax3, ax4]:
+                ax.set_xticklabels([])
+            for ax in [ax5, ax6]:
+                ax.set_xticklabels([r"$10^1$", r"$10^2$"], fontsize=xticklabel_fontsize)
+            for ax in [ax5, ax6]:
+                ax.set_xticklabels([r"$10^1$", r"$10^2$"], fontsize=xticklabel_fontsize)
+
+            ax1.set_yticks([1e-12,1e-8, 1e-4, 1])
+            ax1.set_yticklabels([r"$10^{-12}$",r"$10^{-8}$",
+                r"$10^{-4}$", r"$10^{0}$"], fontsize=yticklabel_fontsize)
+
+            ax1.set_ylabel(r"$\vert\Delta \tilde{\phi}_k\vert (\%)$ ", fontsize=ylabel_fontsize)
+            ax3.set_ylabel(r"$\vert\Delta \tilde{A}_{\parallel k}\vert$ ", fontsize=ylabel_fontsize)
+            ax5.set_ylabel(r"$\vert\Delta \tilde{B}_{\parallel k}\vert (\%)$ ", fontsize=ylabel_fontsize)
+            ax3.legend(loc="lower right", fontsize=legend_fontsize, ncol=2)
+
             for ax in [ax1, ax3, ax5]:
                 ax.set_xscale("log")
             plt.savefig("vperp_res_field_solve.eps")
@@ -480,12 +494,11 @@ def test_field_solve_apar_for_thesis():
         my_xticklength_minor = 4
         my_xtickwidth_minor = 1
 
-        x_ticklabelfontsize = 20
-        y_ticklabelfontsize = 20
-        y_labelfontsize = 30
-        x_labelfontsize = 30
+        xticklabel_fontsize = 20
+        yticklabel_fontsize = 20
+        ylabel_fontsize = 30
+        xlabel_fontsize = 30
         bracket_fontsize = 70
-        itg_fontsize = 30
 
         top = 0.98
         left = 0.14
@@ -570,14 +583,14 @@ def test_field_solve_apar_for_thesis():
             ax.set_xscale("log")
             ax.set_yscale("log")
         for ax in [ax2]:
-            ax.set_xlabel(r"nvpa", fontsize=x_labelfontsize)
+            ax.set_xlabel(r"nvpa", fontsize=xlabel_fontsize)
         for ax in [ax4]:
-            ax.set_xlabel(r"nvperp", fontsize=x_labelfontsize)
+            ax.set_xlabel(r"nvperp", fontsize=xlabel_fontsize)
         for ax in [ax6]:
-            ax.set_xlabel(r"$\tilde{k}_\perp$", fontsize=x_labelfontsize)
+            ax.set_xlabel(r"$\tilde{k}_\perp$", fontsize=xlabel_fontsize)
 
-        ax1.set_ylabel(r"$\Delta \tilde{A}_{\parallel k} (\%)$ ", fontsize=y_labelfontsize)
-        ax2.set_ylabel(r"$\Delta \tilde{A}_{\parallel k} (\%)$ ", fontsize=y_labelfontsize)
+        ax1.set_ylabel(r"$\Delta \tilde{A}_{\parallel k} (\%)$ ", fontsize=ylabel_fontsize)
+        ax2.set_ylabel(r"$\Delta \tilde{A}_{\parallel k} (\%)$ ", fontsize=ylabel_fontsize)
         plt.savefig("apar_field_solve.eps")
         plt.close()
 
