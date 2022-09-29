@@ -55,6 +55,8 @@
 !test_cbc_beta_scan/sims/viking_gfortran_build/old_em_stella_comparison/electromagnetic-new_stream_implicit/*/template*
 !test_cbc_beta_scan/sims/beta_0.04000_investigation/*.in
 !test_cbc_beta_scan/sims/beta_0.04000_investigation/*/*.in
+!test_cbc_beta_scan/sims/beta_0.04000_for_thesis/*.in
+!test_cbc_beta_scan/sims/beta_0.04000_for_thesis/*.omega
 !test_cbc_beta_scan/sims/stella_master_beta0_ky05_np4_nt64_nvpa18_nmu12_zupw0_str_mirror_implicit/input.in
 !test_cbc_beta_scan/sims/stella_master_beta0_ky05_np4_nt64_nvpa18_nmu12_zupw0_str_mirror_implicit/*.sh
 

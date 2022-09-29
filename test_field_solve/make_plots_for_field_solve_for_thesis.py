@@ -835,8 +835,7 @@ def test_field_solve_apar_for_thesis():
     # make_plot("vperp")
     return
 
-
 if __name__ == "__main__":
     print("Hello world")
-    # vspace_res_test_field_solve_for_thesis()
+    vspace_res_test_field_solve_for_thesis()
     test_field_solve_apar_for_thesis()

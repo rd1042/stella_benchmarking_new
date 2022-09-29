@@ -102,7 +102,7 @@
  zed_upwind = 0.02
  time_upwind = 0.02
  vpa_upwind = 0.02
- zed_upwind_explicit = 0.1
+ zed_upwind_explicit = 0.5
  stream_implicit = .false.
  mirror_implicit = .false.
  !mirror_semi_lagrange = .false.
