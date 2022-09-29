@@ -573,7 +573,7 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
         ylabel_fontsize = 30
         xlabel_fontsize = 30
         legend_fontsize = 18
-        linestyles=((0,(1,0)), (0, (2,2)), (0,(5,1,1,1)), (0,(1,1)),
+        linestyles=((0,(1,0)), (0, (2,2)), (0,(3,1,1,1)), (0,(1,1)),
                     (0, (3,2,2,3)), (0, (1,0)) )
         # linewidths = [6, 4, 3, 3, 3, 2]
         # linestyles=((0,(1,0)), (0, (2,2)), (0,(5,1,1,1)), (0,(1,1)), (0,(1,0)), (0, (2,2)))
@@ -589,20 +589,20 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
         my_yticklength_minor = 6
         my_ytickwidth_minor = 1
 
+        linewidths = [6, 4, 3]
         default_cols = plt.get_cmap("tab10")
 
-        left = 0.17
+        left = 0.13
         right = 0.985
         top = 0.985
         bottom = 0.08
         vspace=0.1
-        hspace=0.15
+        hspace=0.1
         height = (top - bottom - vspace)/2
         width = (right - left - hspace)/2
         col2_left = left + width + hspace
-        my_linewidth = 3
 
-        fig = plt.figure(figsize=(12,12))
+        fig = plt.figure(figsize=(14,12))
         ax1 = fig.add_axes((left, bottom + height + vspace, width, height))
         ax2 = fig.add_axes((col2_left, bottom + height + vspace, width, height))
         ax3 = fig.add_axes((left, bottom, width, height))
@@ -659,10 +659,16 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
             # bpar_t = bpar_vs_t[:,int(len(z)*0.5),0]
             # print("phi_t = ", phi_t)
             # print("phi_vs_t[-1,:,0] = ", phi_vs_t[-1,:,0])
-            ax1.plot(z/np.pi, phi_vs_t[-1,:,0], label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
-            ax2.plot(z/np.pi, apar_vs_t[-1,:,0], label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
-            ax3.plot(z/np.pi, bpar_vs_t[-1,:,0], label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
-            ax4.plot(t, phi_t, label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
+            phinorm = np.max(abs(phi_vs_t[-1,:,0]))
+            aparnorm = np.max(abs(apar_vs_t[-1,:,0]))
+            bparnorm = np.max(abs(bpar_vs_t[-1,:,0]))
+            if sim_types[idx] == "stella":
+                phinorm*=-1
+                bparnorm*=-1
+            ax1.plot(z/np.pi, phi_vs_t[-1,:,0]/phinorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            ax2.plot(z/np.pi, apar_vs_t[-1,:,0]/aparnorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            ax3.plot(z/np.pi, bpar_vs_t[-1,:,0]/bparnorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            ax4.plot(t, phi_t, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
             #ax4.plot(t, apar_t, label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
 
         for ax in [ax1, ax2, ax3]:
@@ -670,26 +676,6 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
             ax.plot([-1, 1], [0,0], c="black", lw=1., zorder=-10)
         ax4.set_xlim((0,40))
         ax4.plot([0,40], [0,0], c="black", lw=1., zorder=-10)
-        # if field_name == "phi":
-        #     field_ylabel_ax1 = r"$\tilde{\phi}_k$"
-        #     field_ylabel_ax2 = r"$\tilde{\phi}_k$ error (%)"
-        # if field_name == "apar":
-        #     field_ylabel_ax1 = r"$\tilde{A}_{\parallel, k}$"
-        #     field_ylabel_ax2 = r"$\tilde{A}_{\parallel, k}$ error (%)"
-        # if field_name == "bpar":
-        #     field_ylabel_ax1 = r"$\tilde{B}_{\parallel, k}$"
-        #     field_ylabel_ax2 = r"$\tilde{B}_{\parallel, k}$ error (%)"
-
-        # ax1.set_xlim((-1, 1))
-        # ax2.set_xlim((-1, 1))
-        # ax1.set_xlim((0,20))
-        # ax1.set_ylim((-6, 6))
-        # if ax1_yticks is not None:
-        #     ax1.set_yticks(ax1_yticks)
-        #     ax1.set_yticklabels(ax1_yticklabels, fontsize=y_ticklabelfontsize)
-        # if ax2_yticks is not None:
-        #     ax2.set_yticks(ax2_yticks)
-        #     ax2.set_yticklabels(ax2_yticklabels, fontsize=y_ticklabelfontsize)
         for ax in [ax1, ax2, ax3, ax4]:
             ax.tick_params("x", length=my_xticklength, width=my_xtickwidth, direction="in")
             ax.tick_params("y", length=my_yticklength, width=my_ytickwidth, direction="in")
@@ -701,21 +687,22 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
             ax.set_xticks([-0.5, 0.5], minor=True)
             ax.set_xticklabels([], minor=True)
 
-        ax1.set_yticks([-0.2, 0, 0.2])
-        ax1.set_yticklabels([r"$-0.2$", r"$0$", r"$0.2$"], fontsize=y_ticklabelfontsize)
-        ax1.set_yticks([-0.3, -0.1, 0.1, 0.3], minor=True)
-        ax1.set_yticklabels([], minor=True)
-
-        ax2.set_yticks([-1, 0, 1])
-        ax2.set_yticklabels([r"$-0.2$", r"$0$", r"$0.2$"], fontsize=y_ticklabelfontsize)
-        ax2.set_yticks([-0.5, 0.5], minor=True)
-        ax2.set_yticklabels([], minor=True)
-
-        ax3.set_yticks([-0.04, 0, 0.04])
-        ax3.set_yticklabels([r"$-0.04$", r"$0$", r"$0.04$"], fontsize=y_ticklabelfontsize)
-        ax3.set_yticks([-0.06, -0.02, 0.02, 0.06], minor=True)
-        ax3.set_yticklabels([], minor=True)
-
+        for ax in [ax1, ax2, ax3]:
+            ax.set_yticks([-1, 0, 1])
+            ax.set_yticklabels([r"$-1$", r"$0$", r"$1$"], fontsize=y_ticklabelfontsize)
+            ax.set_yticks([-0.5, 0.5], minor=True)
+            ax.set_yticklabels([], minor=True)
+        #
+        # ax2.set_yticks([-1, 0, 1])
+        # ax2.set_yticklabels([r"$-0.2$", r"$0$", r"$0.2$"], fontsize=y_ticklabelfontsize)
+        # ax2.set_yticks([-0.5, 0.5], minor=True)
+        # ax2.set_yticklabels([], minor=True)
+        #
+        # ax3.set_yticks([-0.04, 0, 0.04])
+        # ax3.set_yticklabels([r"$-0.04$", r"$0$", r"$0.04$"], fontsize=y_ticklabelfontsize)
+        # ax3.set_yticks([-0.06, -0.02, 0.02, 0.06], minor=True)
+        # ax3.set_yticklabels([], minor=True)
+        #
         ax4.set_yticks([-4, -2, 0, 2])
         ax4.set_yticklabels([r"$-4$", r"$-2$", r"$0$", r"$2$"], fontsize=y_ticklabelfontsize)
         ax4.set_yticks([-3, -1, 1, 3], minor=True)
@@ -730,7 +717,6 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
         for ax in [ax1, ax2, ax3]:
             ax.set_xlabel(r"$z$", fontsize=xlabel_fontsize)
 
-        # plt.show()
         plt.savefig(save_name)
         plt.close()
 
@@ -760,13 +746,13 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
     stella_explicit_src_h_dt4Em4_zupwexpl05 = "sims/stella_src_h_for_thesis/input_explicit_src_h_zupwexpl0.5.out.nc"
 
     fiducial_sims = [gs2_implicit_dt4Em2, stella_implicit_src_h_dt4Em2,
-                    # stella_explicit_src_h_dt4Em4_zupwexpl01
+                    stella_explicit_src_h_dt4Em4_zupwexpl01
                     ]
     fiducial_sim_types = ["gs2", "stella",
-                        # "stella"
+                        "stella"
                         ]
     fiducial_sim_labels = ["GS2 (fid.)", "stella impl. (fid.)",
-                        # "stella explicit (fid.)"
+                        "stella explicit (fid.)"
                             ]
     make_fields_zt_plots_for_thesis()
 
@@ -799,18 +785,18 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
     #     print("(freq, err, gamma, err) = ",
     #         ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
 
-    for idx, outnc_longname in enumerate([stella_explicit_src_h_dt4Em4_zupwexpl01,
-        stella_explicit_src_h_dt4Em4_zupwexpl0,
-        stella_explicit_src_h_dt4Em4_zupwexpl05,
-        stella_explicit_src_h_dt4Em4_zupwexpl1,
-                 ]):
-        #######################
-        ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
-         [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname,
-                            "stella", make_plot=True)
-        print("outnc_longname  = ", outnc_longname)
-        print("(freq, err, gamma, err) = ",
-            ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
+    # for idx, outnc_longname in enumerate([stella_explicit_src_h_dt4Em4_zupwexpl01,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl0,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl05,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl1,
+    #              ]):
+    #     #######################
+    #     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+    #      [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname,
+    #                         "stella", make_plot=True)
+    #     print("outnc_longname  = ", outnc_longname)
+    #     print("(freq, err, gamma, err) = ",
+    #         ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
 
     return
 

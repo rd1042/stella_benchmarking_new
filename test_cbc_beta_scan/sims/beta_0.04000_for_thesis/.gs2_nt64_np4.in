@@ -1,0 +1,284 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&parameters
+ beta = 0.0400
+ zeff = 1.0
+/
+
+&kt_grids_knobs
+ grid_option = "single"
+/
+
+
+
+
+&kt_grids_single_parameters
+ aky = 0.5
+ akx = 0.0
+/
+
+
+
+
+&theta_grid_parameters
+ akappa = 1.0
+ akappri = 0.0	
+ tri = 0.0
+ tripri = 0.0
+ ntheta = 64
+ nperiod = 4
+
+
+ shat = 0.8
+ qinp = 1.38
+
+  eps = 0.367647058824
+  rmaj = 2.72
+  r_geo = 2.72
+  rhoc = 0.5
+  epsl = 0.735294117647
+
+
+ shift = 0.0
+/
+
+
+
+
+&theta_grid_knobs
+ equilibrium_option = "eik"
+/
+
+
+&theta_grid_eik_knobs
+  iflux = 0
+  local_eq = .true.
+  bishop = 4
+  s_hat_input = 0.78
+  beta_prime_input = 0.0
+  irho = 2
+  writelots = .false.
+/
+
+
+
+
+
+&le_grids_knobs
+ ngauss = 8
+ negrid = 18
+/
+
+
+
+
+&dist_fn_knobs
+ gridfac = 1.0
+ omprimfac = 1.0
+ adiabatic_option = "iphi00=2"
+ g_exb = 0.0
+ nonad_zero = .true.
+ opt_source = .true.
+/
+
+
+
+
+&fields_knobs
+ field_option = "implicit"
+/
+
+
+
+
+&knobs
+ wstar_units = .false.
+ fphi = 1.0
+ fapar = 1.0
+ faperp = 0.0
+ fbpar = 1.0
+ delt = 0.05
+ nstep = 2000
+/
+
+
+
+
+&reinit_knobs
+ delt_adj = 2.0
+ delt_minimum = 1.0e-06
+/
+
+
+
+
+&layouts_knobs
+ layout = "lexys"
+/
+
+
+
+
+&collisions_knobs
+ collision_model = "none"
+/
+
+
+
+
+&nonlinear_terms_knobs
+ nonlinear_mode = "off"
+
+ cfl = 0.5
+/
+
+
+
+
+&species_knobs
+ nspec = 2
+/
+
+
+
+
+&species_parameters_1
+ z = 1.0
+ mass = 1.0
+ dens = 1.0
+ temp = 1.0
+  tprim = 2.537
+  fprim = 0.809
+ uprim = 0.0
+ vnewk = 0.01
+ type = "ion"
+/
+
+
+
+
+&dist_fn_species_knobs_1
+ fexpr = 0.45
+ bakdif = 0.05
+/
+
+
+
+
+
+&species_parameters_2
+ z = -1.0
+ mass = 0.00028
+ dens = 1.0
+ temp = 1.0
+  tprim = 2.537
+  fprim = 0.809
+ uprim = 0.0
+ vnewk = 0.01
+ type = "electron"
+/
+
+
+
+
+&dist_fn_species_knobs_2
+ fexpr = 0.45
+ bakdif = 0.05
+/
+
+
+
+
+
+&init_g_knobs
+ chop_side = .false.
+ phiinit = 0.001
+ ginit_option = "noise"
+/
+
+
+
+
+&gs2_diagnostics_knobs
+ print_flux_line = .F.
+ write_nl_flux = .true.
+ print_line = .false.
+ write_verr = .true.
+
+ write_line = .false.
+
+ write_hrate = .false.
+
+ write_avg_moments = .F.
+
+ write_omega = .true.
+ write_omavg = .false.
+ write_eigenfunc = .false.
+ write_final_fields = .false.
+ write_final_moments = .false.
+
+ nsave = 100
+ nwrite = 10
+ navg = 10
+ omegatol = -0.0001
+ omegatinst = 500.0
+ save_for_restart = .false.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ write_phi_over_time = .false.
+
+
+
+
+
+
+
+
+
+/
+
+
+
+
+&general_f0_parameters
+ alpha_f0 = "analytic"
+ energy_0 = 0.01
+/
+

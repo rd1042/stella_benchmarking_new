@@ -10,6 +10,8 @@ import re
 import pickle
 import make_param_scans as mps
 
+default_cmap = plt.get_cmap("tab10")
+
 def compare_beta_scans(stella_folder, gs2_folder, save_name, plot_apar=False, plot_bpar=False):
     """ """
     stella_beta, stella_longnames = get_sim_longnames(stella_folder)
@@ -65,12 +67,12 @@ def make_beta_plots_from_pickles_for_thesis(pickle_longnames, labels, marker_siz
     ax1 = fig.add_axes((left, row1_bottom, width, height))
     ax2 = fig.add_axes((left, bottom, width, height))
 
-    ## Use the last folder as the "correct" one
-    reference_pickle_longname = pickle_longnames[-1]
+    ## Use the second folder as the "correct" one
+    reference_pickle_longname = pickle_longnames[1]
     myfile = open(reference_pickle_longname, "rb")
     [beta_ref, gamma_ref, omega_ref] = pickle.load(myfile)
     myfile.close()
-
+    col_list = [default_cmap(0), default_cmap(1), default_cmap(2), default_cmap(3)]
 
     for folder_idx, pickle_longname in enumerate(pickle_longnames):
         myfile = open(pickle_longname, "rb")
@@ -78,11 +80,15 @@ def make_beta_plots_from_pickles_for_thesis(pickle_longnames, labels, marker_siz
         myfile.close()
         if not omega_diff:
             ax1.plot(beta_vals, omega_vals, label=labels[folder_idx],
-                lw=lw_list[folder_idx], ls=ls_list[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
+                lw=lw_list[folder_idx], ls=ls_list[folder_idx],
+                c=col_list[folder_idx],
+                marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
             ax2.plot(beta_vals, gamma_vals, label=labels[folder_idx],
-                lw=lw_list[folder_idx], ls=ls_list[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
+                lw=lw_list[folder_idx], ls=ls_list[folder_idx],
+                c=col_list[folder_idx],
+                marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
         else:
-            if folder_idx!=(len(pickle_longnames)-1):
+            if folder_idx!=1:
                 ## Whether or not this is the reference beta scan, plot Omega-Omega_ref
                 # Find where beta vals match.
                 beta_to_compare = []
@@ -97,9 +103,13 @@ def make_beta_plots_from_pickles_for_thesis(pickle_longnames, labels, marker_siz
                         gamma_diff.append(100*(gamma_vals[beta_idx] - gamma_ref[closest_beta_ref_idx])/gamma_ref[closest_beta_ref_idx])
                         omega_diff.append(100*(omega_vals[beta_idx] - omega_ref[closest_beta_ref_idx])/omega_ref[closest_beta_ref_idx])
                 ax1.plot(beta_to_compare, omega_diff, label=labels[folder_idx],
-                         lw=lw_list[folder_idx], ls=ls_list[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
+                         lw=lw_list[folder_idx], ls=ls_list[folder_idx],
+                         c=col_list[folder_idx],
+                         marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
                 ax2.plot(beta_to_compare, gamma_diff, label=labels[folder_idx],
-                         lw=lw_list[folder_idx], ls=ls_list[folder_idx], marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
+                         lw=lw_list[folder_idx], ls=ls_list[folder_idx],
+                         c=col_list[folder_idx],
+                         marker=marker_list[folder_idx], mfc="none", markersize=marker_size)
 
     # for ax in [ax1, ax2]:
     #     ax.grid(True)
@@ -161,16 +171,16 @@ def make_omega_beta_plots_fapar1_fbpar1_1():
 
     make_beta_plots_from_pickles_for_thesis(
                 [
-                "sims/" + mps.stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
-                "sims/" + mps.stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
                 "sims/" + mps.gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
                 "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
                 ],
                 [
-                r"stella ($n_\theta=32$, $n_{period}=2$)",
-                r"stella ($n_\theta=64$, $n_{period}=4$)",
                 r"GS2 ($n_\theta=32$, $n_{period}=2$)",
                 r"GS2 ($n_\theta=64$, $n_{period}=4$)",
+                r"stella (implicit) ($n_\theta=32$, $n_{period}=2$)",
+                r"stella (implicit) ($n_\theta=64$, $n_{period}=4$)",
                 ],
                 omega_diff=False,
                 save_name="cbc_Omega_beta_scan.eps"
@@ -184,16 +194,16 @@ def make_omega_beta_plots_fapar1_fbpar1_2():
 
     make_beta_plots_from_pickles_for_thesis(
                 [
-                "sims/" + mps.stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
-                "sims/" + mps.stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
                 "sims/" + mps.gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
                 "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
                 ],
                 [
-                r"stella ($n_\theta=32$, $n_{period}=2$)",
-                r"stella ($n_\theta=64$, $n_{period}=4$)",
                 r"GS2 ($n_\theta=32$, $n_{period}=2$)",
-                #r"Gs2 ($n_\theta=64$, $n_{period}=4$)",
+                r"Gs2 ($n_\theta=64$, $n_{period}=4$)",
+                r"stella (implicit) ($n_\theta=32$, $n_{period}=2$)",
+                r"stella (implicit) ($n_\theta=64$, $n_{period}=4$)",
                 ],
                 omega_diff=True,
                 save_name="cbc_Omegadiff_beta_scan.eps"

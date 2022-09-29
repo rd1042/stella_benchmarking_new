@@ -1,7 +1,7 @@
 &zgrid_parameters
- nzed = 32
+ nzed = 64
  ntubes = 1
- nperiod = 2
+ nperiod = 4
  boundary_option="default"
 /
 
@@ -81,9 +81,9 @@
  zed_upwind = 0.0 ! 0.02
  time_upwind = 0.02
  vpa_upwind = 0.02
- zed_upwind_explicit = 0
+ zed_upwind_explicit = 0.1
  delt = 0.005
- nstep = 1000
+ nstep = 40000
 /
 &species_knobs
  nspec= 2
@@ -110,7 +110,7 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 10
+ nwrite = 400
  nsave = 10000 
  save_for_restart = .false.
  write_omega = .true.

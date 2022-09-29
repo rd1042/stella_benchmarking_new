@@ -289,45 +289,6 @@ def compare_implicit_explicit_gbar_formulation_and_dgdz_src_h():
 
     return
 
-def for_thesis_beta004_benchmark_plot():
-    """Compare Omega(t) and fields for simulation with nz=64, nperiod=4 for the following:
-    (1) GS2
-    (2) stella implicit streaming + mirror
-    (3) stella explicit """
-    # See GS2 and stella ntheta=32 and ntheta=64 (fiducial points only)
-    for_thesis_folder = "sims/beta_0.04000_for_thesis/"
-    outnc_longnames_1 = glob.glob(comparison_folder + "gs2/*.out.nc")
-    outnc_longnames_2 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32.out.nc"]
-    outnc_longnames_3 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32_zupwind0.out.nc"]
-    outnc_longnames_3 = [comparison_folder + "stella_str_impl_ntheta32_mirror_explicit/stella_str_impl_ntheta32_zupwind0_vpaupwind0.out.nc"]
-    outnc_longnames_4 = [comparison_folder + "stella_str_impl_ntheta64/stella_str_impl_ntheta64.out.nc"]
-    outnc_longnames_5 = [comparison_folder + "stella_explicit_centered_dgdz/stella_explict_zupw1.out.nc" ,
-                         comparison_folder + "stella_explicit_centered_dgdz/stella_explict_zupw0.3.out.nc" ]
-    outnc_longnames_6 = glob.glob(comparison_folder + "stella_explicit_centered_dgdz/*.out.nc")
-    outnc_longnames_7 = [comparison_folder + "stella_explicit_centered_dgdz_src_h/stella_explict_zupw0_src_h.out.nc",
-                         comparison_folder + "stella_explicit_centered_dgdz_src_h/stella_explict_zupw1_src_h.out.nc",
-                         comparison_folder + "stella_explicit_centered_dgdz_src_h/stella_implicit_zupw0_src_h_fapar1_fbpar1.out.nc",
-                            ]
-    outnc_longnames_8 = [
-                comparison_folder + "stella_src_h_fapar1_fbpar1/stella_str_mirror_implicit_zupw0_src_h_fapar1_fbpar1.out.nc",
-                comparison_folder + "stella_src_h_fapar1_fbpar1/stella_str_mirror_implicit_zupw0_src_h_fapar1_fbpar1_delt5E-2.out.nc",
-                        ]
-    ### This compares all the explcit sims to reference gs2 + reference stella implciit
-    outnc_lists = [outnc_longnames_1,
-                   outnc_longnames_2,
-                   #outnc_longnames_3,
-                   #outnc_longnames_4,
-                   outnc_longnames_5,
-                   #outnc_longnames_6,
-                   outnc_longnames_7,
-                   # outnc_longnames_8
-                   ]
-    # Flatten into a 1D list
-    outnc_longnames =  [element for sublist in outnc_lists for element in sublist]
-    make_comparison(outnc_longnames)
-
-    return
-
 def compare_blowup():
     """ """
     outnc_longnames = glob.glob(comparison_folder + "blowup/*.out.nc")
@@ -608,7 +569,7 @@ if __name__ == "__main__":
     # compare_ntheta32_vs_64_sims()
     # compare_explicit_with_dgdz_fbpar0()
     # compare_implicit_explicit_with_dgdz()
-    compare_implicit_explicit_gbar_formulation_and_dgdz_src_h()
+    #compare_implicit_explicit_gbar_formulation_and_dgdz_src_h()
     #compare_ntheta32_sims()
     # compare_ntheta64_sims()
     # compare_all_sims()
