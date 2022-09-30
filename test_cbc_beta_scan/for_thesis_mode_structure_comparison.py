@@ -22,7 +22,7 @@ default_cmap = plt.get_cmap("tab10")
 def make_comparison_beta004(diff=False):
     """ """
     marker_size = 12
-    legend_fontsize = 24
+    legend_fontsize = 16
     marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
     lw_list = [6, 4, 2]
     ls_list = ["-", "--", "-.", (0, (4,1,2,1))]
@@ -172,8 +172,8 @@ def make_comparison_beta004(diff=False):
     ax1.set_xticklabels([], fontsize=x_ticklabelfontsize)
     ax3.set_xticklabels([r"$-6\pi$", r"$-4\pi$", r"$-2\pi$", r"$0$", r"$2\pi$", r"$4\pi$", r"$6\pi$"], fontsize=x_ticklabelfontsize)
 
-    ax1.legend(loc="best", fontsize=legend_fontsize)
     if diff:
+        ax1.legend(loc="best", fontsize=legend_fontsize)
         ax1.set_ylim([-40, 58])
         ax2.set_ylim([-20, 5])
         ax3.set_ylim([-35, 32])
@@ -192,9 +192,10 @@ def make_comparison_beta004(diff=False):
         ax2.set_ylabel(r"$\Delta \vert \tilde{A}_{\parallel k} \vert$ ($\%$)", fontsize=y_labelfontsize)
         ax3.set_ylabel(r"$\Delta \vert \tilde{B}_{\parallel k} \vert$ ($\%$)", fontsize=y_labelfontsize)
     else:
-        ax1.set_ylim([-0.02, 1.02])
+        ax1.set_ylim([-0.02, 1.2])
         ax2.set_ylim([-0.003, 0.068])
         ax3.set_ylim([-0.001, 0.026])
+        ax1.legend(loc="upper right", fontsize=legend_fontsize)
         ax1.set_ylabel(r"$\vert \tilde{\phi}_k \vert$", fontsize=y_labelfontsize)
         ax2.set_ylabel(r"$\vert \tilde{A}_{\parallel k} \vert$", fontsize=y_labelfontsize)
         ax3.set_ylabel(r"$\vert \tilde{B}_{\parallel k} \vert$", fontsize=y_labelfontsize)

@@ -687,6 +687,11 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
             ax.set_xticks([-0.5, 0.5], minor=True)
             ax.set_xticklabels([], minor=True)
 
+
+        ax4.set_xticks([0, 10, 20, 30, 40])
+        ax4.set_xticklabels([r"$0$", r"$10$", r"$20$", r"$30$", r"$40$"], fontsize=x_ticklabelfontsize)
+        ax4.set_xticks([5, 15, 25, 35], minor=True)
+        ax4.set_xticklabels([], minor=True)
         for ax in [ax1, ax2, ax3]:
             ax.set_yticks([-1, 0, 1])
             ax.set_yticklabels([r"$-1$", r"$0$", r"$1$"], fontsize=y_ticklabelfontsize)
@@ -736,6 +741,7 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
     stella_implicit_src_h_dt4Em2 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2.out.nc"
     stella_implicit_src_h_dt4Em4 = "sims/stella_src_h_for_thesis/input_implicit_src_h.out.nc"
     stella_implicit_src_h_dt4Em2_tupw002 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_tupw002.out.nc"
+    stella_implicit_src_h_dt4Em2_tupw01 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_tupw01.out.nc"
     stella_implicit_src_h_dt4Em2_zupw002 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_zupw002.out.nc"
     stella_implicit_src_h_dt4Em2_nz72 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_nzed72.out.nc"
     stella_implicit_src_h_dt4Em2_higher_vres = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_higher_vres.out.nc"
@@ -774,6 +780,7 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
     # for idx, outnc_longname in enumerate([stella_implicit_src_h_dt4Em2,
     #         stella_implicit_src_h_dt4Em4,
     #         stella_implicit_src_h_dt4Em2_tupw002,
+    #         stella_implicit_src_h_dt4Em2_tupw01,
     #         stella_implicit_src_h_dt4Em2_nz72,
     #         stella_implicit_src_h_dt4Em2_higher_vres
     #              ]):

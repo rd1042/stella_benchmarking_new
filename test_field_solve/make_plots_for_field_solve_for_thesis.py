@@ -584,7 +584,7 @@ def test_field_solve_apar_for_thesis():
         #ax2 = fig.add_axes((col2_left, bottom, width, height)) # vpa-res, gbar
 
         ax1.plot(kperp_vals, analytic_apar_h_kperp, lw=3, marker="o", mfc="none", markersize=marker_size, label=r"$\tilde{h}_k$")
-        ax1.plot(kperp_vals, analytic_apar_gbar_kperp, lw=3, marker="o", mfc="none", markersize=marker_size, label=r"$\tilde{\bar{g}}_k$")
+        ax1.plot(kperp_vals, analytic_apar_gbar_kperp, lw=3, marker="s", mfc="none", markersize=marker_size, label=r"$\tilde{\bar{g}}_k$")
         ax1.set_xscale("log")
         ax1.legend(loc="best", fontsize=legend_fontsize)
         #ax2.set_xscale("log")
@@ -839,5 +839,5 @@ def test_field_solve_apar_for_thesis():
 
 if __name__ == "__main__":
     print("Hello world")
-    vspace_res_test_field_solve_for_thesis()
-    # test_field_solve_apar_for_thesis()
+    #vspace_res_test_field_solve_for_thesis()
+    test_field_solve_apar_for_thesis()
