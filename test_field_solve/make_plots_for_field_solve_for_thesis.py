@@ -286,7 +286,7 @@ def vspace_res_test_field_solve_for_thesis():
     marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
     lw_list = [4, 3, 3, 2]
     ls_list = ["-", "--", "-.", (0, (4,1,2,1))]
-
+    title_fontsize = 40
     my_xticklength = 7
     my_xtickwidth = 2
     my_xminorticklength = 4
@@ -302,10 +302,10 @@ def vspace_res_test_field_solve_for_thesis():
     xlabel_fontsize = 36
     bracket_fontsize = 60
 
-    top = 0.98
+    top = 0.94
     left = 0.14
     right = 0.98
-    bottom = 0.13
+    bottom = 0.07
     vspace = 0.02
     hspace = 0.08
 
@@ -402,6 +402,8 @@ def vspace_res_test_field_solve_for_thesis():
     def finish_plot(fig, ax1, ax2, ax3, ax4, ax5, ax6, which):
         """ """
         ########## Beginning stuff
+        ax1.set_title(r"$\tilde{h}_{k}$", fontsize=title_fontsize)
+        ax2.set_title(r"$\tilde{\bar{g}}_{k}$", fontsize=title_fontsize)
         for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
             #ax.set_xlim((0, 150))
             ax.set_xscale("log")
@@ -838,4 +840,4 @@ def test_field_solve_apar_for_thesis():
 if __name__ == "__main__":
     print("Hello world")
     vspace_res_test_field_solve_for_thesis()
-    test_field_solve_apar_for_thesis()
+    # test_field_solve_apar_for_thesis()

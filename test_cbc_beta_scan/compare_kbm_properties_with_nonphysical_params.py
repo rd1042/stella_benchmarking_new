@@ -23,6 +23,7 @@ from helper_ncdf_new import view_ncdf_variables, extract_data_from_ncdf_with_xar
 import plot_2d_utils as plot2dutils
 
 comparison_folder = "sims/beta_0.04000_investigation/"
+beta_04_for_thesis_folder = "sims/beta_0.04000_for_thesis/"
 
 def make_comparison(outnc_longnames, gamma_buffer = 0.01, omega_buffer = 0.01,lw=3):
     """ """
@@ -273,6 +274,12 @@ def compare_implicit_explicit_gbar_formulation_and_dgdz_src_h():
                 comparison_folder + "stella_src_h_fapar1_fbpar1/stella_str_mirror_implicit_zupw0_src_h_fapar1_fbpar1.out.nc",
                 comparison_folder + "stella_src_h_fapar1_fbpar1/stella_str_mirror_implicit_zupw0_src_h_fapar1_fbpar1_delt5E-2.out.nc",
                         ]
+    outnc_longnames_9 = [
+        beta_04_for_thesis_folder + "gs2_nt64_np4.out.nc",
+        beta_04_for_thesis_folder + "stella_implicit_np4_nt64.out.nc",
+        beta_04_for_thesis_folder + "stella_explicit_zupw0_src_h_fapar1_fbpar1.out.nc",
+        beta_04_for_thesis_folder + "stella_implicit_np4_nt64_tupw0.out.nc",
+                    ]
     ### This compares all the explcit sims to reference gs2 + reference stella implciit
     outnc_lists = [outnc_longnames_1,
                    outnc_longnames_2,
@@ -285,7 +292,8 @@ def compare_implicit_explicit_gbar_formulation_and_dgdz_src_h():
                    ]
     # Flatten into a 1D list
     outnc_longnames =  [element for sublist in outnc_lists for element in sublist]
-    make_comparison(outnc_longnames)
+    # make_comparison(outnc_longnames)
+    make_comparison(outnc_longnames_9)
 
     return
 
@@ -569,7 +577,7 @@ if __name__ == "__main__":
     # compare_ntheta32_vs_64_sims()
     # compare_explicit_with_dgdz_fbpar0()
     # compare_implicit_explicit_with_dgdz()
-    #compare_implicit_explicit_gbar_formulation_and_dgdz_src_h()
+    compare_implicit_explicit_gbar_formulation_and_dgdz_src_h()
     #compare_ntheta32_sims()
     # compare_ntheta64_sims()
     # compare_all_sims()

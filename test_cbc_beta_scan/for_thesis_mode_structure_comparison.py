@@ -56,14 +56,20 @@ def make_comparison_beta004(diff=False):
         beta_04_for_thesis_folder + "gs2_nt64_np4.out.nc",
         beta_04_for_thesis_folder + "stella_implicit_np4_nt64.out.nc",
         beta_04_for_thesis_folder + "stella_explicit_zupw0_src_h_fapar1_fbpar1.out.nc",
+        #beta_04_for_thesis_folder + "stella_implicit_np4_nt64_tupw0.out.nc",
         ]
     labels =[
              r"GS2 ($n_\theta=64$, $n_{period}=4$)",
               r"stella (implicit) ($n_\theta=64$, $n_{period}=4$)",
               r"stella (explicit) ($n_\theta=64$, $n_{period}=4$)",
+              #r"stella (implicit) ($n_\theta=64$, $n_{period}=4$, $u_t=0$)",
                 ]
-    col_list = [default_cmap(1), default_cmap(3), default_cmap(4)]
-    sim_types = ["gs2", "stella", "stella"]
+    col_list = [default_cmap(1), default_cmap(3), default_cmap(4),
+                # default_cmap(4)
+                ]
+    sim_types = ["gs2", "stella", "stella",
+                 # "stella"
+                 ]
 
     sim_shortnames = []
     tvals_list = []
@@ -220,7 +226,7 @@ def make_comparison_beta004(diff=False):
 def make_comparison_beta0(diff=False):
     """ """
     marker_size = 12
-    legend_fontsize = 24
+    legend_fontsize = 16
     marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
     lw_list = [6, 4, 2]
     ls_list = ["-", "--", "-.", (0, (4,1,2,1))]
@@ -252,16 +258,16 @@ def make_comparison_beta0(diff=False):
     outnc_longnames= [
         beta_0_for_thesis_folder + "gs2_nt64_np4.out.nc",
         beta_0_for_thesis_folder + "stella_implicit_np4_nt64.out.nc",
-        # beta_0_for_thesis_folder + "stella_explicit_zupw0_src_h.out.nc",
+        beta_0_for_thesis_folder + "stella_explicit_zupw0_src_h.out.nc",
         ]
     labels =[
              r"GS2 ($n_\theta=64$, $n_{period}=4$)",
               r"stella (implicit) ($n_\theta=64$, $n_{period}=4$)",
-              # r"stella (explicit) ($n_\theta=64$, $n_{period}=4$)",
+              r"stella (explicit) ($n_\theta=64$, $n_{period}=4$)",
                 ]
     sim_types = ["gs2",
                  "stella",
-                 # "stella"
+                 "stella"
                  ]
     col_list = [default_cmap(1), default_cmap(3), default_cmap(4)]
 
@@ -300,7 +306,7 @@ def make_comparison_beta0(diff=False):
     z_ref = zvals_list[0]
     phiz_ref = phiz_list[0]
 
-    fig = plt.figure(figsize=(12,5))
+    fig = plt.figure(figsize=(12,8))
     ax1 = fig.add_axes((left, bottom, width, height))
 
     for sim_idx, sim_shortname in enumerate(sim_shortnames):
@@ -332,16 +338,16 @@ def make_comparison_beta0(diff=False):
         ax.set_xticklabels([], minor=True)
     ax1.set_xticklabels([r"$-6\pi$", r"$-4\pi$", r"$-2\pi$", r"$0$", r"$2\pi$", r"$4\pi$", r"$6\pi$"], fontsize=x_ticklabelfontsize)
 
-    ax1.legend(loc="best", fontsize=legend_fontsize)
+    ax1.legend(loc="upper right", fontsize=legend_fontsize)
     if diff:
-    #     ax1.set_ylim([-40, 58])
-    #     ax1.set_yticks([-40, 0, 40,])
-    #     ax1.set_yticklabels([r"$-40$", r"$0$", r"$40$"], fontsize=y_ticklabelfontsize)
-    #     ax1.set_yticks([-20, 20], minor=True)
-    #     ax1.set_yticklabels([], minor=True)
+        ax1.set_ylim([-80, 79])
+        ax1.set_yticks([-80, -40, 0, 40,])
+        ax1.set_yticklabels([r"$-80$", r"$-40$", r"$0$", r"$40$"], fontsize=y_ticklabelfontsize)
+        ax1.set_yticks([-60, -20, 20, 60], minor=True)
+        ax1.set_yticklabels([], minor=True)
         ax1.set_ylabel(r"$\Delta \vert \tilde{\phi}_k \vert$ ($\%$)", fontsize=y_labelfontsize)
     else:
-        ax1.set_ylim([-0.02, 1.02])
+        ax1.set_ylim([-0.02, 1.1])
         ax1.set_ylabel(r"$\vert \tilde{\phi}_k \vert$", fontsize=y_labelfontsize)
         ax1.set_yticks([0, 0.5, 1,])
         ax1.set_yticklabels([r"$0$", r"$0.5$", r"$1$"], fontsize=y_ticklabelfontsize)
@@ -381,5 +387,5 @@ def for_thesis_beta0_benchmark_plot():
     return
 
 if __name__ == "__main__":
-    # for_thesis_beta004_benchmark_plot()
+    for_thesis_beta004_benchmark_plot()
     for_thesis_beta0_benchmark_plot()
