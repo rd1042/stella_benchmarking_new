@@ -88,7 +88,7 @@
  fapar = 0.0
  fbpar = 0.0
  delt = 0.03
- nstep = 10000
+ nstep = 20000
  cfl_cushion = 0.75
  stream_implicit = .false. ! .true.
  mirror_implicit = .false.

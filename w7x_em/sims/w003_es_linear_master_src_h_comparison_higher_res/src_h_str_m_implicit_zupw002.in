@@ -4,7 +4,26 @@
  boundary_option='default'
 /
 &geo_knobs
- geo_option = 'vmec'
+ geo_option = 'vmec' ! 'miller' ! 'vmec'
+/
+
+&millergeo_parameters
+ nzed_local = 128
+ rhoc = 0.5
+ shat = 0.78 ! Changed from 0.796
+ qinp = 1.38 ! Changed from 1.4
+ rmaj = 2.72 ! Changed from 2.77778
+ rgeo = 2.72 ! Changed from 2.77778
+ shift = 0.0
+ kappa = 1.0
+ kapprim = 0.0
+ tri = 0.0
+ triprim = 0.0
+ betaprim = 0.0
+
+ d2qdr2 = 0.0
+ d2psidr2 = 0.0
+ betadbprim = 0.0
 /
 
 &vmec_parameters
@@ -35,6 +54,9 @@
 /
 &time_advance_knobs
  explicit_option="rk2"
+ xdriftknob =  1
+ ydriftknob =  1
+ wstarknob = 1
 /
 
 &kt_grids_knobs
@@ -51,6 +73,8 @@
 &physics_flags
  nonlinear = .false.
  full_flux_surface = .false.
+ include_mirror = .true.
+ include_parallel_streaming = .true.
 /
 &init_g_knobs
  chop_side = F
@@ -60,14 +84,19 @@
  width0 = 1.0
 /
 &knobs
- fphi =   1.0
- fapar =  0.0
+ fphi = 1.0
+ fapar = 0.0
  fbpar = 0.0
  delt = 0.05
- nstep = 20000
+ nstep = 5000
  cfl_cushion = 0.75
- stream_implicit = .false.
- mirror_implicit = .false.
+ stream_implicit = .true. ! .true.
+ mirror_implicit = .true.
+ mirror_semi_lagrange = .false.
+ ! zed_upwind_explicit = 0.1
+ zed_upwind = 0.02
+ time_upwind = 0
+ vpa_upwind = 0
 /
 &species_knobs
  nspec=2
@@ -78,8 +107,8 @@
  mass=1.0
  dens=1.0
  temp=1.0
- tprim=3
- fprim=3
+ tprim=3.0
+ fprim=3.0
  type='ion'
 /
 &species_parameters_2
@@ -87,13 +116,13 @@
  mass=0.00028! deuterium plasma
  dens=1.0
  temp=1.0
- tprim=3
- fprim=3
+ tprim=3.0
+ fprim=3.0
  type='electron'
 /
 &stella_diagnostics_knobs
- nwrite = 200
- nsave = 3000
+ nwrite = 50
+ nsave = 20000
  save_for_restart = .false.
  write_omega = .true.
  write_kspectra = .false.
