@@ -112,9 +112,11 @@ def make_beta_scan(parent_folder_name, beta_vals):
     template = parent_folder_name + "/template_input_file"
     template_runscript = parent_folder_name + "/template_runscript"
     if not os.path.exists(template):
+        print("folder = ", parent_folder_name)
         print("template doesn't exist! Exitting")
         sys.exit()
     if not os.path.exists(template_runscript):
+        print("folder = ", parent_folder_name)
         print("template_runscript doesn't exist! Exitting")
         sys.exit()
 
