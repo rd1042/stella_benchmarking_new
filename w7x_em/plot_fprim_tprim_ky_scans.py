@@ -382,12 +382,13 @@ def for_thesis_make_fprim_tprim_ky_scan_w015_027():
 
     return
 
-def make_fprim_tprim_ky_scan(folder_longname, save_name="draft.eps"):
+def make_fprim_tprim_ky_scan(folder_longname, save_name_prefix="draft"):
     """For looking at the data, not fancy plotting """
 
     def make_plots(ky_val, fprim_mesh, tprim_mesh, freq_fprim_tprim_meshgrid,
                    gammaom_fprim_tprim_meshgrid,
-                   gammasafe_fprim_tprim_meshgrid):
+                   gammasafe_fprim_tprim_meshgrid,
+                   save_name):
         """Create nice-looking plots for the 3 quantities."""
 
         fig = plt.figure(figsize=[12, 12])
@@ -473,18 +474,21 @@ def make_fprim_tprim_ky_scan(folder_longname, save_name="draft.eps"):
                         unique_tprim, [freq_fprim_tprim_ky_array[:,:,ky_idx],
                             gammaom_fprim_tprim_ky_array[:,:,ky_idx], gammasafe_fprim_tprim_ky_array[:,:,ky_idx],
                         ])
+        ky_str = "ky{:.3f}".format(ky_val)
+        save_name = save_name_prefix + "_" + ky_str + ".eps"
         make_plots(ky_val, fprim_mesh, tprim_mesh, freq_meshgrid,
                     gammaom_meshgrid,
                     gammasafe_meshgrid,
+                    save_name
                     )
     return
 
 if __name__ == "__main__":
     print("Hello world")
 
-    # make_fprim_tprim_ky_scan(make_scans.folder_name_1)
-    # make_fprim_tprim_ky_scan(make_scans.folder_name_2)
-    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_em, save_name="w7x_expl_em.eps")
-    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es, save_name="w7x_expl_es.eps")
-    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em, save_name="w7x_impl_em.eps")
-    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es, save_name="w7x_impl_es.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_ky05, save_name_prefix="w7x_expl_em.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_ky05, save_name_prefix="w7x_expl_em.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_em, save_name_prefix="w7x_expl_em.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es, save_name_prefix="w7x_expl_es.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em, save_name_prefix="w7x_impl_em.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es, save_name_prefix="w7x_impl_es.eps")

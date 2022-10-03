@@ -11,12 +11,13 @@ import re
 import math
 from construct_stella_files_in_folders import make_fprim_tprim_ky_scan
 
-folder_name_1 = "sims/w003_em_linear_fprim_tprim_explicit_scan"
-folder_name_2 = "sims/w003_em_linear_fprim_tprim_implicit_scan"
+folder_name_expl_ky05 = "sims/w003_em_linear_fprim_tprim_explicit_scan_ky0.5"
+folder_name_impl_ky05 = "sims/w003_em_linear_fprim_tprim_implicit_scan_ky0.5"
 folder_name_expl_higher_ky_em = "sims/w003_em_linear_fprim_tprim_explicit_scan_higher_ky"
 folder_name_expl_higher_ky_es = "sims/w003_es_linear_fprim_tprim_explicit_scan_higher_ky"
 folder_name_impl_higher_ky_em = "sims/w003_em_linear_fprim_tprim_implicit_scan_higher_ky"
 folder_name_impl_higher_ky_es = "sims/w003_es_linear_fprim_tprim_implicit_scan_higher_ky"
+folder_name_impl_em_good_resolution = "sims/w003_em_linear_fprim_tprim_implicit_scan_good_resolution"
 
 if __name__ == "__main__":
     print("Hello world")
@@ -29,6 +30,7 @@ if __name__ == "__main__":
     # make_fprim_tprim_ky_scan(folder_name_2, fprim_vals, tprim_vals, ky_vals)
     ky_vals = [1.5, 3.0]
     # make_fprim_tprim_ky_scan(folder_name_expl_higher_ky_em, fprim_vals, tprim_vals, ky_vals)
-    make_fprim_tprim_ky_scan(folder_name_expl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
-    make_fprim_tprim_ky_scan(folder_name_impl_higher_ky_em, fprim_vals, tprim_vals, ky_vals)
-    make_fprim_tprim_ky_scan(folder_name_impl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
+    # make_fprim_tprim_ky_scan(folder_name_expl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
+    # make_fprim_tprim_ky_scan(folder_name_impl_higher_ky_em, fprim_vals, tprim_vals, ky_vals)
+    # make_fprim_tprim_ky_scan(folder_name_impl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
+    folder_name_impl_em_good_resolution(folder_name_impl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
