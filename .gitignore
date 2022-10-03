@@ -79,10 +79,10 @@ test_slab_em/sims/*/*.used_inputs.in
 !w7x_em/sims/wout_DKH*/template*
 !w7x_em/sims/wout_DKH*/submit_jobs.sh
 !w7x_em/sims/wout_DKH*/*.pickle
-!w7x_em/sims/w003_es_linear_master_src_h_comparison/README.md
-!w7x_em/sims/w003_es_linear_master_src_h_comparison/src*.in
-!w7x_em/sims/w003_es_linear_master_src_h_comparison/master*.in
-!w7x_em/sims/w003_es_linear_master_src_h_comparison/*.sh
+!w7x_em/sims/w003_es_linear_master_src_h_comparison*/README.md
+!w7x_em/sims/w003_es_linear_master_src_h_comparison*/src*.in
+!w7x_em/sims/w003_es_linear_master_src_h_comparison*/master*.in
+!w7x_em/sims/w003_es_linear_master_src_h_comparison*/*.sh
 !w7x_em/sims/w003_es_linear_master_src_h_comparison_higher_res/README.md
 !w7x_em/sims/w003_es_linear_master_src_h_comparison_higher_res/src*.in
 !w7x_em/sims/w003_es_linear_master_src_h_comparison_higher_res/master*.in

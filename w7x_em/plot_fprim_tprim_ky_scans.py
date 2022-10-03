@@ -382,7 +382,7 @@ def for_thesis_make_fprim_tprim_ky_scan_w015_027():
 
     return
 
-def make_fprim_tprim_ky_scan(folder_longname):
+def make_fprim_tprim_ky_scan(folder_longname, save_name="draft.eps"):
     """For looking at the data, not fancy plotting """
 
     def make_plots(ky_val, fprim_mesh, tprim_mesh, freq_fprim_tprim_meshgrid,
@@ -452,7 +452,8 @@ def make_fprim_tprim_ky_scan(folder_longname):
         ax2.set_title(r"$\omega$ (.omega file)"); #ax5.set_title(r"$\omega$")
         ax3.set_title(r"$\gamma$ ($\phi^2$ fit)"); #ax6.set_title(r"$k_y$")
 
-        plt.show()
+        plt.savefig(save_name)
+        plt.close()
 
         # Uncomment to save the figure.
         # plt.savefig(str(target_ky) + ".png")
@@ -467,9 +468,6 @@ def make_fprim_tprim_ky_scan(folder_longname):
     file.close()
 
     for ky_idx, ky_val in enumerate(unique_ky):
-#     # Interpolate onto uniform grid.
-#     fprim_interp, tprim_interp, [freq_interp, gammaom_interp, gammap2_interp] = \
-#         interpolate_lists(fprim_list, tprim_list, [freq_list, gammaom_list, gammap2_list])
         fprim_mesh, tprim_mesh, [freq_meshgrid, gammaom_meshgrid,
             gammasafe_meshgrid] = uniquearrays2meshgrids(unique_fprim,
                         unique_tprim, [freq_fprim_tprim_ky_array[:,:,ky_idx],
@@ -486,7 +484,7 @@ if __name__ == "__main__":
 
     # make_fprim_tprim_ky_scan(make_scans.folder_name_1)
     # make_fprim_tprim_ky_scan(make_scans.folder_name_2)
-    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_em)
-    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es)
-    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em)
-    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es)
+    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_em, save_name="w7x_expl_em.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es, save_name="w7x_expl_es.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em, save_name="w7x_impl_em.eps")
+    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es, save_name="w7x_impl_es.eps")
