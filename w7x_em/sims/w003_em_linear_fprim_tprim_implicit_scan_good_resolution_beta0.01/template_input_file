@@ -94,8 +94,8 @@
  mirror_implicit = .true.
  mirror_semi_lagrange = .false.
  ! zed_upwind_explicit = 0.1
- zed_upwind = 0.02
- time_upwind = 0.02
+ zed_upwind = 0 ! 0.02
+ time_upwind = 0 ! 0.02
  vpa_upwind = 0
 /
 &species_knobs
@@ -121,7 +121,7 @@
  type='electron'
 /
 &stella_diagnostics_knobs
- nwrite = 50
+ nwrite = 25
  nsave = 20000
  save_for_restart = .false.
  write_omega = .true.
