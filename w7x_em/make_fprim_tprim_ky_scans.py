@@ -28,9 +28,9 @@ if __name__ == "__main__":
     # ky_vals = [0.5]
     # make_fprim_tprim_ky_scan(folder_name_1, fprim_vals, tprim_vals, ky_vals)
     # make_fprim_tprim_ky_scan(folder_name_2, fprim_vals, tprim_vals, ky_vals)
-    ky_vals = [1.5, 3.0]
+    ky_vals = [1.5, 3.0, 4.5]
     # make_fprim_tprim_ky_scan(folder_name_expl_higher_ky_em, fprim_vals, tprim_vals, ky_vals)
     # make_fprim_tprim_ky_scan(folder_name_expl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
     # make_fprim_tprim_ky_scan(folder_name_impl_higher_ky_em, fprim_vals, tprim_vals, ky_vals)
     # make_fprim_tprim_ky_scan(folder_name_impl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
-    folder_name_impl_em_good_resolution(folder_name_impl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
+    make_fprim_tprim_ky_scan(folder_name_impl_em_good_resolution, fprim_vals, tprim_vals, ky_vals)
