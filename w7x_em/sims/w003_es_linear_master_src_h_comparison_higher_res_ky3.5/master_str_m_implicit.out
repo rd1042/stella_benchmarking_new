@@ -1,0 +1,16 @@
+ istep=      0 time=  0.0000E+00  |phi|^2=  0.9133E+00 |apar|^2=   0.0000E+00
+ istep=     25 time=  0.1250E+01  |phi|^2=  0.7553E+00 |apar|^2=   0.0000E+00
+ istep=     50 time=  0.2500E+01  |phi|^2=  0.6000E+00 |apar|^2=   0.0000E+00
+ istep=     75 time=  0.3750E+01  |phi|^2=  0.4567E+00 |apar|^2=   0.0000E+00
+ istep=    100 time=  0.5000E+01  |phi|^2=  0.3800E+00 |apar|^2=   0.0000E+00
+ istep=    125 time=  0.6250E+01  |phi|^2=  0.3600E+00 |apar|^2=   0.0000E+00
+ istep=    150 time=  0.7500E+01  |phi|^2=  0.3617E+00 |apar|^2=   0.0000E+00
+ istep=    175 time=  0.8750E+01  |phi|^2=  0.3458E+00 |apar|^2=   0.0000E+00
+ istep=    200 time=  0.1000E+02  |phi|^2=  0.3350E+00 |apar|^2=   0.0000E+00
+ istep=    225 time=  0.1125E+02  |phi|^2=  0.2975E+00 |apar|^2=   0.0000E+00
+ istep=    250 time=  0.1250E+02  |phi|^2=  0.2578E+00 |apar|^2=   0.0000E+00
+ istep=    275 time=  0.1375E+02  |phi|^2=  0.2416E+00 |apar|^2=   0.0000E+00
+ istep=    300 time=  0.1500E+02  |phi|^2=  0.2464E+00 |apar|^2=   0.0000E+00
+ istep=    325 time=  0.1625E+02  |phi|^2=  0.2318E+00 |apar|^2=   0.0000E+00
+ istep=    350 time=  0.1750E+02  |phi|^2=  0.2092E+00 |apar|^2=   0.0000E+00
+ istep=    375 time=  0.1875E+02  |phi|^2=  0.1989E+00 |apar|^2=   0.0000E+00
