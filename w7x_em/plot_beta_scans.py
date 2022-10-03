@@ -94,9 +94,14 @@ def make_beta_scan_plot_for_thesis():
        together with B(z) """
 
     folder_longnames =  [
-                        make_scans.folder_name_w003_explicit,
-                        make_scans.folder_name_w003_explicit,
-                        make_scans.folder_name_w003_explicit,
+                make_scans.folder_name_w003_explicit,
+                make_scans.folder_name_w003_implicit_ky1,
+                make_scans.folder_name_w003_implicit_ky2,
+                make_scans.folder_name_w003_implicit_ky15,
+                make_scans.folder_name_w003_explicit_fbpar0,
+                make_scans.folder_name_w003_implicit_ky1_fbpar0,
+                make_scans.folder_name_w003_implicit_ky2_fbpar0,
+                make_scans.folder_name_w003_implicit_ky15_fbpar0,
                         ]
 
     return

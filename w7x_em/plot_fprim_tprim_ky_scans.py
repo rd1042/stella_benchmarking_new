@@ -131,6 +131,8 @@ def for_thesis_make_fprim_tprim_ky_scan_w003():
 
         return
 
+
+    folder_1 = make_scans.folder_name_impl_em_good_resolution
     pickle_longname = folder_1 + "/omega_fprim_tprim_ky_array.pickle"
     file = open(pickle_longname, "rb")
     [pickle_string, unique_fprim, unique_tprim, unique_ky,
@@ -486,9 +488,10 @@ def make_fprim_tprim_ky_scan(folder_longname, save_name_prefix="draft"):
 if __name__ == "__main__":
     print("Hello world")
 
-    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_ky05, save_name_prefix="w7x_expl_em.eps")
-    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_ky05, save_name_prefix="w7x_expl_em.eps")
-    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_em, save_name_prefix="w7x_expl_em.eps")
-    make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es, save_name_prefix="w7x_expl_es.eps")
-    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em, save_name_prefix="w7x_impl_em.eps")
-    make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es, save_name_prefix="w7x_impl_es.eps")
+    # make_fprim_tprim_ky_scan(make_scans.folder_name_expl_ky05, save_name_prefix="w7x_expl_em.eps")
+    # make_fprim_tprim_ky_scan(make_scans.folder_name_impl_ky05, save_name_prefix="w7x_expl_em.eps")
+    # make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_em, save_name_prefix="w7x_expl_em.eps")
+    # make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es, save_name_prefix="w7x_expl_es.eps")
+    # make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em, save_name_prefix="w7x_impl_em.eps")
+    # make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es, save_name_prefix="w7x_impl_es.eps")
+    for_thesis_make_fprim_tprim_ky_scan_w003()

@@ -7,7 +7,7 @@ import sys
 sys.path.append("../postprocessing_tools")
 from helper_ncdf_new import view_ncdf_variables_with_xarray, extract_data_from_ncdf_with_xarray
 import plot_2d_utils as plot2dutils
-from save_pickles_from_stella_scans import get_phiz_data_stella
+from save_pickles_from_stella_scans import get_omega_data, get_phiz_data_stella
 
 sim_longname_master_explicit = "sims/w003_es_linear_master_src_h_comparison_higher_res/master_explicit"
 sim_longname_master_implicit = "sims/w003_es_linear_master_src_h_comparison_higher_res/master_str_m_implicit"
@@ -23,7 +23,7 @@ def make_omega_t_plot_for_thesis():
                     sim_longname_master_explicit,
                     sim_longname_master_implicit,
                     sim_longname_src_h_explicit,
-                    sim_longname_src_h_implicit,
+                    # sim_longname_src_h_implicit,
                     # sim_longname_src_h_implicit_zupw002,
                     # sim_longname_src_h_implicit_tupw002,
                     sim_longname_src_h_implicit_zupw002_tupw002,
@@ -50,40 +50,46 @@ def make_omega_t_plot_for_thesis():
     bottom=0.12
     vspace = 0.02
     width=right-left
-    height=(top-bottom-vspace)/2
-    row1_bottom = bottom+height+vspace
+    height=(top-bottom-2*vspace)/3
+    row2_bottom = bottom+height+vspace
+    row1_bottom = row2_bottom+height+vspace
     ileft = 0.4
-    ibottom = 0.2
+    ibottom = 0.1
     iwidth = 0.5
-    iheight = 0.2
+    iheight = 0.1
 
-    fig = plt.figure(figsize=(10,8))
+    fig = plt.figure(figsize=(10,12))
 
     ax1 = fig.add_axes((left, row1_bottom, width, height))
-    ax2 = fig.add_axes((left, bottom, width, height))
+    ax2 = fig.add_axes((left, row2_bottom, width, height))
+    ax3 = fig.add_axes((left, bottom, width, height))
     # inset_ax1 = fig.add_axes((ileft, row1_bottom+ibottom, iwidth, iheight))
-    # inset_ax2 = fig.add_axes((ileft, bottom+ibottom, iwidth, iheight))
+    # inset_ax2 = fig.add_axes((ileft, row2_bottom+ibottom, iwidth, iheight))
+    # inset_ax3 = fig.add_axes((ileft, bottom+ibottom, iwidth, iheight))
 
     for sim_idx, sim_longname in enumerate(sim_longnames):
         outnc_longname = sim_longname + ".out.nc"
-        [t, omega] = extract_data_from_ncdf_with_xarray(outnc_longname, "t", "omega")
-        tend = t[-1]
+        time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
+        tend = time[-1]
         print("outnc_longname = ", outnc_longname)
-        ax1.plot(t-tend, omega[:,0,0,0], lw=my_linewidth, label=sim_labels[sim_idx])
-        ax2.plot(t-tend, omega[:,0,0,1], lw=my_linewidth, label=sim_labels[sim_idx])
-        # inset_ax1.plot(tend-t, omega[:,0,0,0], lw=my_linewidth)
-        # inset_ax2.plot(tend-t, omega[:,0,0,1], lw=my_linewidth)
+        ax1.plot(time-tend, freqom, lw=my_linewidth, label=sim_labels[sim_idx])
+        ax2.plot(time-tend, gammaom, lw=my_linewidth, label=sim_labels[sim_idx])
+        ax3.plot(time-tend, gamma_stable, lw=my_linewidth, label=sim_labels[sim_idx])
+        # inset_ax1.plot(time-tend, freqom, lw=my_linewidth)
+        # inset_ax2.plot(time-tend, gammaom, lw=my_linewidth)
+        # inset_ax3.plot(time-tend, gamma_stable, lw=my_linewidth)
 
-    # ax1.set_ylim((0.424, 0.441))
-    # ax2.set_ylim((0.2545, 0.272))
+    ax1.set_ylim((-0.4, 0.4))
+    ax2.set_ylim((0, 0.272))
+    ax3.set_ylim((0, 0.272))
     # inset_ax1.set_ylim((-5.5, 17))
     # inset_ax2.set_ylim((-7, 5.5))
 
-    # for ax in [ax1, ax2]:
-    #     ax.set_xlim(80, 200)
-    #     ax.grid(True)
-    #     ax.set_xticks([100, 150, 200])
-    #     ax.tick_params("y", length=my_xticklength, width=my_xtickwidth, direction="out")
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim(-100, 0)
+        ax.grid(True)
+        ax.set_xticks([-100, -50, 0])
+        ax.tick_params("y", length=my_xticklength, width=my_xtickwidth, direction="out")
     # for ax in [inset_ax1, inset_ax2]:
     #     ax.set_xlim(0, 200)
     #     ax.set_xticks([0, 100, 200])
@@ -91,7 +97,7 @@ def make_omega_t_plot_for_thesis():
     #     ax.tick_params("x", length=my_xticklength, width=my_xtickwidth, direction="in")
     #     ax.set_xticklabels(["0", "100", "200"], fontsize=x_ticklabelfontsize)
     ax1.legend(loc="best")
-    ax2.legend(loc="best")
+    #ax2.legend(loc="best")
     ax1.tick_params("x", top=False, bottom=False)
     ax2.tick_params("x", top=False, bottom=True, length=my_xticklength, width=my_xtickwidth, direction="out")
     # ax1.set_yticks([0.425, 0.43, 0.435, 0.44])
@@ -107,9 +113,9 @@ def make_omega_t_plot_for_thesis():
     ax1.set_ylabel(r"$\tilde{\omega}$", fontsize=y_labelfontsize)
     ax2.set_ylabel(r"$\tilde{\gamma}$", fontsize=y_labelfontsize)
     ax2.set_xlabel(r"$\tilde{t}$", fontsize=x_labelfontsize)
-    plt.show()
-    # plt.savefig("images/master_src_h_omega_t.eps")
-    # plt.close()
+    # plt.show()
+    plt.savefig("images/master_src_h_omega_t.eps")
+    plt.close()
     return
 
 def make_phi_z_plot_for_thesis():
@@ -139,14 +145,20 @@ def make_phi_z_plot_for_thesis():
                     # sim_longname_master_explicit,
                     sim_longname_master_implicit,
                     # sim_longname_src_h_explicit,
-                    sim_longname_src_h_implicit,
+                    # sim_longname_src_h_implicit,
+                    # sim_longname_src_h_implicit_zupw002,
+                    # sim_longname_src_h_implicit_tupw002,
+                    sim_longname_src_h_implicit_zupw002_tupw002,
                         ]
     sim_labels = [
-                  "master, RK2",
-                  "master, implicit",
-                  "em stella, RK2",
-                  "em stella, implicit",
-                    ]
+                 # "master, explicit",
+                 "master, implicit",
+                #  "sh, explicit",
+                # "sh, implicit",
+                 # "sh, implicit zup",
+                 # "sh, implicit tup",
+                 "sh, implicit zuptup",
+                ]
 
     for sim_idx, sim_longname in enumerate(sim_longnames):
         z, real_phi, imag_phi = get_phiz_data_stella(sim_longname)
@@ -207,4 +219,4 @@ def make_phi_z_plot_for_thesis():
 if __name__ == "__main__":
     print("Hello world")
     make_omega_t_plot_for_thesis()
-    # make_phi_z_plot_for_thesis()
+    make_phi_z_plot_for_thesis()
