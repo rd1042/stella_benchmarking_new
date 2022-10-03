@@ -37,7 +37,7 @@
 
 &parameters
  zeff = 1.0
- beta = 0
+ beta=0
  rhostar = 0.0
  vnew_ref = 0.0
  nine=1.0
