@@ -18,3 +18,6 @@ if __name__ == "__main__":
     # postprocess_beta_scan(make_scans.folder_name_w003_implicit_ky15_fbpar0)
 
     postprocess_beta_scan(make_scans.folder_name_w003_implicit_ky1_upw0)
+    postprocess_beta_scan(make_scans.folder_name_w003_implicit_ky15_upw0)
+    postprocess_beta_scan(make_scans.folder_name_w003_implicit_ky2_upw0)
+    postprocess_beta_scan(make_scans.folder_name_w003_implicit_ky1_fbpar0_upw0)
