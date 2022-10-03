@@ -367,7 +367,7 @@ def get_omega_from_subfolder_and_make_plot(outnc_longname):
     # make_omega_time_plot_for_stella(sim_longname, time, freqom, gammaom, gamma_stable)
     make_phi_z_plot_for_stella(sim_longname, z, abs_phi)
 
-    return freqom[-1], gammaom[-1], gamma_stable[-1], sim_converged
+    return freqom_finite[-1], gammaom_finite[-1], gamma_stable_finite[-1], sim_converged
 
 def make_phi_z_plot_for_stella(sim_longname, z, abs_phi):
     """ """
