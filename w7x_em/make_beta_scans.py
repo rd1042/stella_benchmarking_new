@@ -14,7 +14,7 @@ from construct_stella_files_in_folders import make_beta_scan
 folder_name_dkh_explicit_betalr = "sims/wout_DKH_0_norm_betalr_scan_explicit"
 folder_name_dkh_implicit_betalr = "sims/wout_DKH_0_norm_betalr_scan_implicit"
 folder_name_dkh_explicit_betalr_fbpar0 = "sims/wout_DKH_0_norm_betalr_scan_fbpar0_explicit"
-folder_name_w003_explicit = "sims/wout_w003_beta_scan_explicit"
+folder_name_w003_explicit = "sims/w003_beta_scan_explicit"
 folder_name_w003_implicit_ky1 = "sims/w003_beta_scan_implicit_ky1"
 folder_name_w003_implicit_ky2 = "sims/w003_beta_scan_implicit_ky2"
 folder_name_w003_implicit_ky15 = "sims/w003_beta_scan_implicit_ky15"
