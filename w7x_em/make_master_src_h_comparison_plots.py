@@ -16,8 +16,12 @@ sim_longname_src_h_implicit = "sims/w003_es_linear_master_src_h_comparison_highe
 sim_longname_src_h_implicit_zupw002 = "sims/w003_es_linear_master_src_h_comparison_higher_res/src_h_str_m_implicit_zupw002"
 sim_longname_src_h_implicit_tupw002 = "sims/w003_es_linear_master_src_h_comparison_higher_res/src_h_str_m_implicit_tupw002"
 sim_longname_src_h_implicit_zupw002_tupw002 = "sims/w003_es_linear_master_src_h_comparison_higher_res/src_h_str_m_implicit_zupw002_tupw002"
+sim_longname_master_explicit_ky35 = "sims/w003_es_linear_master_src_h_comparison_higher_res_ky3.5/master_explicit"
+sim_longname_master_implicit_ky35 = "sims/w003_es_linear_master_src_h_comparison_higher_res_ky3.5/master_str_m_implicit"
+sim_longname_src_h_explicit_ky35 = "sims/w003_es_linear_master_src_h_comparison_higher_res_ky3.5/src_h_explicit"
+sim_longname_src_h_implicit_ky35 = "sims/w003_es_linear_master_src_h_comparison_higher_res_ky3.5/src_h_str_m_implicit"
 
-def make_omega_t_plot_for_thesis():
+def make_omega_t_plot_for_thesis_ky1():
     """ """
     sim_longnames = [
                     sim_longname_master_explicit,
@@ -118,7 +122,102 @@ def make_omega_t_plot_for_thesis():
     plt.close()
     return
 
-def make_phi_z_plot_for_thesis():
+def make_omega_t_plot_for_thesis_ky35():
+    """ """
+    sim_longnames = [
+                sim_longname_master_explicit_ky35,
+                sim_longname_master_implicit_ky35,
+                sim_longname_src_h_explicit_ky35,
+                sim_longname_src_h_implicit_ky35
+                        ]
+    sim_labels = [
+                 "master, explicit",
+                 "master, implicit",
+                  "sh, explicit",
+                 "sh, implicit",
+                ]
+    my_xticklength = 5
+    my_xtickwidth = 2
+    x_ticklabelfontsize = 20
+    y_ticklabelfontsize = 20
+    y_labelfontsize = 30
+    x_labelfontsize = 30
+    my_linewidth = 1#4
+    left = 0.15
+    right = 0.97
+    top = 0.98
+    bottom=0.12
+    vspace = 0.02
+    width=right-left
+    height=(top-bottom-2*vspace)/3
+    row2_bottom = bottom+height+vspace
+    row1_bottom = row2_bottom+height+vspace
+    ileft = 0.4
+    ibottom = 0.1
+    iwidth = 0.5
+    iheight = 0.1
+
+    fig = plt.figure(figsize=(10,12))
+
+    ax1 = fig.add_axes((left, row1_bottom, width, height))
+    ax2 = fig.add_axes((left, row2_bottom, width, height))
+    ax3 = fig.add_axes((left, bottom, width, height))
+    # inset_ax1 = fig.add_axes((ileft, row1_bottom+ibottom, iwidth, iheight))
+    # inset_ax2 = fig.add_axes((ileft, row2_bottom+ibottom, iwidth, iheight))
+    # inset_ax3 = fig.add_axes((ileft, bottom+ibottom, iwidth, iheight))
+
+    for sim_idx, sim_longname in enumerate(sim_longnames):
+        outnc_longname = sim_longname + ".out.nc"
+        time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
+        tend = time[-1]
+        print("outnc_longname = ", outnc_longname)
+        ax1.plot(time-tend, freqom, lw=my_linewidth, label=sim_labels[sim_idx])
+        ax2.plot(time-tend, gammaom, lw=my_linewidth, label=sim_labels[sim_idx])
+        ax3.plot(time-tend, gamma_stable, lw=my_linewidth, label=sim_labels[sim_idx])
+        # inset_ax1.plot(time-tend, freqom, lw=my_linewidth)
+        # inset_ax2.plot(time-tend, gammaom, lw=my_linewidth)
+        # inset_ax3.plot(time-tend, gamma_stable, lw=my_linewidth)
+
+    ax1.set_ylim((-0.4, 0.4))
+    ax2.set_ylim((0, 0.272))
+    ax3.set_ylim((0, 0.272))
+    # inset_ax1.set_ylim((-5.5, 17))
+    # inset_ax2.set_ylim((-7, 5.5))
+
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim(-100, 0)
+        ax.grid(True)
+        ax.set_xticks([-100, -50, 0])
+        ax.tick_params("y", length=my_xticklength, width=my_xtickwidth, direction="out")
+    # for ax in [inset_ax1, inset_ax2]:
+    #     ax.set_xlim(0, 200)
+    #     ax.set_xticks([0, 100, 200])
+    #     ax.tick_params("y", length=my_xticklength, width=my_xtickwidth, direction="in")
+    #     ax.tick_params("x", length=my_xticklength, width=my_xtickwidth, direction="in")
+    #     ax.set_xticklabels(["0", "100", "200"], fontsize=x_ticklabelfontsize)
+    ax1.legend(loc="best")
+    #ax2.legend(loc="best")
+    ax1.tick_params("x", top=False, bottom=False)
+    ax2.tick_params("x", top=False, bottom=True, length=my_xticklength, width=my_xtickwidth, direction="out")
+    # ax1.set_yticks([0.425, 0.43, 0.435, 0.44])
+    # ax1.set_yticklabels(["0.425", "0.43", "0.435", "0.44"], fontsize=y_ticklabelfontsize)
+    # ax2.set_yticks([0.255, 0.26, 0.265, 0.27])
+    # ax2.set_yticklabels(["0.255", "0.26", "0.265", "0.27"], fontsize=y_ticklabelfontsize)
+    # inset_ax1.set_yticks([0, 10])
+    # inset_ax1.set_yticklabels(["0", "10"], fontsize=y_ticklabelfontsize)
+    # inset_ax2.set_yticks([-5, 0, 5])
+    # inset_ax2.set_yticklabels(["-5", "0", "5"], fontsize=y_ticklabelfontsize)
+    # ax1.set_xticklabels([])
+    # ax2.set_xticklabels(["100", "150", "200"], fontsize=x_ticklabelfontsize)
+    ax1.set_ylabel(r"$\tilde{\omega}$", fontsize=y_labelfontsize)
+    ax2.set_ylabel(r"$\tilde{\gamma}$", fontsize=y_labelfontsize)
+    ax2.set_xlabel(r"$\tilde{t}$", fontsize=x_labelfontsize)
+    # plt.show()
+    plt.savefig("images/master_src_h_omega_t.eps")
+    plt.close()
+    return
+
+def make_phi_z_plot_for_thesis_ky35():
     """ """
 
     my_xticklength = 5
@@ -142,22 +241,16 @@ def make_phi_z_plot_for_thesis():
     ax1 = ax3.twinx()
 
     sim_longnames = [
-                    # sim_longname_master_explicit,
-                    sim_longname_master_implicit,
-                    # sim_longname_src_h_explicit,
-                    # sim_longname_src_h_implicit,
-                    # sim_longname_src_h_implicit_zupw002,
-                    # sim_longname_src_h_implicit_tupw002,
-                    sim_longname_src_h_implicit_zupw002_tupw002,
+                sim_longname_master_explicit_ky35,
+                sim_longname_master_implicit_ky35,
+                sim_longname_src_h_explicit_ky35,
+                sim_longname_src_h_implicit_ky35
                         ]
     sim_labels = [
-                 # "master, explicit",
+                 "master, explicit",
                  "master, implicit",
-                #  "sh, explicit",
-                # "sh, implicit",
-                 # "sh, implicit zup",
-                 # "sh, implicit tup",
-                 "sh, implicit zuptup",
+                  "sh, explicit",
+                 "sh, implicit",
                 ]
 
     for sim_idx, sim_longname in enumerate(sim_longnames):
@@ -218,5 +311,5 @@ def make_phi_z_plot_for_thesis():
 
 if __name__ == "__main__":
     print("Hello world")
-    make_omega_t_plot_for_thesis()
-    make_phi_z_plot_for_thesis()
+    make_omega_t_plot_for_thesis_ky35()
+    make_phi_z_plot_for_thesis_ky35()
