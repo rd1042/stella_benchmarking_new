@@ -13,5 +13,5 @@ if __name__ == "__main__":
     # postprocess_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es)
 
     # postprocess_fprim_tprim_ky_scan(make_scans.folder_name_impl_em_good_resolution)
-    postprocess_fprim_tprim_ky_scan(make_scans.folder_name_impl_em_good_resolution_beta001)
+    # postprocess_fprim_tprim_ky_scan(make_scans.folder_name_impl_em_good_resolution_beta001)
     postprocess_fprim_tprim_ky_scan(make_scans.folder_name_impl_em_good_resolution_beta003)
