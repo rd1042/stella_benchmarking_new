@@ -310,6 +310,7 @@ def get_omega_from_subfolder_and_make_plot(outnc_longname):
     time_gammaom = time[gammaom_finite_idxs]
     gamma_stable_finite_idxs = np.isfinite(gamma_stable)
     gamma_stable_finite = gamma_stable[gamma_stable_finite_idxs]
+    time_gamma_stable = time[gammaom_finite_idxs]
 
     freqom_tolerance = 1E-2
     freqom_frac_tolerance = 2E-2
