@@ -9,7 +9,7 @@ import sys
 
 import make_fprim_tprim_ky_scans as make_scans
 
-def for_thesis_make_fprim_tprim_ky_scan_w003():
+def for_thesis_make_fprim_tprim_ky_scan_kjm3():
     """For fancy plotting """
 
     def make_plots(freq_ax, gamma_ax, freq_cbax, gamma_cbax, fprim_mesh, tprim_mesh, freq_fprim_tprim_meshgrid,
@@ -126,7 +126,7 @@ def for_thesis_make_fprim_tprim_ky_scan_w003():
         cbax4.set_yticklabels(gamma_ticklabels_list[1], fontsize=cb_ticklabelsize)
         cbax6.set_yticklabels(gamma_ticklabels_list[2], fontsize=cb_ticklabelsize)
         # Uncomment to save the figure.
-        plt.savefig(str("images/w003_fprim_tprim_beta0.01") + ".png")
+        plt.savefig(str("images/kjm3_fprim_tprim_beta0.01") + ".png")
         plt.close()
 
         return
@@ -370,7 +370,7 @@ def for_thesis_make_fprim_tprim_ky_scan_w015_027():
                             gammasafe_fprim_tprim_ky_array[:,:,ky_idx],
                         ])
         ## Reverse the sign of the frequency - I think these equilibria are
-        ## "the other way around" compared to w003
+        ## "the other way around" compared to kjm3
         freq_meshgrid = - freq_meshgrid
         make_plots(freq_axes[eq_idx], gamma_axes[eq_idx],
                     freq_cbaxes[eq_idx],
@@ -496,4 +496,4 @@ if __name__ == "__main__":
     # make_fprim_tprim_ky_scan(make_scans.folder_name_expl_higher_ky_es, save_name_prefix="w7x_expl_es.eps")
     # make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em, save_name_prefix="w7x_impl_em.eps")
     # make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es, save_name_prefix="w7x_impl_es.eps")
-    for_thesis_make_fprim_tprim_ky_scan_w003()
+    for_thesis_make_fprim_tprim_ky_scan_kjm3()

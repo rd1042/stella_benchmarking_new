@@ -102,12 +102,12 @@ def make_beta_scan_plot_for_thesis():
        together with B(z) """
 
     folder_longnames =  [
-                make_scans.folder_name_w003_explicit,
-                make_scans.folder_name_w003_implicit_ky1_upw0,
-                make_scans.folder_name_w003_implicit_ky15_upw0,
-                make_scans.folder_name_w003_implicit_ky2_upw0,
-                make_scans.folder_name_w003_explicit_fbpar0,
-                make_scans.folder_name_w003_implicit_ky1_fbpar0_upw0,
+                make_scans.folder_name_kjm3_explicit,
+                make_scans.folder_name_kjm3_implicit_ky1_upw0,
+                make_scans.folder_name_kjm3_implicit_ky15_upw0,
+                make_scans.folder_name_kjm3_implicit_ky2_upw0,
+                make_scans.folder_name_kjm3_explicit_fbpar0,
+                make_scans.folder_name_kjm3_implicit_ky1_fbpar0_upw0,
                         ]
     labels = [ r"$\tilde{k}_y=1$, RK2",
                r"$\tilde{k}_y=1$, implicit",
@@ -250,15 +250,15 @@ def make_mode_plots_for_beta_scan_for_thesis():
        together with B(z) """
 
     sim_longnames =  [
-                # make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0400/input",
-                # make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0600/input",
-                # make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0800/input",
-                # make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.1000/input",
-                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0400/input_for_fields",
-                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0600/input_for_fields",
-                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0800/input_for_fields",
-                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.1000/input_for_fields",
-                #make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.1000/input_different_res",
+                # make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0400/input",
+                # make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0600/input",
+                # make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0800/input",
+                # make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.1000/input",
+                make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0400/input_for_fields",
+                make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0600/input_for_fields",
+                make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0800/input_for_fields",
+                make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.1000/input_for_fields",
+                #make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.1000/input_different_res",
                         ]
     labels = [ r"$\beta=4\%$",
                r"$\beta=6\%$",
@@ -414,8 +414,8 @@ def make_mode_plots_for_beta01_scan_for_thesis():
        together with B(z) """
 
     sim_longnames =  [
-                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.1000/input_for_fields",
-                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.1000/input_different_res",
+                make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.1000/input_for_fields",
+                make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.1000/input_different_res",
                         ]
     labels = [
                r"$\beta=10\%$",
@@ -636,7 +636,7 @@ def make_g_vpamu_colorplot_beta01_for_thesis():
 
         return
 
-    outnc_longname_gvmus = "sims/w003_beta0.1_implicit_ky1_upw0_mode_structure/input.out.nc"
+    outnc_longname_gvmus = "sims/kjm3_beta0.1_implicit_ky1_upw0_mode_structure/input.out.nc"
     [vpa, mu, gvmus] = extract_data_from_ncdf_with_xarray(outnc_longname_gvmus, "vpa", "mu", "gvmus")
     gvmus_tfinal_ion = np.array(gvmus[-1,0,:,:])
     gvmus_tfinal_ion = np.log(np.transpose(gvmus_tfinal_ion))
