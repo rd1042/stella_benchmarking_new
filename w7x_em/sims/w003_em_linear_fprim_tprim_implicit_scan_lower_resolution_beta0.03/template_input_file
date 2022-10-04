@@ -44,8 +44,8 @@
  tite=1.0
 /
 &vpamu_grids_parameters
- nvgrid = 72
- nmu = 24
+ nvgrid = 24 ! 72
+ nmu = 12 ! 24
  vpa_max = 3.0
  vperp_max = 3.0
 /
@@ -88,7 +88,7 @@
  fapar = 1.0
  fbpar = 1.0
  delt = 0.05
- nstep = 5000
+ nstep = 2000
  cfl_cushion = 0.75
  stream_implicit = .true. ! .true.
  mirror_implicit = .true.
@@ -121,7 +121,7 @@
  type='electron'
 /
 &stella_diagnostics_knobs
- nwrite = 25
+ nwrite = 20
  nsave = 20000
  save_for_restart = .false.
  write_omega = .true.
