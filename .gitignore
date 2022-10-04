@@ -75,6 +75,8 @@ test_slab_em/sims/*/*.used_inputs.in
 !w7x_em/sims/w003_*/*.pickle
 !w7x_em/sims/w003_*/template*
 !w7x_em/sims/w003_*/submit_jobs.sh
+!w7x_em/sims/w003_beta_scan_implicit_ky1_upw0/*/*.final_fields
+!w7x_em/sims/w003_beta_scan_implicit_ky1_upw0/*/*.geometry
 !w7x_em/equilibria/*
 !w7x_em/sims/wout_DKH*/template*
 !w7x_em/sims/wout_DKH*/submit_jobs.sh
