@@ -88,12 +88,12 @@ def construct_longlists_for_stella_fprim_tprim_ky_scan(folder_name, has_subfolde
     bad_sims_list = []  # Records sims which somehow failed
     unconverged_sim_list = []
     if has_subfolders:
-        for subfolder_longame in subfolder_longnames:
+        for subfolder_longname in subfolder_longnames:
             # Find the .out.nc files
-            outnc_longnames = glob.glob(subfolder_longame+ "*.out.nc")
+            outnc_longnames = glob.glob(subfolder_longname+ "*.out.nc")
             if (len(outnc_longnames) > 1) and remake_sims_if_not_converged:
                 # Get the latest sim - this will be input_X , where X=len(outnc_longnames)-1
-                outnc_longname = subfolder_longame + "input_" + str(len(outnc_longnames)-1) + ".out.nc"
+                outnc_longname = subfolder_longname + "input_" + str(len(outnc_longnames)-1) + ".out.nc"
             else:
                 outnc_longname = subfolder_longname + "input.out.nc"
                 # outnc_longname = outnc_longnames[0]
