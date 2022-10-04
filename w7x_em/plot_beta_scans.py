@@ -120,6 +120,7 @@ def kjm3_make_beta_scan_plot_for_thesis():
 
     for ax in [ax1,ax2,ax3]:
         ax.set_xlim((-0.001,0.101))
+        ax.plot([-2, 2], [0,0], c="grey", lw=1)
     ax1.set_ylim(0, 2.8)
     ax2.set_ylim(-0.3, 3.9)
     ax3.set_ylim(-0.3, 3.9)
@@ -226,7 +227,7 @@ def w003_make_beta_scan_plot_for_thesis():
         [pickle_string, beta_array, gammaom_array, gammasafe_array,
             freq_array] = pickle.load(file)
         file.close()
-        ax1.plot(beta_array, -freq_array, marker=marker_list[folder_idx], lw=my_linewidth,
+        ax1.plot(beta_array, freq_array, marker=marker_list[folder_idx], lw=my_linewidth,
                     markersize=marker_size, mfc="None", label=labels[folder_idx], c=default_cmap(folder_idx))
         ax2.plot(beta_array, gammaom_array, marker=marker_list[folder_idx], lw=my_linewidth,
                     markersize=marker_size, mfc="None", label=labels[folder_idx], c=default_cmap(folder_idx))
@@ -234,7 +235,7 @@ def w003_make_beta_scan_plot_for_thesis():
                     markersize=marker_size, mfc="None", label=labels[folder_idx], c=default_cmap(folder_idx))
         if folder_idx == 1:
             for counter, beta_idx in enumerate(special_beta_idxs):
-                ax1.plot(beta_array[beta_idx], -freq_array[beta_idx], marker=marker_list[folder_idx], lw=my_linewidth,
+                ax1.plot(beta_array[beta_idx], freq_array[beta_idx], marker=marker_list[folder_idx], lw=my_linewidth,
                     markersize=marker_size, mfc=special_cols[counter], c=default_cmap(folder_idx))
                 ax2.plot(beta_array[beta_idx], gammaom_array[beta_idx], marker=marker_list[folder_idx], lw=my_linewidth,
                     markersize=marker_size, mfc=special_cols[counter], c=default_cmap(folder_idx))
@@ -257,6 +258,7 @@ def w003_make_beta_scan_plot_for_thesis():
         ax.set_xticks([0, 0.02, 0.04, 0.06, 0.08, 0.1])
         ax.set_xticks([0.01, 0.03, 0.05, 0.07, 0.09], minor=True)
         ax.set_xticklabels([], minor=True)
+        ax.plot([-2,2], [0,0], c="grey", lw=1, zorder=-1)
     ax1.set_yticks([0, 1, 2])
     ax1.set_yticklabels([r"$0$", r"$1$", r"$2$"], fontsize=y_ticklabelfontsize)
     ax1.set_yticks([0.5, 1.5, 2.5], minor=True)
@@ -899,3 +901,5 @@ if __name__ == "__main__":
 
     w003_make_beta_scan_plot_for_thesis()
     w003_make_mode_plots_for_beta_scan_for_thesis()
+    kjm3_make_beta_scan_plot_for_thesis()
+    kjm3_make_mode_plots_for_beta_scan_for_thesis()

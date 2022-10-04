@@ -38,5 +38,5 @@ if __name__ == "__main__":
     # make_fprim_tprim_ky_scan(folder_name_impl_higher_ky_em, fprim_vals, tprim_vals, ky_vals)
     # make_fprim_tprim_ky_scan(folder_name_impl_higher_ky_es, fprim_vals, tprim_vals, ky_vals)
     # make_fprim_tprim_ky_scan(kjm3_impl_em_good_resolution, fprim_vals, tprim_vals, ky_vals)
-    make_fprim_tprim_ky_scan(kjm3_impl_em_good_resolution_beta001, fprim_vals, tprim_vals, ky_vals)
-    make_fprim_tprim_ky_scan(kjm3_impl_em_lower_resolution_beta003, fprim_vals, tprim_vals, ky_vals)
+    make_fprim_tprim_ky_scan(w003_impl_em_good_resolution_beta001, fprim_vals, tprim_vals, ky_vals)
+    make_fprim_tprim_ky_scan(w003_impl_em_lower_resolution_beta003, fprim_vals, tprim_vals, ky_vals)
