@@ -80,6 +80,8 @@ def construct_longlists_for_stella_fprim_tprim_ky_scan(folder_name, has_subfolde
     tprim_longlist = []
     ky_longlist = []
 
+    remake_sims_if_not_converged = False 
+
     omega_file_growth_rate_longlist = []
     safe_growth_rate_longlist = []
     freq_longlist = []
@@ -89,11 +91,12 @@ def construct_longlists_for_stella_fprim_tprim_ky_scan(folder_name, has_subfolde
         for subfolder_longame in subfolder_longnames:
             # Find the .out.nc files
             outnc_longnames = glob.glob(subfolder_longame+ "*.out.nc")
-            if len(outnc_longnames) > 1:
+            if (len(outnc_longnames) > 1) and remake_sims_if_not_converged:
                 # Get the latest sim - this will be input_X , where X=len(outnc_longnames)-1
                 outnc_longname = subfolder_longame + "input_" + str(len(outnc_longnames)-1) + ".out.nc"
             else:
-                outnc_longname = outnc_longnames[0]
+                outnc_longname = subfolder_longname + "input.out.nc"
+                # outnc_longname = outnc_longnames[0]
 
             # If has_subfolders, Find the "latest" outnc_longname in the folder
             # Get the param vals and append to their lists
@@ -138,6 +141,8 @@ def construct_longlists_for_stella_beta_scan(folder_name, has_subfolders=True):
 
     beta_longlist = []
 
+    remake_sims_if_not_converged = False
+
     omega_file_growth_rate_longlist = []
     safe_growth_rate_longlist = []
     freq_longlist = []
@@ -147,11 +152,12 @@ def construct_longlists_for_stella_beta_scan(folder_name, has_subfolders=True):
         for subfolder_longame in subfolder_longnames:
             # Find the .out.nc files
             outnc_longnames = glob.glob(subfolder_longame+ "*.out.nc")
-            if len(outnc_longnames) > 1:
+            if (len(outnc_longnames) > 1) and remake_sims_if_not_converged:
                 # Get the latest sim - this will be input_X , where X=len(outnc_longnames)-1
                 outnc_longname = subfolder_longame + "input_" + str(len(outnc_longnames)-1) + ".out.nc"
             else:
-                outnc_longname = outnc_longnames[0]
+                # outnc_longname = outnc_longnames[0]
+                outnc_longname = subfolder_longame + "input.out.nc"
 
             # If has_subfolders, Find the "latest" outnc_longname in the folder
             # Get the param vals and append to their lists
