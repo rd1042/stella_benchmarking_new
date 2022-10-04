@@ -16,62 +16,6 @@ from helper_ncdf_new import view_ncdf_variables_with_xarray, extract_data_from_n
 
 default_cmap = plt.get_cmap("tab10")
 
-# def beta_scan_gene_benchmark_for_thesis():
-#     """ """
-#
-#     folder_longnames = [make_scans.folder_name_dkh_explicit_betalr,
-#                 make_scans.folder_name_dkh_explicit_betalr_fbpar0,
-#                 make_scans.folder_name_dkh_implicit_betalr,
-#                 ]
-#     labels=[r"explicit", r"explicit ($\delta B_\parallel=0$)", r"implicit"]
-#
-#     fig = plt.figure(figsize=(12,12))
-#
-#     left = 0.1
-#     right = 0.96
-#     top = 0.96
-#     bottom = 0.1
-#     vspace = 0.05
-#     width = right - left
-#     height = (top - bottom  - 2*vspace)/3
-#     row2_bottom = bottom + height + vspace
-#     row1_bottom = row2_bottom + height + vspace
-#     ax1 = fig.add_axes((left, row1_bottom, width, height))
-#     ax2 = fig.add_axes((left, row2_bottom, width, height))
-#     ax3 = fig.add_axes((left, bottom, width, height))
-#
-#     label_fontsize = 40
-#     legend_fontsize = 15
-#     xticklabel_fontsize = 15
-#     yticklabel_fontsize = 15
-#     for counter, folder_longname in enumerate(folder_longnames):
-#         pickle_longname = folder_longname + "/omega_beta_array.pickle"
-#         file = open(pickle_longname, "rb")
-#         [pickle_string, beta_array, gammaom_array, gammasafe_array,
-#             freq_array] = pickle.load(file)
-#         file.close()
-#         ax1.plot(beta_array*100, -freq_array, marker="o")
-#         ax2.plot(beta_array*100, gammaom_array, marker="o")
-#         ax3.plot(beta_array*100, gammasafe_array, marker="o", label=labels[counter])
-#
-#     ax3.set_xlabel(r"$\beta$ (%)", fontsize=label_fontsize)
-#     ax1.set_ylabel(r"$\tilde{\omega}$", fontsize=label_fontsize)
-#     ax2.set_ylabel(r"$\tilde{\gamma}$", fontsize=label_fontsize)
-#     ax3.set_ylabel(r"$\tilde{\gamma}_{2}$", fontsize=label_fontsize)
-#     ax3.legend(loc="upper center", fontsize=legend_fontsize)
-#     ax1.set_ylim(0, 0.5)
-#     ax2.set_ylim(-0.18, 0.4)
-#     ax3.set_ylim(0, 0.4)
-#     for ax in [ax1, ax2, ax3]:
-#         ax.set_xlim(-0.05, 20.05)
-#         ax.set_xticks([0, 4, 8, 12, 16, 20])
-#         ax.set_xticklabels([r"$0$", r"$4$", r"$8$", r"$12$", r"$16$", r"$20$"], fontsize=xticklabel_fontsize)
-#
-#     plt.savefig("w7x_gene_benchmark.eps")
-#     plt.close()
-#     return
-
-
 def make_beta_scan_plot(folder_longnames):
     """For looking at the data, not fancy plotting """
 
@@ -92,7 +36,7 @@ def make_beta_scan_plot(folder_longnames):
     plt.show()
     return
 
-def make_beta_scan_plot_for_thesis():
+def kjm3_make_beta_scan_plot_for_thesis():
     """Want to scan beta for ky=1, 1.5, 2, 3 (or maybe fewer betas if time constrained)
     - For each ky, plot Omega(beta)
     - For some select ky, beta, plot:
@@ -210,7 +154,130 @@ def make_beta_scan_plot_for_thesis():
     ax2.set_ylabel(r"$\tilde{\gamma}_{stella}$", fontsize=y_labelfontsize)
     ax3.set_ylabel(r"$\tilde{\gamma}_{2}$", fontsize=y_labelfontsize)
 
-    plt.savefig("images/w7x_omega_beta_scan.eps")
+    plt.savefig("images/kjm3_omega_beta_scan.eps")
+    plt.close()
+
+    return
+
+def w003_make_beta_scan_plot_for_thesis():
+    """Want to scan beta for ky=1, 1.5, 2, 3 (or maybe fewer betas if time constrained)
+    - For each ky, plot Omega(beta)
+    - For some select ky, beta, plot:
+        - phi(z)
+        - apar(z)
+        - bpar(z)
+       together with B(z) """
+
+    folder_longnames =  [
+                make_scans.folder_name_w003_explicit,
+                make_scans.folder_name_w003_implicit_ky1_upw0,
+                make_scans.folder_name_w003_implicit_ky15_upw0,
+                make_scans.folder_name_w003_implicit_ky2_upw0,
+                make_scans.folder_name_w003_explicit_fbpar0,
+                make_scans.folder_name_w003_implicit_ky1_fbpar0_upw0,
+                        ]
+    labels = [ r"$\tilde{k}_y=1$, RK2",
+               r"$\tilde{k}_y=1$, implicit",
+               r"$\tilde{k}_y=1.5$, implicit",
+               r"$\tilde{k}_y=2$, implicit",
+               r"$\tilde{k}_y=1$, $B_\parallel=0$, RK2",
+               r"$\tilde{k}_y=1$, $B_\parallel=0$, implicit",
+
+                ]
+    special_cols = [default_cmap(6), default_cmap(7),
+                default_cmap(8), default_cmap(9),
+                ]
+    special_beta_idxs = [4, 6, 8, 10]
+    fig = plt.figure(figsize=(12,12))
+    left = 0.1
+    right = 0.98
+    bottom = 0.1
+    top = 0.985
+    vspace = 0.015
+    width = right - left
+    height = (top - bottom - 2*vspace)/3
+
+    row2_bottom = bottom + height + vspace
+    row1_bottom = row2_bottom + height + vspace
+
+    x_ticklabelfontsize = 20
+    x_labelfontsize = 40
+    my_xticklength = 6
+    my_xtickwidth = 3
+    my_xticklength_minor = 3
+    my_xtickwidth_minor = 1
+    y_labelfontsize = x_labelfontsize
+    y_ticklabelfontsize = x_ticklabelfontsize
+    # cb_ticklabelsize = 14
+    # cbax_title_fontsize = 20
+    ax_title_fontsize = 20
+    marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
+    marker_size=15
+    my_linewidth = 3
+    legend_fontsize = 13.5
+
+    ax1 = fig.add_axes((left, row1_bottom, width, height))
+    ax2 = fig.add_axes((left, row2_bottom, width, height))
+    ax3 = fig.add_axes((left, bottom, width, height))
+
+    for folder_idx, folder_longname in enumerate(folder_longnames):
+        pickle_longname = folder_longname + "/omega_beta_array.pickle"
+        file = open(pickle_longname, "rb")
+        [pickle_string, beta_array, gammaom_array, gammasafe_array,
+            freq_array] = pickle.load(file)
+        file.close()
+        ax1.plot(beta_array, -freq_array, marker=marker_list[folder_idx], lw=my_linewidth,
+                    markersize=marker_size, mfc="None", label=labels[folder_idx], c=default_cmap(folder_idx))
+        ax2.plot(beta_array, gammaom_array, marker=marker_list[folder_idx], lw=my_linewidth,
+                    markersize=marker_size, mfc="None", label=labels[folder_idx], c=default_cmap(folder_idx))
+        ax3.plot(beta_array, gammasafe_array, marker=marker_list[folder_idx], lw=my_linewidth,
+                    markersize=marker_size, mfc="None", label=labels[folder_idx], c=default_cmap(folder_idx))
+        if folder_idx == 1:
+            for counter, beta_idx in enumerate(special_beta_idxs):
+                ax1.plot(beta_array[beta_idx], -freq_array[beta_idx], marker=marker_list[folder_idx], lw=my_linewidth,
+                    markersize=marker_size, mfc=special_cols[counter], c=default_cmap(folder_idx))
+                ax2.plot(beta_array[beta_idx], gammaom_array[beta_idx], marker=marker_list[folder_idx], lw=my_linewidth,
+                    markersize=marker_size, mfc=special_cols[counter], c=default_cmap(folder_idx))
+                ax3.plot(beta_array[beta_idx], gammasafe_array[beta_idx], marker=marker_list[folder_idx], lw=my_linewidth,
+                    markersize=marker_size, mfc=special_cols[counter], c=default_cmap(folder_idx))
+
+    for ax in [ax1,ax2,ax3]:
+        ax.set_xlim((-0.001,0.101))
+    ax1.set_ylim(0, 2.8)
+    ax2.set_ylim(-0.3, 3.9)
+    ax3.set_ylim(-0.3, 3.9)
+
+    for ax in [ax1, ax2, ax3]:
+        #ax.scatter(fprim_list, tprim_list, c="r", s=3.)
+        #print("in make_plots. sorted(set(fprim_list)) = ", sorted(set(fprim_list)))
+        ax.tick_params("x", which="major", top=True, bottom=True, length=my_xticklength, width=my_xtickwidth, direction="in")
+        ax.tick_params("y", which="major", left=True, right=True, length=my_xticklength, width=my_xtickwidth, direction="in")
+        ax.tick_params("x", which="minor", top=True, bottom=True, length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in")
+        ax.tick_params("y", which="minor", left=True, right=True, length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in")
+        ax.set_xticks([0, 0.02, 0.04, 0.06, 0.08, 0.1])
+        ax.set_xticks([0.01, 0.03, 0.05, 0.07, 0.09], minor=True)
+        ax.set_xticklabels([], minor=True)
+    ax1.set_yticks([0, 1, 2])
+    ax1.set_yticklabels([r"$0$", r"$1$", r"$2$"], fontsize=y_ticklabelfontsize)
+    ax1.set_yticks([0.5, 1.5, 2.5], minor=True)
+    ax1.set_yticklabels([], minor=True)
+
+    for ax in [ax2, ax3]:
+        ax.set_yticks([0, 1, 2, 3])
+        ax.set_yticklabels([r"$0$", r"$1$", r"$2$", r"$3$"], fontsize=y_ticklabelfontsize)
+        ax.set_yticks([0.5, 1.5, 2.5, 3.5], minor=True)
+        ax.set_yticklabels([], minor=True)
+
+    ax3.legend(loc="upper left", fontsize=legend_fontsize)
+    ax3.set_xticklabels([r"$0$", r"$2$", r"$4$", r"$6$", r"$8$", r"$10$"], fontsize=x_ticklabelfontsize)
+    ax1.set_xticklabels([], fontsize=x_ticklabelfontsize)
+    ax2.set_xticklabels([], fontsize=x_ticklabelfontsize)
+    ax3.set_xlabel(r"$\beta (\%)$", fontsize=x_labelfontsize)
+    ax1.set_ylabel(r"$\tilde{\omega}_{stella}$", fontsize=y_labelfontsize)
+    ax2.set_ylabel(r"$\tilde{\gamma}_{stella}$", fontsize=y_labelfontsize)
+    ax3.set_ylabel(r"$\tilde{\gamma}_{2}$", fontsize=y_labelfontsize)
+
+    plt.savefig("images/w003_omega_beta_scan.eps")
     plt.close()
 
     return
@@ -240,7 +307,7 @@ def get_normalised_fields_for_z_zeta(sim_longname):
 
     return z, zeta, abs_phi, abs_apar, abs_bpar
 
-def make_mode_plots_for_beta_scan_for_thesis():
+def kjm3_make_mode_plots_for_beta_scan_for_thesis():
     """Want to scan beta for ky=1, 1.5, 2, 3 (or maybe fewer betas if time constrained)
     - For each ky, plot Omega(beta)
     - For some select ky, beta, plot:
@@ -399,12 +466,176 @@ def make_mode_plots_for_beta_scan_for_thesis():
     ax1_inset.set_yticklabels([r"$0$",r"$1$"], fontsize=inset_ticklabelfonstsize)
     ax1_inset.set_xticks([-1,0,1])
     ax1_inset.set_xticklabels([r"$-1$", r"$0$",r"$1$"], fontsize=inset_ticklabelfonstsize)
-    plt.savefig("images/w7x_fields_beta_scan.eps")
+    plt.savefig("images/kjm3_fields_beta_scan.eps")
     plt.close()
 
     return
 
-def make_mode_plots_for_beta01_scan_for_thesis():
+def w003_make_mode_plots_for_beta_scan_for_thesis():
+    """Want to scan beta for ky=1, 1.5, 2, 3 (or maybe fewer betas if time constrained)
+    - For each ky, plot Omega(beta)
+    - For some select ky, beta, plot:
+        - phi(z)
+        - apar(z)
+        - bpar(z)
+       together with B(z) """
+
+    sim_longnames =  [
+                # make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0400/input",
+                # make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0600/input",
+                # make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.0800/input",
+                # make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.1000/input",
+                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0400/input_for_fields",
+                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0600/input_for_fields",
+                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.0800/input_for_fields",
+                make_scans.folder_name_w003_implicit_ky1_upw0 + "/beta_0.1000/input_for_fields",
+                #make_scans.folder_name_kjm3_implicit_ky1_upw0 + "/beta_0.1000/input_different_res",
+                        ]
+    labels = [ r"$\beta=4\%$",
+               r"$\beta=6\%$",
+               r"$\beta=8\%$",
+               r"$\beta=10\%$",
+               #r"$\beta=10\%$ (new resolution)",
+                ]
+    cols = [default_cmap(6), default_cmap(7),
+            default_cmap(8), default_cmap(9),
+            ]
+
+    lw_list = [6, 4, 4, 2, 2]
+    ls_list = ["-", "--", "-.", (0, (4,1,2,1)), "-"]
+
+    fig = plt.figure(figsize=(12,12))
+    left = 0.14
+    right = 0.98
+    bottom = 0.08
+    top = 0.9
+    vspace = 0.015
+    width = right - left
+    height = (top - bottom - 2*vspace)/3
+
+    row2_bottom = bottom + height + vspace
+    row1_bottom = row2_bottom + height + vspace
+
+    x_ticklabelfontsize = 20
+    x_labelfontsize = 40
+    my_xticklength = 6
+    my_xtickwidth = 3
+    my_xticklength_minor = 3
+    my_xtickwidth_minor = 1
+    y_labelfontsize = x_labelfontsize
+    y_ticklabelfontsize = x_ticklabelfontsize
+    inset_ticklabelfonstsize = 16
+    # cb_ticklabelsize = 14
+    # cbax_title_fontsize = 20
+    ax_title_fontsize = 20
+    marker_list = ["s", "o", "P", "X", "v", "^", "<", ">", "1", "2", "3"]
+    marker_size=15
+    my_linewidth = 3
+    legend_fontsize = 20
+
+    inset_width = 0.26
+    inset_height = 0.16
+    inset_left = 0.04
+    inset_bottom = 0.08
+
+    ax1 = fig.add_axes((left, row1_bottom, width, height))
+    ax2 = fig.add_axes((left, row2_bottom, width, height))
+    ax3 = fig.add_axes((left, bottom, width, height))
+    ax1_inset = fig.add_axes((left + inset_left, row1_bottom + inset_bottom, inset_width, inset_height))
+    ax1zeta = ax1.twiny() # fig.add_axes((left, row1_bottom, width, height))
+    ax2zeta = ax2.twiny() # fig.add_axes((left, row1_bottom, width, height))
+    ax3zeta = ax3.twiny() # fig.add_axes((left, row1_bottom, width, height))
+
+    for sim_idx, sim_longname in enumerate(sim_longnames):
+        z, zeta, abs_phi, abs_apar, abs_bpar = get_normalised_fields_for_z_zeta(sim_longname)
+        if sim_idx == 4:
+            z = z * 0.2
+        if sim_idx == 0:
+            ax1_inset.plot(z/np.pi, abs_phi, lw=lw_list[sim_idx], ls=ls_list[sim_idx],
+                        label=labels[sim_idx], c=cols[sim_idx])
+        # print("abs_phi = ", abs_phi)
+        # print("min(zeta/pi) = ", np.min(zeta/np.pi))
+        # print("max(zeta/pi) = ", np.max(zeta/np.pi))
+        ax1.plot(z/np.pi, abs_phi, lw=lw_list[sim_idx], ls=ls_list[sim_idx],
+                    label=labels[sim_idx], c=cols[sim_idx])
+        ax2.plot(z/np.pi, abs_apar, lw=lw_list[sim_idx], ls=ls_list[sim_idx],
+                    label=labels[sim_idx], c=cols[sim_idx])
+        ax3.plot(z/np.pi, abs_bpar, lw=lw_list[sim_idx], ls=ls_list[sim_idx],
+                    label=labels[sim_idx], c=cols[sim_idx])
+
+    # for ax in [ax1,ax2,ax3]:
+    #     ax.set_xlim((0,0.1))
+    # ax1.set_ylim(0, 2.8)
+    # ax2.set_ylim(-0.3, 3.9)
+    # ax3.set_ylim(-0.3, 3.9)
+
+    for ax in [ax1, ax2, ax3]:
+        #ax.scatter(fprim_list, tprim_list, c="r", s=3.)
+        #print("in make_plots. sorted(set(fprim_list)) = ", sorted(set(fprim_list)))
+        ax.set_xlim(-0.15, 0.15)
+        ax.tick_params("x", which="major", top=False, bottom=True, length=my_xticklength, width=my_xtickwidth, direction="in")
+        ax.tick_params("y", which="major", left=True, right=True, length=my_xticklength, width=my_xtickwidth, direction="in")
+        ax.tick_params("x", which="minor", top=False, bottom=True, length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in")
+        ax.tick_params("y", which="minor", left=True, right=True, length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in")
+        ax.set_xticks([-0.1, 0, 0.1])
+        ax.set_xticks([-0.15, -0.05, 0.05, 0.15], minor=True)
+        ax.set_xticklabels([], minor=True)
+        ax.grid(True)
+
+    ax3.set_xlabel(r"$z$", fontsize=x_labelfontsize)
+    ax1zeta.set_xlabel(r"$\zeta$", fontsize=x_labelfontsize, labelpad=20)
+    #ax1zeta.set_xlabel(r"$\zeta$", fontsize=x_labelfontsize)
+    ax1.set_ylabel(r"$\vert \tilde{\phi}_k \vert$", fontsize=y_labelfontsize)
+    ax2.set_ylabel(r"$\vert \tilde{A}_{\parallel k} \vert$", fontsize=y_labelfontsize)
+    ax3.set_ylabel(r"$\vert \tilde{B}_{\parallel k} \vert$", fontsize=y_labelfontsize)
+    ax1.set_yticks([0, 0.5, 1,])
+    ax1.set_yticklabels([r"$0$", r"$0.5$", r"$1$"], fontsize=y_ticklabelfontsize)
+    ax1.set_yticks([0.25, 0.75], minor=True)
+
+    ax2.set_yticks([0, 0.05])
+    ax2.set_yticklabels([r"$0$", r"$0.05$"], fontsize=y_ticklabelfontsize)
+    ax2.set_yticks([0.25], minor=True)
+    ax2.set_yticklabels([], minor=True)
+    ax3.set_yticks([0, 0.05])
+    ax3.set_yticklabels([r"$0$", r"$0.05$"], fontsize=y_ticklabelfontsize)
+    ax3.set_yticks([0.25], minor=True)
+    ax3.set_yticklabels([], minor=True)
+    ax3.set_xticklabels([r"$-0.1$", "$0$", r"$0.1$"], fontsize=x_ticklabelfontsize)
+    ax1.set_xticklabels([], fontsize=x_ticklabelfontsize)
+    ax2.set_xticklabels([], fontsize=x_ticklabelfontsize)
+
+    for ax in [ax1zeta, ax2zeta, ax3zeta]:
+        ax.tick_params("x", which="major", top=True, bottom=False, length=my_xticklength, width=my_xtickwidth, direction="in")
+        ax.tick_params("x", which="minor", top=True, bottom=False, length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in")
+        ax.set_xlim(np.min(zeta)*0.15/np.pi, np.max(zeta)*0.15/np.pi)
+        ax.set_xticks([-0.4, 0, 0.4])
+        ax.set_xticks([-0.6, -0.2, 0.2, 0.6], minor=True)
+    ax1zeta.set_xticklabels([r"$-2\pi/5$", r"$0$", r"$2\pi/5$"], fontsize=x_ticklabelfontsize)
+    ax2zeta.set_xticklabels([], fontsize=x_ticklabelfontsize)
+    ax3zeta.set_xticklabels([], fontsize=x_ticklabelfontsize)
+    # for ax in [ax2, ax3]:
+    #     ax.set_yticks([0, 1, 2, 3])
+    #     ax.set_yticklabels([r"$0$", r"$1$", r"$2$", r"$3$"], fontsize=y_ticklabelfontsize)
+    #     ax.set_yticks([0.5, 1.5, 2.5, 3.5], minor=True)
+    #     ax.set_yticklabels([], minor=True)
+
+    ax3.legend(loc="upper left", fontsize=legend_fontsize)
+    # ax3.set_xticklabels([r"$0$", r"$2$", r"$4$", r"$6$", r"$8$", r"$10$"], fontsize=x_ticklabelfontsize)
+    # ax1.set_xticklabels([], fontsize=x_ticklabelfontsize)
+    # ax2.set_xticklabels([], fontsize=x_ticklabelfontsize)
+
+    ax1_inset.set_xlim((-1,1))
+    ax1_inset.set_ylim((-0.05, 1.05))
+    ax1_inset.set_yticks([0,1])
+    ax1_inset.set_yticklabels([r"$0$",r"$1$"], fontsize=inset_ticklabelfonstsize)
+    ax1_inset.set_xticks([-1,0,1])
+    ax1_inset.set_xticklabels([r"$-1$", r"$0$",r"$1$"], fontsize=inset_ticklabelfonstsize)
+    plt.savefig("images/w003_fields_beta_scan.eps")
+    plt.close()
+
+    return
+
+def kjm3_make_mode_plots_for_beta01_scan_for_thesis():
     """Want to scan beta for ky=1, 1.5, 2, 3 (or maybe fewer betas if time constrained)
     - For each ky, plot Omega(beta)
     - For some select ky, beta, plot:
@@ -541,12 +772,12 @@ def make_mode_plots_for_beta01_scan_for_thesis():
     # ax1.set_xticklabels([], fontsize=x_ticklabelfontsize)
     # ax2.set_xticklabels([], fontsize=x_ticklabelfontsize)
 
-    plt.savefig("images/w7x_fields_beta0.1.eps")
+    plt.savefig("images/kjm3_fields_beta0.1.eps")
     plt.close()
 
     return
 
-def make_g_vpamu_colorplot_beta01_for_thesis():
+def kjm3_make_g_vpamu_colorplot_beta01_for_thesis():
     """Make a scatter plot of (vpa, mu) to show the grids"""
 
     def make_gvmus_plots(g_meshgrid, save_name, species):
@@ -665,3 +896,6 @@ if __name__ == "__main__":
     # make_mode_plots_for_beta01_scan_for_thesis()
     # make_mode_plots_for_beta01_scan_for_thesis()
     # make_g_vpamu_colorplot_beta01_for_thesis()
+
+    w003_make_beta_scan_plot_for_thesis()
+    w003_make_mode_plots_for_beta_scan_for_thesis()
