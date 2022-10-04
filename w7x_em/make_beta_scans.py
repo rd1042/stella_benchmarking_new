@@ -27,7 +27,13 @@ folder_name_kjm3_implicit_ky1_upw0 = "sims/kjm3_beta_scan_implicit_ky1_upw0"
 folder_name_kjm3_implicit_ky1_fbpar0_upw0 = "sims/kjm3_beta_scan_implicit_ky1_fbpar0_upw0"
 folder_name_kjm3_implicit_ky15_upw0 = "sims/kjm3_beta_scan_implicit_ky1.5_upw0"
 folder_name_kjm3_implicit_ky2_upw0 = "sims/kjm3_beta_scan_implicit_ky2_upw0"
-# folder_name_kjm3_implicit_ky1_upw0 = "sims/kjm3_beta_scan_implicit_ky1_upw0"
+
+folder_name_w003_implicit_ky1_upw0 = "sims/w003_beta_scan_implicit_ky1_upw0"
+folder_name_w003_implicit_ky1_fbpar0_upw0 = "sims/w003_beta_scan_implicit_ky1_fbpar0_upw0"
+folder_name_w003_implicit_ky15_upw0 = "sims/w003_beta_scan_implicit_ky1.5_upw0"
+folder_name_w003_implicit_ky2_upw0 = "sims/w003_beta_scan_implicit_ky2_upw0"
+folder_name_w003_explicit = "sims/w003_beta_scan_explicit"
+folder_name_w003_explicit_fbpar0 = "sims/w003_beta_scan_explicit_fbpar0"
 
 if __name__ == "__main__":
     print("Hello world")
@@ -46,6 +52,13 @@ if __name__ == "__main__":
     # make_beta_scan(folder_name_kjm3_implicit_ky2_fbpar0, beta_vals)
 
     # make_beta_scan(folder_name_kjm3_implicit_ky1_upw0, beta_vals)
-    make_beta_scan(folder_name_kjm3_implicit_ky1_fbpar0_upw0, beta_vals)
-    make_beta_scan(folder_name_kjm3_implicit_ky15_upw0, beta_vals)
-    make_beta_scan(folder_name_kjm3_implicit_ky2_upw0, beta_vals)
+    # make_beta_scan(folder_name_kjm3_implicit_ky1_fbpar0_upw0, beta_vals)
+    # make_beta_scan(folder_name_kjm3_implicit_ky15_upw0, beta_vals)
+    # make_beta_scan(folder_name_kjm3_implicit_ky2_upw0, beta_vals)
+
+    make_beta_scan(folder_name_w003_implicit_ky1_upw0, beta_vals)
+    make_beta_scan(folder_name_w003_implicit_ky1_fbpar0_upw0, beta_vals)
+    make_beta_scan(folder_name_w003_implicit_ky15_upw0, beta_vals)
+    make_beta_scan(folder_name_w003_implicit_ky2_upw0, beta_vals)
+    make_beta_scan(folder_name_w003_explicit, beta_vals)
+    make_beta_scan(folder_name_w003_explicit_fbpar0, beta_vals)
