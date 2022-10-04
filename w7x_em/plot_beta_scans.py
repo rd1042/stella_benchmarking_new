@@ -663,4 +663,5 @@ if __name__ == "__main__":
     # make_beta_scan_plot_for_thesis()
     # make_mode_plots_for_beta_scan_for_thesis()
     # make_mode_plots_for_beta01_scan_for_thesis()
-    make_g_vpamu_colorplot_beta01_for_thesis()
+    # make_mode_plots_for_beta01_scan_for_thesis()
+    # make_g_vpamu_colorplot_beta01_for_thesis()

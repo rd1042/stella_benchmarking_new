@@ -178,17 +178,17 @@ def make_omega_t_plot_for_thesis_ky35():
         # inset_ax2.plot(time-tend, gammaom, lw=my_linewidth)
         # inset_ax3.plot(time-tend, gamma_stable, lw=my_linewidth)
 
-    ax1.set_ylim((-0.4, 0.4))
-    ax2.set_ylim((0, 0.272))
-    ax3.set_ylim((0, 0.272))
+    # ax1.set_ylim((-0.4, 0.4))
+    # ax2.set_ylim((0, 0.272))
+    # ax3.set_ylim((0, 0.272))
     # inset_ax1.set_ylim((-5.5, 17))
     # inset_ax2.set_ylim((-7, 5.5))
 
-    for ax in [ax1, ax2, ax3]:
-        ax.set_xlim(-100, 0)
-        ax.grid(True)
-        ax.set_xticks([-100, -50, 0])
-        ax.tick_params("y", length=my_xticklength, width=my_xtickwidth, direction="out")
+    # for ax in [ax1, ax2, ax3]:
+    #     ax.set_xlim(-100, 0)
+    #     ax.grid(True)
+    #     ax.set_xticks([-100, -50, 0])
+    #     ax.tick_params("y", length=my_xticklength, width=my_xtickwidth, direction="out")
     # for ax in [inset_ax1, inset_ax2]:
     #     ax.set_xlim(0, 200)
     #     ax.set_xticks([0, 100, 200])

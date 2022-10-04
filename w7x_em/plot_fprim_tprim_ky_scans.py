@@ -126,19 +126,21 @@ def for_thesis_make_fprim_tprim_ky_scan_w003():
         cbax4.set_yticklabels(gamma_ticklabels_list[1], fontsize=cb_ticklabelsize)
         cbax6.set_yticklabels(gamma_ticklabels_list[2], fontsize=cb_ticklabelsize)
         # Uncomment to save the figure.
-        plt.savefig(str("draft_fprim_tprim_w003") + ".png")
+        plt.savefig(str("images/w003_fprim_tprim_beta0.01") + ".png")
         plt.close()
 
         return
 
 
-    folder_1 = make_scans.folder_name_impl_em_good_resolution
+    folder_1 = make_scans.folder_name_impl_em_good_resolution_beta001
     pickle_longname = folder_1 + "/omega_fprim_tprim_ky_array.pickle"
     file = open(pickle_longname, "rb")
     [pickle_string, unique_fprim, unique_tprim, unique_ky,
         gammaom_fprim_tprim_ky_array, gammasafe_fprim_tprim_ky_array,
         freq_fprim_tprim_ky_array] = pickle.load(file)
     file.close()
+    print("unique_ky = ", unique_ky)
+    freq_fprim_tprim_ky_array = -freq_fprim_tprim_ky_array # Swap sign because of equilibrium
     (fig, ax1, ax2, ax3, ax4, ax5, ax6, cbax1, cbax2, cbax3, cbax4, cbax5, cbax6) = init_plots()
     ky_15_idx = unique_ky.index(1.5)
     ky_3_idx = unique_ky.index(3)
