@@ -316,8 +316,8 @@ def get_omega_from_subfolder_and_make_plot(outnc_longname):
     freqom_frac_tolerance = 2E-2
     gammaom_tolerance = 1E-2
     gammaom_frac_tolerance = 2E-2
-    gamma_stable_tolerance = 1E-2
-    gamma_frac_stable_tolerance = 2E-2
+    gamma_stable_tolerance = 1E-1
+    gamma_frac_stable_tolerance = 2E-1
     time_tolerance = 1E-5
     sim_converged = True
     ## Check if freqom, gammaom, gamma_stable are converged
