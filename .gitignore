@@ -77,6 +77,8 @@ test_slab_em/sims/*/*.used_inputs.in
 !w7x_em/sims/w003_*/submit_jobs.sh
 !w7x_em/sims/w003_beta_scan_implicit_ky1_upw0/*/*.final_fields
 !w7x_em/sims/w003_beta_scan_implicit_ky1_upw0/*/*.geometry
+!w7x_em/sims/w003_fprim_7.7143_tprim_7.7143_ky_4.5000_beta0.01_for_diagnostics/*.final_fields
+!w7x_em/sims/w003_fprim_7.7143_tprim_7.7143_ky_4.5000_beta0.01_for_diagnostics/*.geometry
 !w7x_em/sims/kjm3_*/*.pickle
 !w7x_em/sims/kjm3_*/template*
 !w7x_em/sims/kjm3_*/submit_jobs.sh
