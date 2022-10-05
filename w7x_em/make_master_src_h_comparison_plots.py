@@ -8,6 +8,7 @@ sys.path.append("../postprocessing_tools")
 from helper_ncdf_new import view_ncdf_variables_with_xarray, extract_data_from_ncdf_with_xarray
 import plot_2d_utils as plot2dutils
 from save_pickles_from_stella_scans import get_omega_data, get_phiz_data_stella
+from scipy.stats import sem
 
 kjm3_longname_master_explicit = "sims/kjm3_es_linear_master_src_h_comparison_higher_res/master_explicit"
 kjm3_longname_master_implicit = "sims/kjm3_es_linear_master_src_h_comparison_higher_res/master_str_m_implicit"
@@ -366,7 +367,16 @@ def w003_make_omega_t_plot_for_thesis_ky35():
         outnc_longname = sim_longname + ".out.nc"
         time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
         tend = time[-1]
-        print("outnc_longname = ", outnc_longname)
+        tidx_80pc = int(0.8*len(time))
+        freqom_sample = np.array(freqom)[tidx_80pc:];  gammaom_sample = gammaom[tidx_80pc:]
+        # print("freqom_sample = ", freqom_sample)
+        freqom_avg = np.mean(freqom_sample) ; freqom_err = np.std(freqom_sample)
+        gamma_avg = np.mean(gammaom_sample) ; gammaom_err = np.std(gammaom_sample)
+        print("outnc_longname, freqom_final, freqom_err, gamma_final, gammaom_err = ",
+            outnc_longname[10:], "{:.7f}".format(float(freqom_final)),
+            (float(freqom_err)),
+            "{:.7f}".format(float(gammaom_final)),
+            (float(gammaom_err)))
         ax1.plot(time-tend, freqom, lw=my_linewidth, label=sim_labels[sim_idx])
         ax2.plot(time-tend, gammaom, lw=my_linewidth, label=sim_labels[sim_idx])
         ax3.plot(time-tend, gamma_stable, lw=my_linewidth, label=sim_labels[sim_idx])
@@ -437,11 +447,13 @@ def w003_make_phi_z_plot_for_thesis_ky35():
                 w003_longname_src_h_implicit_ky35
                         ]
     sim_labels = [
-                 "master, explicit",
-                 "master, implicit",
-                  "sh, explicit",
-                 "sh, implicit",
+                 "original, fully expl.",
+                 "original, impl.",
+                 "EM stella, fully expl.",
+                 "EM stella, impl.",
                 ]
+    lw_list = [6, 4, 4, 2, 2]
+    ls_list = ["-", "--", "-.", (0, (4,1,2,1)), "-"]
 
     for sim_idx, sim_longname in enumerate(sim_longnames):
         z, real_phi, imag_phi = get_phiz_data_stella(sim_longname)
@@ -464,14 +476,15 @@ def w003_make_phi_z_plot_for_thesis_ky35():
             ax3.plot(zed/np.pi, bmag, label = r"$\tilde{B}$",c="gray", ls="--", lw=1, alpha=0.5, zorder=10)
         # ax1.plot(z/np.pi, real_phi, label=r"re$(\tilde{\varphi}_k)$", lw=my_linewidth, zorder=100)
         # ax1.plot(z/np.pi, imag_phi, label=r"im$(\tilde{\varphi}_k)$", lw=my_linewidth, zorder=100)
-        ax1.plot(z/np.pi, abs_phi, label=sim_labels[sim_idx], lw=my_linewidth, zorder=100)
+        ax1.plot(z/np.pi, abs_phi, label=sim_labels[sim_idx], lw=lw_list[sim_idx],
+                ls=ls_list[sim_idx], zorder=100)
 
     ax3.yaxis.set_label_position("right")
     ax1.yaxis.set_label_position("left")
     ax3.yaxis.tick_right()
     ax1.yaxis.tick_left()
     ax1.plot([-10, -11], [-10, -11], label = r"$\tilde{B}$",c="gray", ls="--", lw=1, alpha=0.5)
-    ax1.legend(loc="best", fontsize=legend_fontsize)
+    ax1.legend(loc="lower left", fontsize=legend_fontsize, ncol=2)
     ax1.set_ylim((-0.1, 1.1))
     ax1.set_xlim((-1, 1))
     ax3.set_ylim((0.95, 1.22))
@@ -547,7 +560,13 @@ def w003_make_omega_t_plot_for_thesis_ky1():
         outnc_longname = sim_longname + ".out.nc"
         time, freqom_final, gammaom_final, freqom, gammaom, gamma_stable = get_omega_data(sim_longname, "stella")
         tend = time[-1]
-        print("outnc_longname = ", outnc_longname)
+        tidx_80pc = int(0.8*len(time))
+        freqom_sample = np.array(freqom)[tidx_80pc:];  gammaom_sample = gammaom[tidx_80pc:]
+        # print("freqom_sample = ", freqom_sample)
+        freqom_avg = np.mean(freqom_sample) ; freqom_err = np.std(freqom_sample)
+        gamma_avg = np.mean(gammaom_sample) ; gammaom_err = np.std(gammaom_sample)
+        print("outnc_longname, freqom_final, freqom_err, gamma_final, gammaom_err = ",
+            outnc_longname, float(freqom_final), float(freqom_err), float(gammaom_final), float(gammaom_err))
         ax1.plot(time-tend, freqom, lw=my_linewidth, label=sim_labels[sim_idx])
         ax2.plot(time-tend, gammaom, lw=my_linewidth, label=sim_labels[sim_idx])
         ax3.plot(time-tend, gamma_stable, lw=my_linewidth, label=sim_labels[sim_idx])
@@ -624,12 +643,13 @@ def w003_make_phi_z_plot_for_thesis_ky1():
                 w003_longname_src_h_implicit_ky1
                         ]
     sim_labels = [
-                 "master, explicit",
-                 "master, implicit",
-                  "sh, explicit",
-                 "sh, implicit",
+                 "original, fully expl.",
+                 "original, impl.",
+                 "EM stella, fully expl.",
+                 "EM stella, impl.",
                 ]
-
+    lw_list = [6, 4, 4, 2, 2]
+    ls_list = ["-", "--", "-.", (0, (4,1,2,1)), "-"]
     for sim_idx, sim_longname in enumerate(sim_longnames):
         z, real_phi, imag_phi = get_phiz_data_stella(sim_longname)
         # z = np.array(z)
@@ -651,14 +671,15 @@ def w003_make_phi_z_plot_for_thesis_ky1():
             ax3.plot(zed/np.pi, bmag, label = r"$\tilde{B}$",c="gray", ls="--", lw=1, alpha=0.5, zorder=10)
         # ax1.plot(z/np.pi, real_phi, label=r"re$(\tilde{\varphi}_k)$", lw=my_linewidth, zorder=100)
         # ax1.plot(z/np.pi, imag_phi, label=r"im$(\tilde{\varphi}_k)$", lw=my_linewidth, zorder=100)
-        ax1.plot(z/np.pi, abs_phi, label=sim_labels[sim_idx], lw=my_linewidth, zorder=100)
+        ax1.plot(z/np.pi, abs_phi, label=sim_labels[sim_idx], lw=lw_list[sim_idx],
+                ls=ls_list[sim_idx], zorder=100)
 
     ax3.yaxis.set_label_position("right")
     ax1.yaxis.set_label_position("left")
     ax3.yaxis.tick_right()
     ax1.yaxis.tick_left()
     ax1.plot([-10, -11], [-10, -11], label = r"$\tilde{B}$",c="gray", ls="--", lw=1, alpha=0.5)
-    ax1.legend(loc="best", fontsize=legend_fontsize)
+    ax1.legend(loc="lower left", fontsize=legend_fontsize, ncol=2)
     ax1.set_ylim((-0.1, 1.1))
     ax1.set_xlim((-1, 1))
     ax3.set_ylim((0.95, 1.22))
@@ -690,7 +711,7 @@ if __name__ == "__main__":
     print("Hello world")
     # kjm3_make_omega_t_plot_for_thesis_ky35()
     # kjm3_make_phi_z_plot_for_thesis_ky35()
-    w003_make_omega_t_plot_for_thesis_ky35()
+    # w003_make_omega_t_plot_for_thesis_ky35()
     w003_make_phi_z_plot_for_thesis_ky35()
-    w003_make_omega_t_plot_for_thesis_ky1()
+    # w003_make_omega_t_plot_for_thesis_ky1()
     w003_make_phi_z_plot_for_thesis_ky1()

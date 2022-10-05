@@ -200,7 +200,7 @@ def for_thesis_make_fprim_tprim_ky_scan_kjm3():
 
     return
 
-def for_thesis_make_fprim_tprim_ky_scan_w003():
+def for_thesis_make_fprim_tprim_ky_scan_w003(beta="0.01"):
     """For fancy plotting """
 
     def make_plots(freq_ax, gamma_ax, freq_cbax, gamma_cbax, fprim_mesh, tprim_mesh, freq_fprim_tprim_meshgrid,
@@ -285,6 +285,10 @@ def for_thesis_make_fprim_tprim_ky_scan_w003():
         cbax_title_fontsize = 20
         ax_title_fontsize = 20
 
+        if beta == "0.01":
+            for ax in [ax5, ax6]:
+                ax.scatter([7.7143],[7.7143], marker="X", s=100, c="blue")
+
         for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
             #ax.scatter(fprim_list, tprim_list, c="r", s=3.)
             #print("in make_plots. sorted(set(fprim_list)) = ", sorted(set(fprim_list)))
@@ -317,12 +321,18 @@ def for_thesis_make_fprim_tprim_ky_scan_w003():
         cbax4.set_yticklabels(gamma_ticklabels_list[1], fontsize=cb_ticklabelsize)
         cbax6.set_yticklabels(gamma_ticklabels_list[2], fontsize=cb_ticklabelsize)
         # Uncomment to save the figure.
-        plt.savefig(str("images/w003_fprim_tprim_beta003") + ".png")
+        if beta=="0.01":
+            plt.savefig(str("images/w003_fprim_tprim_beta001") + ".png")
+        else:
+            plt.savefig(str("images/w003_fprim_tprim_beta003") + ".png")
         plt.close()
 
         return
 
-    folder_1 = make_scans.w003_impl_em_lower_resolution_beta003
+    if beta=="0.01":
+        folder_1 = make_scans.w003_impl_em_good_resolution_beta001
+    else:
+        folder_1 = make_scans.w003_impl_em_lower_resolution_beta003
 
     pickle_longname = folder_1 + "/omega_fprim_tprim_ky_array.pickle"
     file = open(pickle_longname, "rb")
@@ -687,4 +697,4 @@ if __name__ == "__main__":
     # make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_em, save_name_prefix="w7x_impl_em.eps")
     # make_fprim_tprim_ky_scan(make_scans.folder_name_impl_higher_ky_es, save_name_prefix="w7x_impl_es.eps")
     # for_thesis_make_fprim_tprim_ky_scan_kjm3()
-    for_thesis_make_fprim_tprim_ky_scan_w003()
+    for_thesis_make_fprim_tprim_ky_scan_w003(beta="0.01")
