@@ -40,47 +40,6 @@ def plot_phi2_t(pickle_longnames):
 
     return
 
-def make_colorplot_old(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True):
-    """ """
-    kx_list = []
-    ky_list = []
-    logphi2_list = []
-    if zonal:
-        for i in range(0, len(kx)):
-            for j in range(0, len(ky)): # Adjusted ky limit
-                kx_list.append(kx[i])
-                ky_list.append(ky[j])
-                logphi2_list.append(np.log(phi2_kxky[i,j]))
-
-        [kx_min, kx_max] = [min(kx), max(kx)]
-        [ky_min, ky_max] = [min(ky), max(ky)]
-    else:
-        for i in range(0, len(kx)):
-            for j in range(1, len(ky)):  # Adjusted ky limit
-                kx_list.append(kx[i])
-                ky_list.append(ky[j])
-                logphi2_list.append(np.log(phi2_kxky[i,j]))
-
-        [kx_min, kx_max] = [min(kx), max(kx)]
-        [ky_min, ky_max] = [min(ky[1:]), max(ky[1:])]
-
-    new_kx = np.linspace(kx_min, kx_max, 100)
-    new_ky = np.linspace(ky_min, ky_max, 100)
-
-    # Turn into a "meshgrid"
-    new_kx, new_ky = np.meshgrid(new_kx, new_ky)
-
-    interpolated_data = []  # To store output.
-
-    logphi2_grid = griddata((kx_list, ky_list),
-                          np.asarray(logphi2_list), (new_kx, new_ky),
-                          method="nearest", fill_value=np.nan)
-
-    phi2_contours = ax.contourf(new_kx, new_ky, logphi2_grid, 20, cmap="viridis")
-    fig.colorbar(phi2_contours, cax=cbax)
-
-    return
-
 def make_colorplot(fig, ax, cbax, kx, ky, phi2_kxky, zonal=True, log=True):
     """ """
     if zonal:
@@ -133,6 +92,7 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
     # print("ylabel_idx_vals = ", ylabel_idx_vals)
     # sys.exit()
     marker_size = 50
+    marker_size_large = 300
     linewidth=2
 
     left = 0.16
@@ -149,7 +109,7 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
     ax1.plot(t, phi2, lw=linewidth, zorder=0, c="black", )
     ax1.scatter(t, phi2, c="red", s=marker_size, zorder=10, marker="x")
     for t_idx in t_idxs_sample:
-        ax1.scatter(t[t_idx], phi2[t_idx], c="blue", s=marker_size, zorder=10, marker="x")
+        ax1.scatter(t[t_idx], phi2[t_idx], c="blue", s=marker_size_large, zorder=10, marker="X")
 
     ax1.set_yscale("log")
 
@@ -703,7 +663,7 @@ def make_master_leapfrog_nisl_isl_comparison():
     col_counters = [0, 3, 4, 6]
     t_list = [t_master, t_leapfrog, t_nisl, t_isl]
     phi2_list = [phi2_master, phi2_leapfrog, phi2_nisl, phi2_isl]
-    labels=[r"RK2", r"Leapfrog", r"NISL", r"SL (bilinear interpolation)"]
+    labels=[r"SSP RK2", r"Leapfrog", r"NISL", r"SL (bilinear interpolation)"]
 
     for counter in [0, 1, 2, 3]:
         col_counter = col_counters[counter]
@@ -714,7 +674,7 @@ def make_master_leapfrog_nisl_isl_comparison():
     ax1.legend(loc="lower right", fontsize=legend_fontsize)
     ax1.set_yscale("log")
     ax1.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
-    ax1.set_ylabel(r"$ \sum_{\tilde{k}_x, \tilde{k}_y} \vert \tilde{\phi}_k(t) \vert^2$", fontsize=ylabel_fontsize)
+    ax1.set_ylabel(r"$ \sum_{\tilde{k}_x, \tilde{k}_y} \vert \tilde{\phi}_k\vert^2$", fontsize=ylabel_fontsize)
     ax1.set_xlim(0, 400)
     ax1.set_ylim(2E-4, 1E6)
     ax1.set_xticks([0, 100, 200, 300, 400])
@@ -919,9 +879,9 @@ def make_master_leapfrog_nisl_isl_comparison():
 
 if __name__ == "__main__":
     print("Hello world")
-    plot_properties_master_sim(cfl_cushion="0.25")
+    # plot_properties_master_sim(cfl_cushion="0.25")
     # plot_properties_leapfrog_sim()
     # plot_properties_nisl_sim()
     # plot_properties_isl_sim()
     # make_master_cushion_comparison()
-    # make_master_leapfrog_nisl_isl_comparison()
+    make_master_leapfrog_nisl_isl_comparison()

@@ -1491,7 +1491,7 @@ def plot_phi2t_for_sims_vexb1():
                         nisl_vexb1_outnc_longname,
                         #isl_vexb1_outnc_longname,
                         ]
-    labels = ["RK2", "RK3", "RK4", "Leapfrog", "NISL",
+    labels = ["SSP RK2", "SSP RK3", "SSP RK4", "Leapfrog", "NISL",
                #"ISL"
               ]
     fig = plt.figure(figsize=(12,6))
@@ -1528,7 +1528,7 @@ def plot_phi2t_for_sims_vexb1():
     #ax1.set_yscale("log")
     #ax1.set_xscale("log")
     ax1.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
-    ax1.set_ylabel(r"$\Delta  \sum_{\tilde{k}_x, \tilde{k}_y} \vert\tilde{\phi}_k(t) \vert^2 (\%)$", fontsize=ylabel_fontsize)
+    ax1.set_ylabel(r"$\Delta  \sum_{\tilde{k}_x, \tilde{k}_y} \vert\tilde{\phi}_k \vert^2 (\%)$", fontsize=ylabel_fontsize)
     ax1.set_xlim([0, 500])
     ax1.set_ylim([-0.015, 0.03])
     ax1.set_xticks([0, 250, 500])
@@ -1552,7 +1552,7 @@ def plot_phi2t_for_sims_vexb10():
                         isl_vexb10_outnc_longname,
                         ]
     labels = [#"RK2", "RK3",
-                "RK4",
+                "SSP RK4",
                 #"Leapfrog",
                 "NISL",
                 "NISL (exact first step)",
@@ -1592,7 +1592,7 @@ def plot_phi2t_for_sims_vexb10():
     #ax1.set_yscale("log")
     #ax1.set_xscale("log")
     ax1.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
-    ax1.set_ylabel(r"$\Delta \sum_{\tilde{k}_x, \tilde{k}_y} \vert \tilde{\phi}_k(t) \vert^2 (\%)$", fontsize=ylabel_fontsize)
+    ax1.set_ylabel(r"$\Delta \sum_{\tilde{k}_x, \tilde{k}_y} \vert \tilde{\phi}_k \vert^2 (\%)$", fontsize=ylabel_fontsize)
     ax1.set_xlim([0, 500])
     # ax1.set_ylim([-0.015, 0.03])
     ax1.set_xticks([0, 250, 500])
