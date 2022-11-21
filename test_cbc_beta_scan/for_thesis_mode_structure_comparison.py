@@ -59,10 +59,10 @@ def make_comparison_beta004(diff=False):
         #beta_04_for_thesis_folder + "stella_implicit_np4_nt64_tupw0.out.nc",
         ]
     labels =[
-             r"GS2 ($n_\theta=64$, $n_{period}=4$)",
-              r"stella (implicit) ($n_\theta=64$, $n_{period}=4$)",
-              r"stella (explicit) ($n_\theta=64$, $n_{period}=4$)",
-              #r"stella (implicit) ($n_\theta=64$, $n_{period}=4$, $u_t=0$)",
+             r"GS2 ($n_z=64$, $n_{period}=4$)",
+              r"stella (implicit) ($n_z=64$, $n_{period}=4$)",
+              r"stella (explicit) ($n_z=64$, $n_{period}=4$)",
+              #r"stella (implicit) ($n_z=64$, $n_{period}=4$, $u_t=0$)",
                 ]
     col_list = [default_cmap(1), default_cmap(3), default_cmap(4),
                 # default_cmap(4)
@@ -262,9 +262,9 @@ def make_comparison_beta0(diff=False):
         beta_0_for_thesis_folder + "stella_explicit_zupw0_src_h.out.nc",
         ]
     labels =[
-             r"GS2 ($n_\theta=64$, $n_{period}=4$)",
-              r"stella (implicit) ($n_\theta=64$, $n_{period}=4$)",
-              r"stella (explicit) ($n_\theta=64$, $n_{period}=4$)",
+             r"GS2 ($n_z=64$, $n_{period}=4$)",
+              r"stella (implicit) ($n_z=64$, $n_{period}=4$)",
+              r"stella (explicit) ($n_z=64$, $n_{period}=4$)",
                 ]
     sim_types = ["gs2",
                  "stella",

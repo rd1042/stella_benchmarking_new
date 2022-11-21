@@ -346,7 +346,7 @@ def vspace_res_test_field_solve_for_thesis():
                 idxs = np.argwhere(np.abs(vpamax_array-unique_vpamax_val)<1E-4)
                 ax1.scatter(nvpa_array[idxs], phi_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
                 ax3.scatter(nvpa_array[idxs], apar_array[idxs], marker=marker_list[vpamax_idx],
-                            s=marker_size, label="vpamax="+str(unique_vpamax_val))
+                            s=marker_size, label=r"$\tilde{v}_{\parallel, \rm max}$="+str(unique_vpamax_val))
                 ax5.scatter(nvpa_array[idxs], bpar_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
 
             unique_vpamax = sorted(set(vpamax_vals_gbar))
@@ -361,7 +361,7 @@ def vspace_res_test_field_solve_for_thesis():
                 idxs = np.argwhere(np.abs(vpamax_array-unique_vpamax_val)<1E-4)
                 ax2.scatter(nvpa_array[idxs], phi_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
                 ax4.scatter(nvpa_array[idxs], apar_array[idxs], marker=marker_list[vpamax_idx],
-                            s=marker_size, label="vpamax="+str(unique_vpamax_val))
+                            s=marker_size, label=r"$\tilde{v}_{\parallel, \rm max}$="+str(unique_vpamax_val))
                 ax6.scatter(nvpa_array[idxs], bpar_array[idxs], marker=marker_list[vpamax_idx], s=marker_size)
 
         elif which=="vperp":
@@ -378,7 +378,7 @@ def vspace_res_test_field_solve_for_thesis():
                 idxs = np.argwhere(np.abs(vperpmax_array-unique_vperpmax_val)<1E-4)
                 ax1.scatter(nmu_array[idxs], phi_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
                 ax3.scatter(nmu_array[idxs], apar_array[idxs], marker=marker_list[vperpmax_idx],
-                            s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
+                            s=marker_size, label=r"$\tilde{v}_{\perp, \rm max}$="+str(unique_vperpmax_val))
                 ax5.scatter(nmu_array[idxs], bpar_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
             ## Repeat for gbar dist.
             unique_vperpmax = sorted(set(vperpmax_vals_gbar))
@@ -394,7 +394,7 @@ def vspace_res_test_field_solve_for_thesis():
                 idxs = np.argwhere(np.abs(vperpmax_array-unique_vperpmax_val)<1E-4)
                 ax2.scatter(nmu_array[idxs], phi_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
                 ax4.scatter(nmu_array[idxs], apar_array[idxs], marker=marker_list[vperpmax_idx],
-                            s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
+                            s=marker_size, label=r"$\tilde{v}_{\perp, \rm max}$="+str(unique_vperpmax_val))
                 ax6.scatter(nmu_array[idxs], bpar_array[idxs], marker=marker_list[vperpmax_idx], s=marker_size)
 
         return
@@ -427,7 +427,7 @@ def vspace_res_test_field_solve_for_thesis():
 
         if which=="vpa":
             for ax in [ax5, ax6]:
-                ax.set_xlabel(r"nvpa", fontsize=xlabel_fontsize)
+                ax.set_xlabel(r"$n_{v \parallel}$", fontsize=xlabel_fontsize)
 
             ax1.set_ylim([2e-13, 1e-11])
             ax1.set_yticks([1e-12, 1e-11])
@@ -476,7 +476,7 @@ def vspace_res_test_field_solve_for_thesis():
 
         if which=="vperp":
             for ax in [ax5, ax6]:
-                ax.set_xlabel(r"nmu", fontsize=xlabel_fontsize)
+                ax.set_xlabel(r"$n_{\mu}$", fontsize=xlabel_fontsize)
 
             ax1.set_yticks([1e-12,1e-8, 1e-4, 1])
             ax1.set_yticklabels([r"$10^{-12}$",r"$10^{-8}$",
@@ -526,7 +526,7 @@ def vspace_res_test_field_solve_for_thesis():
 
     analytic_phi_h, analytic_apar_h, analytic_bpar_h = calculate_fields_zjzeroexp(1, 1, "h")
     analytic_phi_gbar, analytic_apar_gbar, analytic_bpar_gbar = calculate_fields_zjzeroexp(1, 1, "gbar")
-
+    print("h")
     ### vpa parameter tests
     vpamax_vals_h, nvpa_vals_h, phi_vals_h, apar_vals_h, bpar_vals_h = get_fields_from_outnc_files(make_sims.phi_bpar_h_vpa_scan_folder)
     vpamax_vals_gbar, nvpa_vals_gbar, phi_vals_gbar, apar_vals_gbar, bpar_vals_gbar = get_fields_from_outnc_files(make_sims.phi_bpar_gbar_vpa_scan_folder)
@@ -684,7 +684,7 @@ def test_field_solve_apar_for_thesis():
         for vpamax_idx, unique_vpamax_val in enumerate(unique_vpamax_gbar):
             idxs = np.argwhere(np.abs(vpamax_array_gbar-unique_vpamax_val)<1E-4)
             ax2.scatter(nvpa_array_gbar[idxs], apar_array_gbar_vpa[idxs], marker=marker_list[vpamax_idx],
-                        s=marker_size, label="vpamax="+str(unique_vpamax_val))
+                        s=marker_size, label=r"$\tilde{v}_{\parallel, \rm max}$="+str(unique_vpamax_val))
         ## Plot vperp-res test
         for vperpmax_idx, unique_vperpmax_val in enumerate(unique_vperpmax_h):
             idxs = np.argwhere(np.abs(vperpmax_array_h-unique_vperpmax_val)<1E-4)
@@ -696,7 +696,7 @@ def test_field_solve_apar_for_thesis():
             # print("nmu_array_gbar[idxs] = ", nmu_array_gbar[idxs])
             # print("apar_array_gbar_vperp[idxs] = ", apar_array_gbar_vperp[idxs])
             ax4.scatter(nmu_array_gbar[idxs], apar_array_gbar_vperp[idxs], marker=marker_list[vperpmax_idx],
-                        s=marker_size, label="vperpmax="+str(unique_vperpmax_val))
+                        s=marker_size, label=r"$\tilde{v}_{\perp, \rm max}$="+str(unique_vperpmax_val))
 
         ## And now kperp
         # Need to sort the apar vals since apar depends on kperp
@@ -772,9 +772,9 @@ def test_field_solve_apar_for_thesis():
             ax.legend(loc="best", ncol=2)
 
         for ax in [ax2]:
-            ax.set_xlabel(r"nvpa", fontsize=xlabel_fontsize)
+            ax.set_xlabel(r"$n_{v \parallel}$", fontsize=xlabel_fontsize)
         for ax in [ax4]:
-            ax.set_xlabel(r"nvperp", fontsize=xlabel_fontsize)
+            ax.set_xlabel(r"$n_{v \perp}$", fontsize=xlabel_fontsize)
         for ax in [ax6]:
             ax.set_xlabel(r"$\tilde{k}_\perp$", fontsize=xlabel_fontsize)
 
@@ -839,5 +839,5 @@ def test_field_solve_apar_for_thesis():
 
 if __name__ == "__main__":
     print("Hello world")
-    #vspace_res_test_field_solve_for_thesis()
+    vspace_res_test_field_solve_for_thesis()
     test_field_solve_apar_for_thesis()

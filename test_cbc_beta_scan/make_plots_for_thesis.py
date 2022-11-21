@@ -257,6 +257,10 @@ def make_beta_plots_from_pickles_for_thesis_gbar(pickle_longnames, labels, marke
                         beta_to_compare.append(beta_val)
                         gamma_diff.append(100*(gamma_vals[beta_idx] - gamma_ref[closest_beta_ref_idx])/gamma_ref[closest_beta_ref_idx])
                         omega_diff.append(100*(omega_vals[beta_idx] - omega_ref[closest_beta_ref_idx])/omega_ref[closest_beta_ref_idx])
+                print("sim:", labels[folder_idx])
+                print("beta_to_compare = ", beta_to_compare)
+                print("gamma_diff = ", gamma_diff)
+                print("omega_diff = ", omega_diff)
                 ax1.plot(beta_to_compare, omega_diff, label=labels[folder_idx],
                          lw=lw_list[folder_idx], ls=ls_list[folder_idx],
                          c=col_list[folder_idx],
@@ -270,7 +274,7 @@ def make_beta_plots_from_pickles_for_thesis_gbar(pickle_longnames, labels, marke
     #     ax.grid(True)
 
 
-    ax2.legend(loc="best", fontsize=legend_fontsize)
+    ax1.legend(loc="lower right", fontsize=legend_fontsize)
     min_beta = -0.001
     max_beta = 0.041
     for ax in [ax1, ax2]:
@@ -281,6 +285,7 @@ def make_beta_plots_from_pickles_for_thesis_gbar(pickle_longnames, labels, marke
     ax1.tick_params("x", which="major", length=my_xticklength, width=my_xtickwidth, direction="in", labelbottom=False)
     ax1.tick_params("y", which="minor", length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in", labelbottom=False)
     ax2.tick_params("x", which="major", length=my_xticklength, width=my_xtickwidth, direction="in", labelbottom=True)
+    ax2.tick_params("y", which="minor", length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in", labelbottom=False)
 
     if not omega_diff:
         min_freq = 0.16
@@ -306,16 +311,23 @@ def make_beta_plots_from_pickles_for_thesis_gbar(pickle_longnames, labels, marke
                     ha='center', va='top',
                         arrowprops=dict(arrowstyle='-[, widthB=7.0, lengthB=0.5', lw=2.0) )
 
-
     else:
+        min_freq = -25
+        max_freq = 20
+        min_gamma = -100
+        max_gamma = 45
+        ax1.set_ylim((min_freq, max_freq))
+        ax2.set_ylim((min_gamma, max_gamma))
         ax1.plot((min_beta, max_beta), (0,0), c="gray", zorder=-10)
         ax2.plot((min_beta, max_beta), (0,0), c="gray", zorder=-10)
         ax1.set_ylabel(r"$\Delta\tilde{\omega}_{ref}$ ($\%$)", fontsize=label_fontsize)
         ax2.set_ylabel(r"$\Delta\tilde{\gamma}_{ref}$ ($\%$)", fontsize=label_fontsize)
-        ax1.set_yticks([0, 2, 4, 6, 8])
-        ax1.set_yticklabels([r"$0$", r"$2$", r"$4$", r"$6$", r"$8$"], fontsize=x_ticklabelfontsize)
-        ax2.set_yticks([-20, -10, 0, 10])
-        ax2.set_yticklabels([r"$-20$", r"$-10$", r"$0$", r"$10$"], fontsize=x_ticklabelfontsize)
+        ax1.set_yticks([-20, -10, 0, 10, 20])
+        ax1.set_yticks([-15, -5, 5, 15], minor=True)
+        ax1.set_yticklabels([r"$-20$", r"$-10$", r"$0$", r"$10$", r"$20$"], fontsize=x_ticklabelfontsize)
+        ax2.set_yticks([-100, -50, 0])
+        ax2.set_yticks([-75, -25, 25], minor=True)
+        ax2.set_yticklabels([r"$-100$", r"$-50$", r"$0$"], fontsize=x_ticklabelfontsize)
     ax2.set_xlabel(r"$\beta$", fontsize=label_fontsize)
     plt.savefig(save_name)
     plt.close()
