@@ -1383,8 +1383,8 @@ def plot_phi2t_for_sims_no_override():
                     nisl_no_override_dt002_outnc_longname,
                     isl_no_override_dt002_outnc_longname
                         ]
-    labels = ["RK2",
-            "RK3", "RK4",
+    labels = ["SSP RK2",
+            "SSP RK3", "SSP RK4",
             "Leapfrog",
             "NISL",
             "SL (bilinear interpolation)"
@@ -1476,7 +1476,6 @@ def plot_phi2t_for_sims_no_override():
     # ax1.set_yticks([-0.01, 0, 0.01, 0.02, 0.03])
     # ax1.set_yticklabels([r"$-0.01$", r"$0$", r"$0.01$", r"$0.02$", r"$0.03$"], fontsize=yticklabel_fontsize)
     plt.show()
-    plt.close()
 
 
     return
