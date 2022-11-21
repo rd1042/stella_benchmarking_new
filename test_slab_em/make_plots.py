@@ -10,22 +10,18 @@ import numpy as np
 import glob
 import re
 import pickle
+from scipy.optimize import curve_fit
 # import ast
 
 IMAGE_DIR = "./images/"
 
-# basic_em_sim = "stella_sims/input_slab_ky0.1_explicit"
-# mandell_beta1_kperp1 = "stella_sims/input_slab_ky0.1_explicit_mandell1"
-# mandell_beta1_kperp001_new = "mandell_sims/input_slab_ky0.01_beta1_new"
-# mandell_beta1_kperp1_new = "mandell_sims/input_slab_ky1_beta1_new"
-# mandell_sf1_kperp1_new = "mandell_sims/input_slab_ky1_sf1_new"
-# mandell_sf1_kperp001_new = "mandell_sims/input_slab_ky0.01_sf1_new"
-# mandell_sf0002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.002_new"
-# mandell_sf00002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.0002_new"
-# mandell_sf000002_kperp001_new = "mandell_sims/input_slab_ky0.01_sf0.00002_new"
-# mandell_sf10_kperp001_new = "mandell_sims/input_slab_ky0.01_sf10_new"
-# mandell_beta1_kperp1_long_t = "stella_sims/input_slab_ky0.1_explicit_mandell2"
-# mandell_beta1_kperp1_long_t_marconi = "mandell_sims/input_slab_ky0.1_beta1"
+new_gbar_folder = "sims/stella_gbar_formulation_ky1_beta1/"
+stella_src_h_implicit_dt4em2_outnc_longname = new_gbar_folder + "input_implicit_src_h_dt4E-2.out.nc"
+stella_gbar_implicit_dt4em2_outnc_longname = new_gbar_folder + "input_implicit_gbar_dt4E-2.out.nc"
+
+
+def damped_oscillation(tdata, amp0, phase, freq, gamma, offset):
+    return (offset + amp0*np.sin(freq*tdata+phase)*np.exp(gamma*tdata))
 
 def examine_sim_output(sim_longname):
     """ """
@@ -279,6 +275,51 @@ def find_ksaw_properties_from_outnc_with_apar(outnc_longname):
 
     return
 
+def fit_ksaw(t, phi_t, make_plot=False):
+    """Fit a straight line to the natural logarithm of phi**2. If we assume that
+    phi**2 is described by phi**2 = A*exp(Bt), then log(phi**2) = ln(A) + Bt"""
+
+    guess_amp = 4.1
+    guess_phase = 1.5*np.pi
+    guess_freq = 1.1
+    guess_gamma = -0.03
+    guess_offset = 0
+    initial_guesses = np.array([guess_amp,
+                                guess_phase,
+                                guess_freq,
+                                guess_gamma,
+                                guess_offset])
+    # if make_plot:
+    #     tmin = np.min(t) ; tmax = np.max(t)
+    #     upsampled_t = np.linspace(tmin, tmax, 1000)
+    #     fig = plt.figure()
+    #     ax1 = fig.add_subplot(111)
+    #
+    #     ax1.scatter(t, phi_t, c="black", marker="x", s=10)
+    #     plt.show()
+
+
+    popt, pcov = curve_fit(damped_oscillation, t, phi_t, p0=initial_guesses)
+    [amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt] = popt
+    amp0_err = (np.sqrt(pcov[0, 0]))
+    phase_err = (np.sqrt(pcov[1, 1]))
+    freq_err = (np.sqrt(pcov[2, 2]))
+    gamma_err = (np.sqrt(pcov[3, 3]))
+    offset_err = (np.sqrt(pcov[4, 4]))
+
+    if make_plot:
+        tmin = np.min(t) ; tmax = np.max(t)
+        upsampled_t = np.linspace(tmin, tmax, 1000)
+        fig = plt.figure()
+        ax1 = fig.add_subplot(111)
+        ax1.plot(upsampled_t, damped_oscillation(upsampled_t, guess_amp, guess_phase, guess_freq, guess_gamma, guess_offset), c="blue")
+        ax1.plot(upsampled_t, damped_oscillation(upsampled_t, amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt), c="red")
+        ax1.scatter(t, phi_t, c="black", marker="x", s=10)
+        plt.show()
+    return ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+           [amp0_err, phase_err, freq_err, gamma_err, offset_err])
+
+
 def compare_sims(outnc_longnames, sim_types, labels, normalise=False, scatter=False,
                  title=None, include_im = False):
     """ """
@@ -286,9 +327,19 @@ def compare_sims(outnc_longnames, sim_types, labels, normalise=False, scatter=Fa
     t_list = []
     z_list = []
     phi_vs_t_list = []
+    omega_list = []
+    damping_rate_list = []
+    omega_error_list = []
+    damping_rate_error_list = []
+
     linestyles=((0,(1,0)), (0, (2,2)), (0,(5,1,1,1)), (0,(1,1)), (0,(1,0)), (0, (2,2)))
     linewidths = [4, 4, 3, 3, 2, 2]
     for idx, outnc_longname in enumerate(outnc_longnames):
+        ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+               [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(
+                                                    outnc_longname, sim_types[idx])
+        omega_list.append(freq_opt) ; omega_error_list.append(freq_err)
+        damping_rate_list.append(gamma_opt) ; damping_rate_error_list.append(gamma_err)
         if sim_types[idx] == "stella":
             t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'zed', 'phi_vs_t', 'beta')
             # print("stella. phi_vs_t.shape = ", phi_vs_t.shape)
@@ -310,6 +361,9 @@ def compare_sims(outnc_longnames, sim_types, labels, normalise=False, scatter=Fa
         # print("len(t) = ", len(t))
         # print("len(z) = ", len(z))
         # sys.exit()
+
+        print("sim, omega, gamma = ", labels[idx], freq_opt, gamma_opt)
+
     fig = plt.figure(figsize=(12,8))
     if include_im:
         ax1 = fig.add_subplot(211)
@@ -674,6 +728,23 @@ def examine_gs2_sim():
     plt.show()
     return
 
+def fit_frequency_and_damping_rate(outnc_longname, sim_type, **kwargs):
+    """ """
+    if sim_type == "stella":
+        t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'zed', 'phi_vs_t', 'beta')
+        phi_vs_t = np.array(phi_vs_t[:,0,:,0,0,:])
+    elif sim_type == "gs2":
+        t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'theta', 'phi_t', 'beta')
+        phi_vs_t = np.array(phi_vs_t[:,0,0,:,:])
+    zval= float(z[int(len(z)*0.5)])
+    phi_t = phi_vs_t[:,int(len(z)*0.5),0]
+    ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+           [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_ksaw(t, phi_t, **kwargs)
+
+    return ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+           [amp0_err, phase_err, freq_err, gamma_err, offset_err])
+
+
 if __name__ == "__main__":
     print("Hello world")
     # examine_first_sim()
@@ -687,34 +758,11 @@ if __name__ == "__main__":
     # find_ksaw_properties_from_outnc_with_apar("mandell_sims/input_thursday18_wapar_upar.out.nc")
     # find_ksaw_properties_from_outnc_with_apar("mandell_sims/input_thursday19_wapar_upar_beta10.out.nc")
 
-    # compare_sims([
-    # #               #"mandell_sims/input_thursday2_dt.out.nc",
-    # #               #"mandell_sims/input_thursday5_ky.out.nc",
-    # #               "mandell_sims/input_thursday8_nions.out.nc",
-    # #               "mandell_sims/input_thursday12_smions_dt.out.nc",
-    #                "mandell_sims/input_thursday15_nions_beta1.out.nc",
-    # #               "mandell_sims/input_thursday15_nions_beta1_light_electrons.out.nc",
-    #                "mandell_sims/input_thursday16_nions_beta1_upar1.out.nc",
-    # #               "mandell_sims/input_thursday13_smions_double_me.out.nc",
-    # #               "mandell_sims/input_thursday14_smions_half_mi.out.nc",
-    # #               #"mandell_sims/input_thursday11_smions_2.out.nc",
-    # #               #"mandell_sims/input_thursday10_shions.out.nc",
-    #                      ],
-    #               [
-    # #               "8",
-    # #              "12",
-    # #              "13",
-    # #              "14",
-    #               "15",
-    # #              "15, light electrons",
-    #               "16",
-    #               ])
-
     # find_ksaw_properties_from_outnc(mandell_sf10_kperp001_new + ".out.nc")
     # examine_gs2_sim()
 
     # benchmark_stella_vs_gs2()
-    benchmark_stella_vs_gs2_fapar1_fbpar0()
+    # benchmark_stella_vs_gs2_fapar1_fbpar0()
     # view_ncdf_variables_with_xarray("sims/stella_ky1_beta1_zero_gradients/input_fully_explicit.out.nc")
     # make_plots_for_movies("sims/stella_ky1_beta1_zero_gradients/input_fully_explicit.out.nc",
     #                        "stella", "movies/stella_ky1_beta1_zero_gradients")
@@ -722,3 +770,7 @@ if __name__ == "__main__":
     #                        "stella", "movies/stella_ky1_beta1_zero_gradients_fapar0_fbpar0")
     # make_plots_for_movies("sims/gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_long.out.nc",
     #                        "gs2", "movies/gs2_ky1_beta1_zero_gradients_fapar1_fbpar1")
+
+    compare_sims([stella_src_h_implicit_dt4em2_outnc_longname,
+                  stella_gbar_implicit_dt4em2_outnc_longname],
+                  ["stella", "stella"], ["src h, implicit", "gbar, implicit"])
