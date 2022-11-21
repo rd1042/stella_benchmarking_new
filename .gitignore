@@ -4,6 +4,7 @@
 !*/*/
 !*/*/*/
 !*/*/*/*/
+
 !test_example_scripts/feature_electromagnetic_new/e*.in
 !test_example_scripts/master/e*.in
 !test_example_scripts/feature_electromagnetic_new/*.sh
@@ -59,7 +60,6 @@
 !test_cbc_beta_scan/sims/beta_0.04000_for_thesis/*.omega
 !test_cbc_beta_scan/sims/stella_master_beta0_ky05_np4_nt64_nvpa18_nmu12_zupw0_str_mirror_implicit/input.in
 !test_cbc_beta_scan/sims/stella_master_beta0_ky05_np4_nt64_nvpa18_nmu12_zupw0_str_mirror_implicit/*.sh
-
 
 
 !test_slab_em/*.py
@@ -139,5 +139,7 @@ test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/*
 
 !test_nonlinear_only_sims/*.py
 !test_nonlinear_only_sims/sims/*/*.in
+
+*/sims/*/.*.in
 
 
