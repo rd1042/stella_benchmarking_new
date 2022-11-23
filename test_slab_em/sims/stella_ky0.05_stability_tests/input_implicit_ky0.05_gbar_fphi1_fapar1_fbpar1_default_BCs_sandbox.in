@@ -9,19 +9,17 @@
  nzed = 36
  ntubes = 1
  nperiod = 1
- boundary_option="self-periodic"
+ boundary_option="default"
 /
 
 &geo_knobs
  geo_option = 'miller'
  geo_file = 'unsheared_slab_gradpar1.geometry'
- overwrite_bmag = .true.
+ ! overwrite_bmag = .true.
  overwrite_gradpar = .true.
  overwrite_gds2 = .true.
  overwrite_gds21 = .true.
  overwrite_gds22 = .true.
- ! overwrite_gds23 = .true. ! Neoclassical only
- ! overwrite_gds24 = .true. ! Neoclassical only
  overwrite_gbdrift = .true.
  overwrite_cvdrift = .true.
  overwrite_gbdrift0 = .true.
@@ -49,6 +47,10 @@
 &physics_flags
  full_flux_surface = .false.
  nonlinear = .false.
+ include_mirror = .false.
+ xdriftknob = 0.
+ ydriftknob = 0.
+ wstarknob = 0.
 /
 
 &parameters
@@ -78,8 +80,8 @@
 /
 &kt_grids_range_parameters
  naky = 1
- aky_min = 0.05
- aky_max = 0.05
+ aky_min = 0.01
+ aky_max = 0.01
  nakx = 1
  akx_min = 0
  akx_max = 0
@@ -89,24 +91,22 @@
  chop_side = F
  phiinit=   1
  restart_file = "nc/example.nc"
- ginit_option= "kpar"
- width0 = -1.0
- den0 = 0
- den1 = 1
+ ginit_option= "default" ! "kpar"
 /
 
 &knobs
  fphi =   1.0
- fapar =  1.0
- fbpar = 1.0
- zed_upwind = 0.02
- time_upwind = 0.02
+ fapar =  0.0 ! 1.0
+ fbpar = 0.0 ! 1.0
+ zed_upwind = 0.0
+ time_upwind = 0.0
  vpa_upwind = 0.02
  stream_implicit = .true.
- mirror_implicit = .false.
+ mirror_implicit = .true. ! .false.
  !mirror_semi_lagrange = .false.
  delt = 0.02 ! 0.0004
- nstep = 30 ! 100000 ! 20000
+ nstep = 200 ! 100000 ! 20000
+ ! use_gbar_streaming = .true.
 /
 &species_knobs
  nspec= 2
@@ -117,8 +117,8 @@
  mass=   1.0
  dens=   1.0
  temp=   1.0
- tprim = 0.0   ! 2.537 ! Changed from 2.49
- fprim = 0.0   ! 0.809 ! Changed from 0.8
+ tprim = 0.0 ! 2.537 ! Changed from 2.49
+ fprim = 0.0 ! 0.809 ! Changed from 0.8
  type='ion'
 /
 
@@ -127,13 +127,13 @@
  mass=   0.00028 ! Changed from 2.7e-4
  dens=   1.0
  temp=   1.0
- tprim = 0.0   ! 2.537 ! Changed from 2.49
- fprim = 0.0   ! 0.809 ! Changed from 0.8
+ tprim = 0.0 ! 2.537 ! Changed from 2.49
+ fprim = 0.0 ! 0.809 ! Changed from 0.8
  type='electron'
 /
 
 &stella_diagnostics_knobs
- nwrite = 1 ! 200
+ nwrite = 5 ! 200
  nsave = 10000 
  save_for_restart = .false.
  write_omega = .false.

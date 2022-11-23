@@ -9,7 +9,7 @@
  nzed = 36
  ntubes = 1
  nperiod = 1
- boundary_option="self-periodic"
+ boundary_option="default"
 /
 
 &geo_knobs
@@ -78,8 +78,8 @@
 /
 &kt_grids_range_parameters
  naky = 1
- aky_min = 0.05
- aky_max = 0.05
+ aky_min = 0.01
+ aky_max = 0.01
  nakx = 1
  akx_min = 0
  akx_max = 0
@@ -99,14 +99,14 @@
  fphi =   1.0
  fapar =  1.0
  fbpar = 1.0
- zed_upwind = 0.02
- time_upwind = 0.02
+ zed_upwind = 0.0
+ time_upwind = 0.0
  vpa_upwind = 0.02
  stream_implicit = .true.
  mirror_implicit = .false.
  !mirror_semi_lagrange = .false.
  delt = 0.02 ! 0.0004
- nstep = 30 ! 100000 ! 20000
+ nstep = 200 ! 100000 ! 20000
 /
 &species_knobs
  nspec= 2
@@ -133,7 +133,7 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 1 ! 200
+ nwrite = 5 ! 200
  nsave = 10000 
  save_for_restart = .false.
  write_omega = .false.
