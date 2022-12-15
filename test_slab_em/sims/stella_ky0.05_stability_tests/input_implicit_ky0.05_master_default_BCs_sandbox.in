@@ -98,14 +98,14 @@
  fphi =   1.0
  fapar =  0.0 ! 1.0
  fbpar = 0.0 ! 1.0
- zed_upwind = 0.0
+ zed_upwind = 0.0 ! 0.0
  time_upwind = 0.0
  vpa_upwind = 0.02
  stream_implicit = .true.
- mirror_implicit = .true. ! .false.
- !mirror_semi_lagrange = .false.
+ mirror_implicit = .true.
+ ! mirror_semi_lagrange = .false.
  delt = 0.02 ! 0.0004
- nstep = 200 ! 100000 ! 20000
+ nstep = 800 ! 100000 ! 20000
 /
 &species_knobs
  nspec= 2
@@ -132,7 +132,7 @@
 /
 
 &stella_diagnostics_knobs
- nwrite = 5 ! 200
+ nwrite = 20 ! 200
  nsave = 10000 
  save_for_restart = .false.
  write_omega = .false.
