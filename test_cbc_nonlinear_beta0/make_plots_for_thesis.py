@@ -127,8 +127,6 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
     ax1.set_yticks([0.01, 1, 100,])
     ax1.set_yticklabels([r"$10^{-2}$", r"$10^0$", r"$10^2$"], fontsize=yticklabel_fontsize)
 
-
-
     if cfl_cushion == "0.5":
         plt.savefig("master_phi2_t.eps")
     else:
@@ -138,7 +136,7 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
     fig = plt.figure(figsize=[12, 12])
 
     left = 0.1
-    right = 0.95
+    right = 0.92
     top = 0.92
     bottom = 0.1
 
@@ -164,6 +162,7 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
     xlabel_fontsize = 30
     ylabel_fontsize = 30
     cbax_title_fontsize = 30
+
     # plot_dim_x = 0.75
     # plot_dim_y = plot_dim_x
     # col1_cb_lhs = 0.9
@@ -198,13 +197,13 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
     cbar3 = cbar_list[2]
     cbar4 = cbar_list[3]
     cbar1.set_ticks([-250, -200, -150, -100, -50])
-    cbax1.set_yticklabels([r"$-250$", r"$-200$", r"$-150$", r"$-100$", r"$-50$"], fontsize=cbarticklabel_fontsize)
+    cbax1.set_yticklabels([r"$10^{-250}$", r"$10^{-200}$", r"$10^{-150}$", r"$10^{-100}$", r"$10^{-50}$"], fontsize=cbarticklabel_fontsize)
     cbar2.set_ticks([-8, -6, -4])
-    cbax2.set_yticklabels([r"$-8$", r"$-6$", r"$-4$"], fontsize=cbarticklabel_fontsize)
+    cbax2.set_yticklabels([r"$10^{-8}$", r"$10^{-6}$", r"$10^{-4}$"], fontsize=cbarticklabel_fontsize)
     cbar3.set_ticks([-3, -2, -1, 0, 1])
-    cbax3.set_yticklabels([r"$-3$", r"$-2$", r"$-1$", r"$0$", r"$1$"], fontsize=cbarticklabel_fontsize)
+    cbax3.set_yticklabels([r"$10^{-3}$", r"$10^{-2}$", r"$10^{-1}$", r"$1$", r"$10$"], fontsize=cbarticklabel_fontsize)
     cbar4.set_ticks([-3, -2, -1, 0])
-    cbax4.set_yticklabels([r"$-3$", r"$-2$", r"$-1$", r"$0$"], fontsize=cbarticklabel_fontsize)
+    cbax4.set_yticklabels([r"$-10^{3}$", r"$10^{-2}$", r"$10^{-1}$", r"$1$"], fontsize=cbarticklabel_fontsize)
     for ax in [ax3, ax4]:
         ax.set_xlabel(r"$\tilde{k}_x$", fontsize=xlabel_fontsize)
     for ax in [ax1, ax3]:
@@ -254,6 +253,51 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
         plt.savefig("fluxes_master.eps")
     else:
         plt.savefig("fluxes_master_cushion025.eps")
+    plt.close()
+
+    return
+
+def plot_qflx_t_master_cfl025():
+    """ """
+
+    fluxes_file="sims/stella_nonlinear_2species_master_cflcushion025/input.fluxes"
+    data = np.loadtxt(fluxes_file, skiprows=1)
+    t = data[:,0]
+    ## I think gyrbohm scaling is just a case of dividing by sqrt(2)
+    qflx_ion = data[:,5]/np.sqrt(2)
+    qflx_electron = data[:,6]/np.sqrt(2)
+
+    linewidth=2
+
+    left = 0.13
+    right =0.98
+    top = 0.98
+    bottom = 0.11
+    width = right - left
+    height = top - bottom
+    fig = plt.figure(figsize=(12,10))
+    ax1 = fig.add_axes((left, bottom, width, height))
+
+    # fig = plt.figure()
+    # ax1 = fig.add_subplot(111)
+    ax1.plot(t, qflx_ion, lw=linewidth,label=r"$Q_i$")
+    ax1.plot(t, qflx_electron, lw=linewidth,label=r"$Q_e$")
+
+    legend_fontsize = 30
+    xlabel_fontsize = 40
+    ylabel_fontsize = 40
+    xticklabel_fontsize = 24
+    yticklabel_fontsize = 24
+    ax1.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
+    ax1.set_ylabel(r"$ Q/Q_{GB}$", fontsize=ylabel_fontsize)
+    ax1.set_xlim(0, 450)
+    ax1.set_ylim(-0.1, 14.3)
+    ax1.set_xticks([0, 100, 200, 300, 400])
+    ax1.set_xticklabels([r"$0$", r"$100$", r"$200$", r"$300$", r"$400$"], fontsize=xticklabel_fontsize)
+    ax1.set_yticks([0, 5, 10,])
+    ax1.set_yticklabels([r"$0$", r"$5$", r"$10$"], fontsize=yticklabel_fontsize)
+    ax1.legend(loc="best", fontsize=legend_fontsize)
+    plt.savefig("master_qflx_t_cushion025.eps")
     plt.close()
 
     return
@@ -880,8 +924,9 @@ def make_master_leapfrog_nisl_isl_comparison():
 if __name__ == "__main__":
     print("Hello world")
     # plot_properties_master_sim(cfl_cushion="0.25")
+    plot_qflx_t_master_cfl025()
     # plot_properties_leapfrog_sim()
     # plot_properties_nisl_sim()
     # plot_properties_isl_sim()
     # make_master_cushion_comparison()
-    make_master_leapfrog_nisl_isl_comparison()
+    # make_master_leapfrog_nisl_isl_comparison()

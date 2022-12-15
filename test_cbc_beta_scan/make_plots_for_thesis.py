@@ -179,7 +179,7 @@ def make_beta_plots_from_pickles_for_thesis_src_h(pickle_longnames, labels, mark
     return
 
 def make_beta_plots_from_pickles_for_thesis_gbar(pickle_longnames, labels, marker_size=1, omega_diff=False,
-                                save_name="test.eps"):
+                                save_name="test.eps", for_talk=False):
     """Either plot Omega(beta), or, if omega_diff=True, plot (Omega-Omega_ref) (beta),
     where Omega_ref is taken from the first pickle. """
 
@@ -273,8 +273,13 @@ def make_beta_plots_from_pickles_for_thesis_gbar(pickle_longnames, labels, marke
     # for ax in [ax1, ax2]:
     #     ax.grid(True)
 
-
-    ax1.legend(loc="lower right", fontsize=legend_fontsize)
+    if for_talk:
+        ax1.legend(loc="upper right", fontsize=legend_fontsize)
+    else:
+        if omega_diff:
+            ax1.legend(loc="middle right", fontsize=legend_fontsize)
+        else:
+            ax1.legend(loc="upper right", fontsize=legend_fontsize)
     min_beta = -0.001
     max_beta = 0.041
     for ax in [ax1, ax2]:
@@ -289,13 +294,13 @@ def make_beta_plots_from_pickles_for_thesis_gbar(pickle_longnames, labels, marke
 
     if not omega_diff:
         min_freq = 0.16
-        max_freq = 1.2
+        max_freq = 1.5
         min_gamma = 0.01
         max_gamma = 0.79
         ax1.set_ylim((min_freq, max_freq))
         ax2.set_ylim((min_gamma, max_gamma))
         ax1.set_yticks([0.4, 0.8, 1.2])
-        ax1.set_yticks([0.2, 0.6, 1], minor=True)
+        ax1.set_yticks([0.2, 0.6, 1, 1.4], minor=True)
         ax1.set_yticklabels([r"$0.4$", r"$0.8$", r"$1.2$"], fontsize=x_ticklabelfontsize)
         ax2.set_yticks([0.2, 0.4, 0.6])
         ax2.set_yticklabels([r"$0.2$", r"$0.4$", r"$0.6$"], fontsize=x_ticklabelfontsize)
@@ -374,6 +379,46 @@ def make_omega_beta_plots_fapar1_fbpar1():
                                 )
     return
 
+def for_talk_make_omega_beta_plots_fapar1_fbpar1():
+    """Plot CBC beta scan for thesis, showing omega and gamma,
+    rather than the difference between these """
+
+    make_beta_plots_from_pickles_for_thesis_src_h(
+                [
+                "sims/" + mps.gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                r"GS2 ($n_z=32$, $n_{period}=2$)",
+                r"GS2 ($n_z=64$, $n_{period}=4$)",
+                r"stella ($n_z=32$, $n_{period}=2$)",
+                r"stella ($n_z=64$, $n_{period}=4$)",
+                ],
+                omega_diff=False,
+                save_name="for_talk_cbc_Omega_beta_scan.eps"
+
+                                )
+    make_beta_plots_from_pickles_for_thesis_src_h(
+                [
+                "sims/" + mps.gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                "sims/" + mps.stella_src_h_beta_scan_ky_05_np4_nt64_nvpa18_nmu12_zupw0_fapar1_fbpar1_str_mirror_implicit_folder + "/beta_gamma_omega.pickle",
+                ],
+                [
+                r"GS2 ($n_z=32$, $n_{period}=2$)",
+                r"Gs2 ($n_z=64$, $n_{period}=4$)",
+                r"stella ($n_z=32$, $n_{period}=2$)",
+                r"stella ($n_z=64$, $n_{period}=4$)",
+                ],
+                omega_diff=True,
+                save_name="for_talk_cbc_Omegadiff_beta_scan.eps"
+
+                                )
+    return
+
 def make_gbar_benchmark_for_thesis():
     """ """
 
@@ -430,7 +475,40 @@ def make_gbar_benchmark_for_thesis():
                         )
     return
 
+
+def make_gbar_plot_for_talk():
+    """ """
+
+    make_beta_plots_from_pickles_for_thesis_gbar(
+        [
+        "sims/" + mps.gs2_beta_scan_ky_05_np2_nt32_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+        "sims/" + mps.gs2_beta_scan_ky_05_np4_nt64_ng8_ne18_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+        "sims/" + stella_beta_scan_ky_05_np2_nt32_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+        "sims/" + stella_beta_scan_ky_05_np4_nt64_nvpa36_nmu24_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+        "sims/" + stella_beta_scan_ky_05_np2_nt64_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+        "sims/" + stella_beta_scan_ky_05_np2_nt128_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+        "sims/" + stella_beta_scan_ky_05_np2_nt256_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+        "sims/" + stella_beta_scan_ky_05_np2_nt512_nvpa18_nmu12_fapar1_fbpar1_folder + "/beta_gamma_omega.pickle",
+        ],
+        [
+        r"GS2 ($n_z=32$, $n_{period}=2$)",
+        r"GS2 ($n_z=64$, $n_{period}=4$)",
+        r"stella ($n_z=32$, $n_{period}=2$)",
+        r"stella ($n_z=64$, $n_{period}=4$)",
+        r"stella ($n_z=64$, $n_{period}=2$)",
+        r"stella ($n_z=128$, $n_{period}=2$)",
+        r"stella ($n_z=256$, $n_{period}=2$)",
+        r"stella ($n_z=512$, $n_{period}=2$)",
+        ],
+        omega_diff=False,
+        save_name="for_talk_cbc_Omega_beta_scan_gbar.eps", for_talk=True
+
+                        )
+
+
 if __name__ == "__main__":
     print("Hello world")
     #make_omega_beta_plots_fapar1_fbpar1()
     make_gbar_benchmark_for_thesis()
+    #make_gbar_plot_for_talk()
+    #for_talk_make_omega_beta_plots_fapar1_fbpar1()

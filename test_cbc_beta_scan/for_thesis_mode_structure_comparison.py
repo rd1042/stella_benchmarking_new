@@ -19,7 +19,7 @@ beta_04_for_thesis_folder = "sims/beta_0.04000_for_thesis/"
 beta_0_for_thesis_folder = "sims/beta_0_for_thesis/"
 default_cmap = plt.get_cmap("tab10")
 
-def make_comparison_beta004(diff=False):
+def make_comparison_beta004(diff=False, for_talk=False):
     """ """
     marker_size = 12
     legend_fontsize = 16
@@ -58,12 +58,20 @@ def make_comparison_beta004(diff=False):
         beta_04_for_thesis_folder + "stella_explicit_zupw0_src_h_fapar1_fbpar1.out.nc",
         #beta_04_for_thesis_folder + "stella_implicit_np4_nt64_tupw0.out.nc",
         ]
-    labels =[
-             r"GS2 ($n_z=64$, $n_{period}=4$)",
-              r"stella (implicit) ($n_z=64$, $n_{period}=4$)",
-              r"stella (explicit) ($n_z=64$, $n_{period}=4$)",
-              #r"stella (implicit) ($n_z=64$, $n_{period}=4$, $u_t=0$)",
-                ]
+    if for_talk:
+        labels =[
+            r"GS2 ($n_z=64$, $n_{period}=4$)",
+            r"stella ($n_z=64$, $n_{period}=4$)",
+            r"stella (fully explicit) ($n_z=64$, $n_{p}=4$)",
+            #r"stella (implicit) ($n_z=64$, $n_{period}=4$, $u_t=0$)",
+        ]
+    else:
+        labels =[
+                 r"GS2 ($n_z=64$, $n_{period}=4$)",
+                  r"stella (implicit) ($n_z=64$, $n_{period}=4$)",
+                  r"stella (explicit) ($n_z=64$, $n_{period}=4$)",
+                  #r"stella (implicit) ($n_z=64$, $n_{period}=4$, $u_t=0$)",
+                    ]
     col_list = [default_cmap(1), default_cmap(3), default_cmap(4),
                 # default_cmap(4)
                 ]
@@ -219,9 +227,15 @@ def make_comparison_beta004(diff=False):
         ax.grid(True)
 
     if diff:
-        plt.savefig("beta_004_mode_comparison_diff.eps")
+        if for_talk:
+            plt.savefig("for_talk_beta_004_mode_comparison_diff.eps")
+        else:
+            plt.savefig("beta_004_mode_comparison_diff.eps")
     else:
-        plt.savefig("beta_004_mode_comparison_fields.eps")
+        if for_talk:
+            plt.savefig("for_talk_beta_004_mode_comparison_fields.eps")
+        else:
+            plt.savefig("beta_004_mode_comparison_fields.eps")
     return
 
 def make_comparison_beta0(diff=False):
@@ -377,6 +391,16 @@ def for_thesis_beta004_benchmark_plot():
 
     return
 
+def for_talk_beta004_benchmark_plot():
+    """Compare Omega(t) and fields for simulation with nz=64, nperiod=4 for the following:
+    (1) GS2
+    (2) stella implicit streaming + mirror
+    (3) stella explicit """
+    make_comparison_beta004(diff=False, for_talk=True)
+    make_comparison_beta004(diff=True, for_talk=True)
+
+    return
+
 def for_thesis_beta0_benchmark_plot():
     """Compare Omega(t) and fields for simulation with nz=64, nperiod=4 for the following:
     (1) GS2
@@ -388,5 +412,6 @@ def for_thesis_beta0_benchmark_plot():
     return
 
 if __name__ == "__main__":
-    for_thesis_beta004_benchmark_plot()
-    for_thesis_beta0_benchmark_plot()
+    # for_thesis_beta004_benchmark_plot()
+    # for_thesis_beta0_benchmark_plot()
+    for_talk_beta004_benchmark_plot()

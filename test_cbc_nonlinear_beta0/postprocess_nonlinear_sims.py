@@ -79,8 +79,6 @@ def postprocess_nonlinear_outnc_sim(outnc_longname):
 
         return
 
-
-
     [t, kx, ky, phi2, phi2_tkxky] = extract_data_from_ncdf_with_xarray(outnc_longname,
                                     "t", "kx", "ky", "phi2", "phi2_vs_kxky")
     t = np.array(t)

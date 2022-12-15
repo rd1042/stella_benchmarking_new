@@ -82,11 +82,16 @@ def fit_frequency_and_damping_rate(outnc_longname, sim_type, **kwargs):
     if sim_type == "stella":
         t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'zed', 'phi_vs_t', 'beta')
         phi_vs_t = np.array(phi_vs_t[:,0,:,0,0,:])
+        zval= float(z[int(len(z)*0.5)])
+        phi_t = phi_vs_t[:,int(len(z)*0.5),0]
     elif sim_type == "gs2":
         t, z, phi_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'theta', 'phi_t', 'beta')
         phi_vs_t = np.array(phi_vs_t[:,0,0,:,:])
-    zval= float(z[int(len(z)*0.5)])
-    phi_t = phi_vs_t[:,int(len(z)*0.5),0]
+        zval= float(z[int(len(z)*0.5)])
+        phi_t = phi_vs_t[:,int(len(z)*0.5),0]
+    elif sim_type == "gene":
+        t, phi_t = get_gene_data(outnc_longname)
+
     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
            [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_ksaw(t, phi_t, **kwargs)
 
@@ -807,6 +812,561 @@ def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis():
 
     return
 
+def get_gene_data(data_file):
+    """Please find attached the data file.
+        First column: time normalised to a/v_th
+        Second column: phi/phi_max  """
+    data = np.loadtxt(data_file)
+    t = data[:,0]
+    phi_t = data[:,1]
+    return t, phi_t
+
+def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis_plus_gene():
+    """
+    Make a plot showing phi(z), apar(z), bpar(z), phi(t) for the fiducial stella implicit,
+    stella explicit and GS2 sims.
+    Then fit phi(t) to the KSAW and report Omega for the following sims:
+     GS2
+     - Fiducial GS2: gs2_implicit_dt4Em2
+     - bakdif=0, fexpr=0.5
+     - increased nzed
+     - increased v-res
+     - reduced dt (4E-4)
+     stella, implicit
+     - Fiducial: stella_implicit_src_h_dt4Em2
+     - ut=0.02
+     - uz=0.02 (unstable)
+     - increased v-res
+     - increased nzed
+     - reduced dt (4E-4)
+     stella, explicit
+     - Fiducial: stella_explicit_src_h_dt4Em4_zupwexpl01
+     - zupwexpl = 1
+     - zupwexpl = 0
+     - zupwexpl = 0.5
+      """
+
+    def make_fields_zt_plots_for_thesis():
+        """ """
+
+        ylabel_fontsize = 30
+        xlabel_fontsize = 30
+        legend_fontsize = 18
+        linestyles=((0,(1,0)), (0, (2,2)), (0,(3,1,1,1)), (0,(1,1)),
+                    (0, (3,2,2,3)), (0, (1,0)) )
+        # linewidths = [6, 4, 3, 3, 3, 2]
+        # linestyles=((0,(1,0)), (0, (2,2)), (0,(5,1,1,1)), (0,(1,1)), (0,(1,0)), (0, (2,2)))
+        # linewidths = [4, 4, 3, 3, 2, 2]
+        y_ticklabelfontsize = 25
+        x_ticklabelfontsize = y_ticklabelfontsize
+        my_xticklength = 8
+        my_xtickwidth = 2
+        my_yticklength = 8
+        my_ytickwidth = 2
+        my_xticklength_minor = 6
+        my_xtickwidth_minor = 1
+        my_yticklength_minor = 6
+        my_ytickwidth_minor = 1
+
+        linewidths = [6, 4, 3, 3]
+        default_cols = plt.get_cmap("tab10")
+
+        left = 0.13
+        right = 0.985
+        top = 0.985
+        bottom = 0.08
+        vspace=0.1
+        hspace=0.1
+        height = (top - bottom - vspace)/2
+        width = (right - left - hspace)/2
+        col2_left = left + width + hspace
+
+        fig = plt.figure(figsize=(14,12))
+        # ax1 = fig.add_axes((left, bottom + height + vspace, width, height))
+        # ax2 = fig.add_axes((col2_left, bottom + height + vspace, width, height))
+        # ax3 = fig.add_axes((left, bottom, width, height))
+        ax4 = fig.add_axes((left, bottom, (right - left), (top - bottom)))
+
+        outnc_longnames = fiducial_sims
+        sim_types = fiducial_sim_types
+        labels = fiducial_sim_labels
+        save_name="phi_t_fapar1_fbpar1_src_h_with_gene.eps"
+
+        t_list = []
+        z_list = []
+        phi_vs_t_list = []
+        apar_vs_t_list = []
+        bpar_vs_t_list = []
+
+        for idx, outnc_longname in enumerate(outnc_longnames):
+            print("outnc_longname = ", outnc_longname)
+            if sim_types[idx] == "stella":
+                # view_ncdf_variables_with_xarray(outnc_longname)
+                t, z, phi_vs_t, apar_vs_t, bpar_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname,
+                    "t", 'zed', "phi_vs_t", "apar_vs_t", "bpar_vs_t", 'beta')
+                phi_vs_t = phi_vs_t[:,0,:,0,0,:]
+                apar_vs_t = apar_vs_t[:,0,:,0,0,:]
+                bpar_vs_t = bpar_vs_t[:,0,:,0,0,:]
+                # shape is now (time, zed, ri)
+            elif sim_types[idx] == "gs2":
+                # view_ncdf_variables_with_xarray(outnc_longname)
+                t, z, phi_vs_t, apar_vs_t, bpar_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'theta', "phi_t",
+                    "apar_t", "bpar_t", 'beta')
+                phi_vs_t = phi_vs_t[:,0,0,:,:]
+                apar_vs_t = apar_vs_t[:,0,0,:,:]/2  # normalise to stella normalisation
+                bpar_vs_t = bpar_vs_t[:,0,0,:,:]
+                # shape is now (time, zed, ri)
+            else:
+                print("sim type not recognised! Aborting")
+                sys.exit()
+            t_list.append(t); z_list.append(z);
+            phi_vs_t_list.append(phi_vs_t) ;  apar_vs_t_list.append(apar_vs_t)
+            bpar_vs_t_list.append(bpar_vs_t)
+
+        ## Plot phi, apar, bpar at final timestep
+        for idx, outnc_longname in enumerate(outnc_longnames):
+            t = t_list[idx]; z = z_list[idx]; phi_vs_t = phi_vs_t_list[idx];
+            apar_vs_t = apar_vs_t_list[idx]; bpar_vs_t = bpar_vs_t_list[idx]
+            print("phi_vs_t.shape = ", apar_vs_t.shape)
+            print("apar_vs_t.shape = ", apar_vs_t.shape)
+            zval= float(z[int(len(z)*0.5)])
+            if abs(zval) > 1E-5:
+                print("Error! zval!=0 . zval = ", zval)
+                sys.exit()
+            apar_t = apar_vs_t[:,int(len(z)*0.25),0]
+            phi_t = phi_vs_t[:,int(len(z)*0.5),0]
+            # bpar_t = bpar_vs_t[:,int(len(z)*0.5),0]
+            # print("phi_t = ", phi_t)
+            # print("phi_vs_t[-1,:,0] = ", phi_vs_t[-1,:,0])
+            phinorm = np.max(abs(phi_vs_t[-1,:,0]))
+            aparnorm = np.max(abs(apar_vs_t[-1,:,0]))
+            bparnorm = np.max(abs(bpar_vs_t[-1,:,0]))
+            if sim_types[idx] == "stella":
+                phinorm*=-1
+                bparnorm*=-1
+            # ax1.plot(z/np.pi, phi_vs_t[-1,:,0]/phinorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            # ax2.plot(z/np.pi, apar_vs_t[-1,:,0]/aparnorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            # ax3.plot(z/np.pi, bpar_vs_t[-1,:,0]/bparnorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            ax4.plot(t, phi_t/max(abs(phi_t)), label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            #ax4.plot(t, apar_t, label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
+
+        idx = idx + 1
+        t_gene, phi_t_gene = get_gene_data(gene_from_maurizio)
+        ax4.plot(t_gene, phi_t_gene, label="GENE", ls=linestyles[idx], lw=linewidths[idx])
+        ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+         [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(gene_from_maurizio,
+                        "gene", make_plot=False)
+        print("(freq, err, gamma, err) = ",
+            ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
+        # for ax in [ax1, ax2, ax3]:
+        #     ax.set_xlim((-1, 1))
+        #     ax.plot([-1, 1], [0,0], c="black", lw=1., zorder=-10)
+        ax4.set_xlim((0,40))
+        ax4.plot([0,40], [0,0], c="black", lw=1., zorder=-10)
+        for ax in [
+                #ax1, ax2, ax3,
+                ax4]:
+            ax.tick_params("x", length=my_xticklength, width=my_xtickwidth, direction="in")
+            ax.tick_params("y", length=my_yticklength, width=my_ytickwidth, direction="in")
+            ax.tick_params("x", which="minor", length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in")
+            ax.tick_params("y", which="minor", length=my_yticklength_minor, width=my_ytickwidth_minor, direction="in")
+        # for ax in [ax1, ax2, ax3]:
+        #     ax.set_xticks([-1, 0, 1])
+        #     ax.set_xticklabels([r"$-\pi$", r"$0$", r"$\pi$"], fontsize=x_ticklabelfontsize)
+        #     ax.set_xticks([-0.5, 0.5], minor=True)
+        #     ax.set_xticklabels([], minor=True)
+
+
+        ax4.set_xticks([0, 10, 20, 30, 40])
+        ax4.set_xticklabels([r"$0$", r"$10$", r"$20$", r"$30$", r"$40$"], fontsize=x_ticklabelfontsize)
+        ax4.set_xticks([5, 15, 25, 35], minor=True)
+        ax4.set_xticklabels([], minor=True)
+        # for ax in [ax1, ax2, ax3]:
+        #     ax.set_yticks([-1, 0, 1])
+        #     ax.set_yticklabels([r"$-1$", r"$0$", r"$1$"], fontsize=y_ticklabelfontsize)
+        #     ax.set_yticks([-0.5, 0.5], minor=True)
+        #     ax.set_yticklabels([], minor=True)
+
+        #
+        # ax2.set_yticks([-1, 0, 1])
+        # ax2.set_yticklabels([r"$-0.2$", r"$0$", r"$0.2$"], fontsize=y_ticklabelfontsize)
+        # ax2.set_yticks([-0.5, 0.5], minor=True)
+        # ax2.set_yticklabels([], minor=True)
+        #
+        # ax3.set_yticks([-0.04, 0, 0.04])
+        # ax3.set_yticklabels([r"$-0.04$", r"$0$", r"$0.04$"], fontsize=y_ticklabelfontsize)
+        # ax3.set_yticks([-0.06, -0.02, 0.02, 0.06], minor=True)
+        # ax3.set_yticklabels([], minor=True)
+        #
+        ax4.set_yticks([-1, -0.5, 0, 0.5, 1])
+        ax4.set_yticklabels([r"$-1$", r"$-0.5$", r"$0$", r"$0.5$", r"$1$"], fontsize=y_ticklabelfontsize)
+        # ax4.set_yticks([-3, -1, 1, 3], minor=True)
+        # ax4.set_yticklabels([], minor=True)
+
+        ax4.legend(loc="best", fontsize=legend_fontsize)
+        # ax1.set_ylabel(r"$\tilde{\phi}_k(\tilde{t}=40)$", fontsize=ylabel_fontsize)
+        # ax2.set_ylabel(r"$\tilde{A}_{\parallel,k}(\tilde{t}=40)$", fontsize=ylabel_fontsize, labelpad=-10)
+        # ax3.set_ylabel(r"$\tilde{B}_{\parallel,k}(\tilde{t}=40)$", fontsize=ylabel_fontsize, labelpad=0)
+        ax4.set_ylabel(r"$\tilde{\phi}_k(z=0)$", fontsize=ylabel_fontsize)
+        ax4.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
+        # for ax in [ax1, ax2, ax3]:
+        #     ax.set_xlabel(r"$z$", fontsize=xlabel_fontsize)
+
+        plt.savefig(save_name)
+        plt.close()
+
+
+        return
+
+    ## GS2
+    gs2_implicit_dt4Em2 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2.out.nc"
+    gs2_implicit_dt4Em2_bd0_fe05 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2_bakdif0_fexpr0.5.out.nc"
+    gs2_implicit_dt4Em2_nz72 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz72_dt4E-2.out.nc"
+    gs2_implicit_dt4Em4 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-4.out.nc"
+    gs2_implicit_dt4Em2_higher_vres = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2_higher_vres.out.nc"
+    gs2_implicit_dt4Em2_quad_vres = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2_quad_vres.out.nc"
+    # stella implicit
+    stella_implicit_src_h_dt4Em2 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2.out.nc"
+    stella_implicit_src_h_dt4Em4 = "sims/stella_src_h_for_thesis/input_implicit_src_h.out.nc"
+    stella_implicit_src_h_dt4Em2_tupw002 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_tupw002.out.nc"
+    stella_implicit_src_h_dt4Em2_tupw01 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_tupw01.out.nc"
+    stella_implicit_src_h_dt4Em2_zupw002 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_zupw002.out.nc"
+    stella_implicit_src_h_dt4Em2_nz72 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_nzed72.out.nc"
+    stella_implicit_src_h_dt4Em2_higher_vres = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_higher_vres.out.nc"
+    # stella explicit
+    stella_explicit_src_h_dt4Em4_zupwexpl01 = "sims/stella_src_h_for_thesis/input_explicit_src_h_zupwexpl0.1.out.nc"
+    stella_explicit_src_h_dt4Em4_zupwexpl1 = "sims/stella_src_h_for_thesis/input_explicit_src_h.out.nc"
+    stella_explicit_src_h_dt4Em4_zupwexpl0 = "sims/stella_src_h_for_thesis/input_explicit_src_h_zupwexpl0.out.nc"
+    stella_explicit_src_h_dt4Em4_zupwexpl05 = "sims/stella_src_h_for_thesis/input_explicit_src_h_zupwexpl0.5.out.nc"
+
+    # GENE
+    gene_from_maurizio = "sims/gene_from_maurizio/data.txt"
+
+    fiducial_sims = [gs2_implicit_dt4Em2, stella_implicit_src_h_dt4Em2,
+                    stella_explicit_src_h_dt4Em4_zupwexpl01
+                    ]
+    fiducial_sim_types = ["gs2", "stella",
+                        "stella"
+                        ]
+    fiducial_sim_labels = ["GS2 (fid.)", "stella impl. (fid.)",
+                        "stella explicit (fid.)"
+                            ]
+    make_fields_zt_plots_for_thesis()
+
+    # for idx, outnc_longname in enumerate([gs2_implicit_dt4Em2,
+    #         gs2_implicit_dt4Em2_bd0_fe05,
+    #         gs2_implicit_dt4Em2_nz72,
+    #         gs2_implicit_dt4Em4,
+    #         gs2_implicit_dt4Em2_higher_vres,
+    #         gs2_implicit_dt4Em2_quad_vres,
+    #              ]):
+    #     #######################
+    #     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+    #      [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname,
+    #                         "gs2", make_plot=True)
+    #     print("outnc_longname  = ", outnc_longname)
+    #     print("(freq, err, gamma, err) = ",
+    #         ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
+
+    # for idx, outnc_longname in enumerate([stella_implicit_src_h_dt4Em2,
+    #         stella_implicit_src_h_dt4Em4,
+    #         stella_implicit_src_h_dt4Em2_tupw002,
+    #         stella_implicit_src_h_dt4Em2_tupw01,
+    #         stella_implicit_src_h_dt4Em2_nz72,
+    #         stella_implicit_src_h_dt4Em2_higher_vres
+    #              ]):
+    #     #######################
+    #     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+    #      [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname,
+    #                         "stella", make_plot=True)
+    #     print("outnc_longname  = ", outnc_longname)
+    #     print("(freq, err, gamma, err) = ",
+    #         ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
+
+    # for idx, outnc_longname in enumerate([stella_explicit_src_h_dt4Em4_zupwexpl01,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl0,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl05,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl1,
+    #              ]):
+    #     #######################
+    #     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+    #      [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname,
+    #                         "stella", make_plot=True)
+    #     print("outnc_longname  = ", outnc_longname)
+    #     print("(freq, err, gamma, err) = ",
+    #         ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
+
+    return
+
+def benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_talk():
+    """
+    Make a plot showing phi(z), apar(z), bpar(z), phi(t) for the fiducial stella implicit,
+    stella explicit and GS2 sims.
+    Then fit phi(t) to the KSAW and report Omega for the following sims:
+     GS2
+     - Fiducial GS2: gs2_implicit_dt4Em2
+     - bakdif=0, fexpr=0.5
+     - increased nzed
+     - increased v-res
+     - reduced dt (4E-4)
+     stella, implicit
+     - Fiducial: stella_implicit_src_h_dt4Em2
+     - ut=0.02
+     - uz=0.02 (unstable)
+     - increased v-res
+     - increased nzed
+     - reduced dt (4E-4)
+     stella, explicit
+     - Fiducial: stella_explicit_src_h_dt4Em4_zupwexpl01
+     - zupwexpl = 1
+     - zupwexpl = 0
+     - zupwexpl = 0.5
+      """
+
+    def make_fields_zt_plots_for_thesis():
+        """ """
+
+        ylabel_fontsize = 30
+        xlabel_fontsize = 30
+        legend_fontsize = 18
+        linestyles=((0,(1,0)), (0, (2,2)), (0,(3,1,1,1)), (0,(1,1)),
+                    (0, (3,2,2,3)), (0, (1,0)) )
+        # linewidths = [6, 4, 3, 3, 3, 2]
+        # linestyles=((0,(1,0)), (0, (2,2)), (0,(5,1,1,1)), (0,(1,1)), (0,(1,0)), (0, (2,2)))
+        # linewidths = [4, 4, 3, 3, 2, 2]
+        y_ticklabelfontsize = 25
+        x_ticklabelfontsize = y_ticklabelfontsize
+        my_xticklength = 8
+        my_xtickwidth = 2
+        my_yticklength = 8
+        my_ytickwidth = 2
+        my_xticklength_minor = 6
+        my_xtickwidth_minor = 1
+        my_yticklength_minor = 6
+        my_ytickwidth_minor = 1
+
+        linewidths = [6, 4, 3]
+        default_cols = plt.get_cmap("tab10")
+
+        left = 0.13
+        right = 0.985
+        top = 0.985
+        bottom = 0.08
+        vspace=0.1
+        hspace=0.1
+        height = (top - bottom - vspace)/2
+        width = (right - left - hspace)/2
+        col2_left = left + width + hspace
+
+        fig = plt.figure(figsize=(14,12))
+        ax1 = fig.add_axes((left, bottom + height + vspace, width, height))
+        ax2 = fig.add_axes((col2_left, bottom + height + vspace, width, height))
+        ax3 = fig.add_axes((left, bottom, width, height))
+        ax4 = fig.add_axes((col2_left, bottom, width, height))
+
+        outnc_longnames = fiducial_sims
+        sim_types = fiducial_sim_types
+        labels = fiducial_sim_labels_for_talk
+        save_name="for_talk_phi_t_fapar1_fbpar1_src_h.eps"
+
+        t_list = []
+        z_list = []
+        phi_vs_t_list = []
+        apar_vs_t_list = []
+        bpar_vs_t_list = []
+
+        for idx, outnc_longname in enumerate(outnc_longnames):
+            print("outnc_longname = ", outnc_longname)
+            if sim_types[idx] == "stella":
+                # view_ncdf_variables_with_xarray(outnc_longname)
+                t, z, phi_vs_t, apar_vs_t, bpar_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname,
+                    "t", 'zed', "phi_vs_t", "apar_vs_t", "bpar_vs_t", 'beta')
+                phi_vs_t = phi_vs_t[:,0,:,0,0,:]
+                apar_vs_t = apar_vs_t[:,0,:,0,0,:]
+                bpar_vs_t = bpar_vs_t[:,0,:,0,0,:]
+                # shape is now (time, zed, ri)
+            elif sim_types[idx] == "gs2":
+                # view_ncdf_variables_with_xarray(outnc_longname)
+                t, z, phi_vs_t, apar_vs_t, bpar_vs_t, beta = extract_data_from_ncdf_with_xarray(outnc_longname, "t", 'theta', "phi_t",
+                    "apar_t", "bpar_t", 'beta')
+                phi_vs_t = phi_vs_t[:,0,0,:,:]
+                apar_vs_t = apar_vs_t[:,0,0,:,:]/2  # normalise to stella normalisation
+                bpar_vs_t = bpar_vs_t[:,0,0,:,:]
+                # shape is now (time, zed, ri)
+            else:
+                print("sim type not recognised! Aborting")
+                sys.exit()
+            t_list.append(t); z_list.append(z);
+            phi_vs_t_list.append(phi_vs_t) ;  apar_vs_t_list.append(apar_vs_t)
+            bpar_vs_t_list.append(bpar_vs_t)
+
+        ## Plot phi, apar, bpar at final timestep
+        for idx, outnc_longname in enumerate(outnc_longnames):
+            t = t_list[idx]; z = z_list[idx]; phi_vs_t = phi_vs_t_list[idx];
+            apar_vs_t = apar_vs_t_list[idx]; bpar_vs_t = bpar_vs_t_list[idx]
+            print("phi_vs_t.shape = ", apar_vs_t.shape)
+            print("apar_vs_t.shape = ", apar_vs_t.shape)
+            zval= float(z[int(len(z)*0.5)])
+            if abs(zval) > 1E-5:
+                print("Error! zval!=0 . zval = ", zval)
+                sys.exit()
+            apar_t = apar_vs_t[:,int(len(z)*0.25),0]
+            phi_t = phi_vs_t[:,int(len(z)*0.5),0]
+            # bpar_t = bpar_vs_t[:,int(len(z)*0.5),0]
+            # print("phi_t = ", phi_t)
+            # print("phi_vs_t[-1,:,0] = ", phi_vs_t[-1,:,0])
+            phinorm = np.max(abs(phi_vs_t[-1,:,0]))
+            aparnorm = np.max(abs(apar_vs_t[-1,:,0]))
+            bparnorm = np.max(abs(bpar_vs_t[-1,:,0]))
+            if sim_types[idx] == "stella":
+                phinorm*=-1
+                bparnorm*=-1
+            ax1.plot(z/np.pi, phi_vs_t[-1,:,0]/phinorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            ax2.plot(z/np.pi, apar_vs_t[-1,:,0]/aparnorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            ax3.plot(z/np.pi, bpar_vs_t[-1,:,0]/bparnorm, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            ax4.plot(t, phi_t, label=(labels[idx]), ls=linestyles[idx], lw=linewidths[idx])
+            #ax4.plot(t, apar_t, label=(labels[idx]), ls=linestyles[idx], lw=my_linewidth)
+
+        for ax in [ax1, ax2, ax3]:
+            ax.set_xlim((-1, 1))
+            ax.plot([-1, 1], [0,0], c="black", lw=1., zorder=-10)
+        ax4.set_xlim((0,40))
+        ax4.plot([0,40], [0,0], c="black", lw=1., zorder=-10)
+        for ax in [ax1, ax2, ax3, ax4]:
+            ax.tick_params("x", length=my_xticklength, width=my_xtickwidth, direction="in")
+            ax.tick_params("y", length=my_yticklength, width=my_ytickwidth, direction="in")
+            ax.tick_params("x", which="minor", length=my_xticklength_minor, width=my_xtickwidth_minor, direction="in")
+            ax.tick_params("y", which="minor", length=my_yticklength_minor, width=my_ytickwidth_minor, direction="in")
+        for ax in [ax1, ax2, ax3]:
+            ax.set_xticks([-1, 0, 1])
+            ax.set_xticklabels([r"$-\pi$", r"$0$", r"$\pi$"], fontsize=x_ticklabelfontsize)
+            ax.set_xticks([-0.5, 0.5], minor=True)
+            ax.set_xticklabels([], minor=True)
+
+
+        ax4.set_xticks([0, 10, 20, 30, 40])
+        ax4.set_xticklabels([r"$0$", r"$10$", r"$20$", r"$30$", r"$40$"], fontsize=x_ticklabelfontsize)
+        ax4.set_xticks([5, 15, 25, 35], minor=True)
+        ax4.set_xticklabels([], minor=True)
+        for ax in [ax1, ax2, ax3]:
+            ax.set_yticks([-1, 0, 1])
+            ax.set_yticklabels([r"$-1$", r"$0$", r"$1$"], fontsize=y_ticklabelfontsize)
+            ax.set_yticks([-0.5, 0.5], minor=True)
+            ax.set_yticklabels([], minor=True)
+        #
+        # ax2.set_yticks([-1, 0, 1])
+        # ax2.set_yticklabels([r"$-0.2$", r"$0$", r"$0.2$"], fontsize=y_ticklabelfontsize)
+        # ax2.set_yticks([-0.5, 0.5], minor=True)
+        # ax2.set_yticklabels([], minor=True)
+        #
+        # ax3.set_yticks([-0.04, 0, 0.04])
+        # ax3.set_yticklabels([r"$-0.04$", r"$0$", r"$0.04$"], fontsize=y_ticklabelfontsize)
+        # ax3.set_yticks([-0.06, -0.02, 0.02, 0.06], minor=True)
+        # ax3.set_yticklabels([], minor=True)
+        #
+        ax4.set_yticks([-4, -2, 0, 2])
+        ax4.set_yticklabels([r"$-4$", r"$-2$", r"$0$", r"$2$"], fontsize=y_ticklabelfontsize)
+        ax4.set_yticks([-3, -1, 1, 3], minor=True)
+        ax4.set_yticklabels([], minor=True)
+
+        ax2.legend(loc="best", fontsize=legend_fontsize)
+        ax1.set_ylabel(r"$\tilde{\phi}_k(\tilde{t}=40)$", fontsize=ylabel_fontsize)
+        ax2.set_ylabel(r"$\tilde{A}_{\parallel,k}(\tilde{t}=40)$", fontsize=ylabel_fontsize, labelpad=-10)
+        ax3.set_ylabel(r"$\tilde{B}_{\parallel,k}(\tilde{t}=40)$", fontsize=ylabel_fontsize, labelpad=0)
+        ax4.set_ylabel(r"$\tilde{\phi}_k(z=0)$", fontsize=ylabel_fontsize)
+        ax4.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
+        for ax in [ax1, ax2, ax3]:
+            ax.set_xlabel(r"$z$", fontsize=xlabel_fontsize)
+
+        plt.savefig(save_name)
+        plt.close()
+
+
+        return
+
+
+
+    ## GS2
+    gs2_implicit_dt4Em2 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2.out.nc"
+    gs2_implicit_dt4Em2_bd0_fe05 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2_bakdif0_fexpr0.5.out.nc"
+    gs2_implicit_dt4Em2_nz72 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz72_dt4E-2.out.nc"
+    gs2_implicit_dt4Em4 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-4.out.nc"
+    gs2_implicit_dt4Em2_higher_vres = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2_higher_vres.out.nc"
+    gs2_implicit_dt4Em2_quad_vres = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar1/input_nz36_dt4E-2_quad_vres.out.nc"
+    # stella implicit
+    stella_implicit_src_h_dt4Em2 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2.out.nc"
+    stella_implicit_src_h_dt4Em4 = "sims/stella_src_h_for_thesis/input_implicit_src_h.out.nc"
+    stella_implicit_src_h_dt4Em2_tupw002 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_tupw002.out.nc"
+    stella_implicit_src_h_dt4Em2_tupw01 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_tupw01.out.nc"
+    stella_implicit_src_h_dt4Em2_zupw002 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_zupw002.out.nc"
+    stella_implicit_src_h_dt4Em2_nz72 = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_nzed72.out.nc"
+    stella_implicit_src_h_dt4Em2_higher_vres = "sims/stella_src_h_for_thesis/input_implicit_src_h_dt4E-2_higher_vres.out.nc"
+    # stella explicit
+    stella_explicit_src_h_dt4Em4_zupwexpl01 = "sims/stella_src_h_for_thesis/input_explicit_src_h_zupwexpl0.1.out.nc"
+    stella_explicit_src_h_dt4Em4_zupwexpl1 = "sims/stella_src_h_for_thesis/input_explicit_src_h.out.nc"
+    stella_explicit_src_h_dt4Em4_zupwexpl0 = "sims/stella_src_h_for_thesis/input_explicit_src_h_zupwexpl0.out.nc"
+    stella_explicit_src_h_dt4Em4_zupwexpl05 = "sims/stella_src_h_for_thesis/input_explicit_src_h_zupwexpl0.5.out.nc"
+
+    fiducial_sims = [gs2_implicit_dt4Em2, stella_implicit_src_h_dt4Em2,
+                    stella_explicit_src_h_dt4Em4_zupwexpl01
+                    ]
+    fiducial_sim_types = ["gs2", "stella",
+                        "stella"
+                        ]
+    fiducial_sim_labels = ["GS2 (fid.)", "stella impl. (fid.)",
+                        "stella explicit (fid.)"
+                            ]
+    fiducial_sim_labels_for_talk = ["GS2", "stella (implicit)",
+                        "stella (explicit)"
+                            ]
+    make_fields_zt_plots_for_thesis()
+
+    # for idx, outnc_longname in enumerate([gs2_implicit_dt4Em2,
+    #         gs2_implicit_dt4Em2_bd0_fe05,
+    #         gs2_implicit_dt4Em2_nz72,
+    #         gs2_implicit_dt4Em4,
+    #         gs2_implicit_dt4Em2_higher_vres,
+    #         gs2_implicit_dt4Em2_quad_vres,
+    #              ]):
+    #     #######################
+    #     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+    #      [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname,
+    #                         "gs2", make_plot=True)
+    #     print("outnc_longname  = ", outnc_longname)
+    #     print("(freq, err, gamma, err) = ",
+    #         ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
+
+    # for idx, outnc_longname in enumerate([stella_implicit_src_h_dt4Em2,
+    #         stella_implicit_src_h_dt4Em4,
+    #         stella_implicit_src_h_dt4Em2_tupw002,
+    #         stella_implicit_src_h_dt4Em2_tupw01,
+    #         stella_implicit_src_h_dt4Em2_nz72,
+    #         stella_implicit_src_h_dt4Em2_higher_vres
+    #              ]):
+    #     #######################
+    #     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+    #      [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname,
+    #                         "stella", make_plot=True)
+    #     print("outnc_longname  = ", outnc_longname)
+    #     print("(freq, err, gamma, err) = ",
+    #         ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
+
+    # for idx, outnc_longname in enumerate([stella_explicit_src_h_dt4Em4_zupwexpl01,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl0,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl05,
+    #     stella_explicit_src_h_dt4Em4_zupwexpl1,
+    #              ]):
+    #     #######################
+    #     ([amp0_opt, phase_opt, freq_opt, gamma_opt, offset_opt],
+    #      [amp0_err, phase_err, freq_err, gamma_err, offset_err]) = fit_frequency_and_damping_rate(outnc_longname,
+    #                         "stella", make_plot=True)
+    #     print("outnc_longname  = ", outnc_longname)
+    #     print("(freq, err, gamma, err) = ",
+    #         ("(" + str(freq_opt) + ", " + str(freq_err) + ", " + str(gamma_opt) + ", " + str(gamma_err) + ")"))
+
+    return
+
+
 def benchamark_stella_src_h_stella_vs_gs2_fapar1_fbpar0_for_thesis():
     """ """
     gs2_implicit_dt5Em2 = "sims/for_thesis_gs2_ky1_beta1_zero_gradients_fapar1_fbpar0/input_nz36_dt5E-2.out.nc"
@@ -853,5 +1413,7 @@ if __name__ == "__main__":
     # benchmark_stella_vs_gs2_fapar1_fbpar0_for_thesis()
     # benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1()
     # benchamark_stella_src_h_stella_vs_gs2_fapar1_fbpar0()
-    benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis()
+    # benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis()
+    benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_thesis_plus_gene()
+    # benchmark_stella_src_h_stella_vs_gs2_fapar1_fbpar1_for_talk()
     # benchamark_stella_src_h_stella_vs_gs2_fapar1_fbpar0_for_thesis()
