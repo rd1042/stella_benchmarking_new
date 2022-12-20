@@ -95,10 +95,20 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
     marker_size_large = 300
     linewidth=2
 
-    left = 0.16
-    right =0.95
-    top = 0.95
-    bottom = 0.14
+    left = 0.18
+    right =0.98
+    top = 0.98
+    bottom = 0.11
+    legend_fontsize = 30
+    xlabel_fontsize = 40
+    ylabel_fontsize = 30
+    xticklabel_fontsize = 24
+    yticklabel_fontsize = 24
+
+    # left = 0.16
+    # right =0.95
+    # top = 0.95
+    # bottom = 0.14
     width = right - left
     height = top - bottom
     fig = plt.figure(figsize=(12,10))
@@ -113,11 +123,11 @@ def plot_properties_master_sim(cfl_cushion="0.5"):
 
     ax1.set_yscale("log")
 
-    legend_fontsize = 16
-    xlabel_fontsize = 30
-    ylabel_fontsize = 30
-    xticklabel_fontsize = 18
-    yticklabel_fontsize = 18
+    # legend_fontsize = 16
+    # xlabel_fontsize = 30
+    # ylabel_fontsize = 30
+    # xticklabel_fontsize = 18
+    # yticklabel_fontsize = 18
     ax1.set_xlabel(r"$\tilde{t}$", fontsize=xlabel_fontsize)
     ax1.set_ylabel(r"$ \sum_{\tilde{k}_x, \tilde{k}_y} \vert \tilde{\phi}_k(t) \vert^2$", fontsize=ylabel_fontsize)
     ax1.set_xlim(0, 450)
@@ -923,7 +933,7 @@ def make_master_leapfrog_nisl_isl_comparison():
 
 if __name__ == "__main__":
     print("Hello world")
-    # plot_properties_master_sim(cfl_cushion="0.25")
+    plot_properties_master_sim(cfl_cushion="0.25")
     plot_qflx_t_master_cfl025()
     # plot_properties_leapfrog_sim()
     # plot_properties_nisl_sim()
