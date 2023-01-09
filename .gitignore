@@ -140,6 +140,10 @@ test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/*
 !test_nonlinear_only_sims/*.py
 !test_nonlinear_only_sims/sims/*/*.in
 
+!long_wavelength_stability_tests/*.in
+!long_wavelength_stability_tests/sims/*.in
+long_wavelength_stability_tests/.*.in
+
 */sims/*/.*.in
 
 

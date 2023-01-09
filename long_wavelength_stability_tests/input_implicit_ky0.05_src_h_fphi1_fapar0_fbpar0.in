@@ -140,7 +140,7 @@
  write_phi_vs_time = .false.
  write_gvmus = .false.
  write_gzvs = .false.
- write_response_matrix = .true.
+ ! write_response_matrix = .true.
 /
 
 &reinit_knobs
