@@ -129,6 +129,14 @@ test_field_solve/sims/*/*.used_inputs.in
 !test_cbc_nonlinear_beta0/sims/*/*.summary_pickle
 !test_cbc_nonlinear_beta0/*.py
 
+
+!test_cbc_nonlinear_em/sims/*/*.summary_pickle
+!test_cbc_nonlinear_em/*.py
+!test_cbc_nonlinear_em/sims/*/*.png
+!test_cbc_nonlinear_em/README.md
+!test_cbc_nonlinear_em/sims/test_em_nonlinear/input_master_like_nonlinear_dt0002_fg_full_krange.in
+!test_cbc_nonlinear_em/sims/test_em_nonlinear/input_master_like_nonlinear_dt001_fg_full_krange.in
+
 !test_cbc_beta0_2species/*.py
 !test_cbc_beta0_2species/sims/*/*.in
 test_cbc_beta0_2species/sims/test_stella_master_with_fluxes/
