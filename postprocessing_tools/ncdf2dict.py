@@ -2,7 +2,7 @@
 #-->Writing ability removed
 
 try:
-    from numpy import complex, product
+    from numpy import product
 except ImportError:
     print("ERROR: NumPy module not available")
     raise
