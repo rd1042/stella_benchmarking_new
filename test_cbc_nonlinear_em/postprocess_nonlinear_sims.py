@@ -120,5 +120,5 @@ def postprocess_folder(folder_longname):
     return
 
 if __name__ == "__main__":
-    postprocess_folder("sims/stella_nonlinear_2species_master")
-    postprocess_folder("sims/stella_nonlinear_2species_nisl")
+    postprocess_nonlinear_outnc_sim("sims/test_em_nonlinear/input_master_like_nonlinear_dt0002_fg_full_krange.out.nc")
+    postprocess_nonlinear_outnc_sim("sims/test_em_nonlinear/input_master_like_nonlinear_dt001_fg_full_krange.out.nc")
