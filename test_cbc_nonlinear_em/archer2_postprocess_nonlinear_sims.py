@@ -161,8 +161,9 @@ def extract_data_from_ncdf_with_xarray(sim_name, *args):
 if __name__ == "__main__":
     # folder_name = "/home/e607/e607/rd1042/stella_benchmarking_new/test_cbc_nonlinear_beta0/sims/"
     folder_name = "sims/test_em_nonlinear"
-    postprocess_nonlinear_outnc_sim(folder_name + "/input_master_like_nonlinear_dt0002_fg_full_krange.out.nc", kspectra_t=True)
+    #postprocess_nonlinear_outnc_sim(folder_name + "/input_master_like_nonlinear_dt0002_fg_full_krange.out.nc", kspectra_t=True)
     postprocess_nonlinear_outnc_sim(folder_name + "/input_master_like_nonlinear_dt001_fg_full_krange.out.nc", kspectra_t=True)
+    postprocess_nonlinear_outnc_sim(folder_name + "/input_master_like_nonlinear_dt001_fg_full_krange_nz64.out.nc", kspectra_t=True)
     #postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_archer2", kspectra_t = True, fluxes=True)
     # postprocess_folder(folder_name + "/stella_nonlinear_2species_nisl_delt_004")
     #postprocess_folder(folder_name + "/stella_nonlinear_2species_leapfrog_nonlinear", kspectra_t = True, fluxes=True)
