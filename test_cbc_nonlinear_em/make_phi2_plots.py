@@ -37,20 +37,23 @@ def get_data_from_pickle(pickle_longname, fluxes=False):
 def make_nl_sim_comparison():
     """ """
 
+    master_dt001_pickle = "../test_cbc_nonlinear_beta0/sims/stella_nonlinear_2species_master_dt001/input.summary_pickle"
     master_cfl025_pickle = "../test_cbc_nonlinear_beta0/sims/stella_nonlinear_2species_master_cflcushion025/input.summary_pickle"
     em_dt001_pickle = "sims/test_em_nonlinear/input_master_like_nonlinear_dt001_fg_full_krange.summary_pickle"
+    em_dt001_pickle_hr = "sims/test_em_nonlinear/input_master_like_nonlinear_dt001_fg_full_krange_nz64.summary_pickle"
     em_dt0002_pickle = "sims/test_em_nonlinear/input_master_like_nonlinear_dt0002_fg_full_krange.summary_pickle"
 
 
-    pickle_names = [master_cfl025_pickle, em_dt001_pickle, em_dt0002_pickle]
-    labels_list=["master", "em, dt=0.01", "em, dt=0.002"]
+    pickle_names = [master_cfl025_pickle, master_dt001_pickle, em_dt001_pickle, em_dt0002_pickle, em_dt001_pickle_hr,]
+    labels_list=["master, dt=0.02 (nz=64)", "master, dt=0.01 (nz=64)", 
+                 "em, dt=0.01 (nz=32)", "em, dt=0.002 (nz=32)", "em, dt=0.01 (nz=64)"]
 
     marker_size = 5
-    linewidth=2
+    linewidth=3
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     
-    flux_t = [True, False, False]
+    flux_t = [True, False, False, False, False]
 
     for idx, pickle in enumerate(pickle_names):
         if flux_t[idx] == True:
@@ -58,7 +61,7 @@ def make_nl_sim_comparison():
         else:
             [t, kx, ky, phi2, phi2_tkxky] = get_data_from_pickle(pickle, fluxes=False)
 
-        ax1.plot(t, phi2, lw=linewidth, zorder=0, label=labels_list[idx])
+        ax1.plot(t, phi2, lw=linewidth, zorder=10, label=labels_list[idx])
 
     ## Dimensions of phi2_tkxky are [t, kx, ky]
     ## Dimensions of parsed_pflx are [t_idxs, spec, kx, ky]
@@ -84,10 +87,13 @@ def make_nl_sim_comparison():
     # # print("ylabel_idx_vals = ", ylabel_idx_vals)
     # # sys.exit()
 
-    ax1.legend(loc="best")
+    label_fontsize = 20
+    legend_fontsize = 16
+    ax1.legend(loc="best", fontsize=legend_fontsize)
     ax1.set_yscale("log")
-    ax1.set_xlabel(r"$t$")
-    ax1.set_ylabel(r"$\phi$^2")
+    ax1.set_xlabel(r"$t$", fontsize=label_fontsize)
+    ax1.set_ylabel(r"$\vert\phi\vert^2$", fontsize=label_fontsize)
+    ax1.grid(True, zorder=0)
     plt.tight_layout()
     plt.show()
 
